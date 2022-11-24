@@ -2,7 +2,7 @@ import { getPayload } from "./pathBuilder/pathBilder";
 import { Migration } from "./migration";
 import { Account } from "everscale-standalone-client";
 import { Address, Contract, toNano, WalletTypes } from "locklift";
-import { DexVaultAbi, TokenRootUpgradeableAbi } from "../build/factorySource";
+import { DexStablePoolAbi, DexVaultAbi, TokenRootUpgradeableAbi } from "../build/factorySource";
 
 export class Dex {
   getPayload = getPayload;
@@ -15,6 +15,7 @@ export class Dex {
   }): Contract<TokenRootUpgradeableAbi> => this.migration.load(`${tokenName}Root`) as Contract<TokenRootUpgradeableAbi>;
 
   getDexVault = (): Contract<DexVaultAbi> => this.migration.load("DexVault");
+  getDexPool = (poolName: string): Contract<DexStablePoolAbi> => this.migration.load(poolName);
   sendTokensTo = async ({
     tokenName,
     receiver,

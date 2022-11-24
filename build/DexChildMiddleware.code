@@ -496,28 +496,50 @@ PUSHREF {
 PUSHREFSLICE {
 	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 }
-.loc ../contracts/DexChildMiddleware.sol, 174
+.loc ../contracts/DexChildMiddleware.sol, 173
+TUPLE 0
+NEWC
+PUSHSLICE x66696e616c697a6520697320636e6163656c656420
+CALLREF {
+	CALL $storeStringInBuilders_macro$
+}
+GETGLOB 25
+PUSHINT 1
+PUSHINT 0
+CONDSEL
+PUSHINT 0
+BLKPUSH 2, 0
+CALLREF {
+	CALL $convertIntToDecStr_macro$
+}
+CALLREF {
+	CALL $assembleList_macro$
+}
+CALLREF {
+	CALL $console_no_obj_log_41304fac_macro$
+}
+.loc ../contracts/DexChildMiddleware.sol, 175
 GETGLOB 25
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.sol, 175
+	.loc ../contracts/DexChildMiddleware.sol, 176
 	GETGLOB 17
 	SECOND
 	POP S2
-	.loc ../contracts/DexChildMiddleware.sol, 176
+	.loc ../contracts/DexChildMiddleware.sol, 177
 	GETGLOB 17
 }
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.sol, 178
+	.loc ../contracts/DexChildMiddleware.sol, 179
 	GETGLOB 16
 	SECOND
 	POP S2
-	.loc ../contracts/DexChildMiddleware.sol, 179
+	.loc ../contracts/DexChildMiddleware.sol, 180
 	GETGLOB 16
 }
 IFELSE
 FIRST
 NIP
-.loc ../contracts/DexChildMiddleware.sol, 181
+.loc ../contracts/DexChildMiddleware.sol, 182
 GETGLOB 22
 DUP
 PUSHINT 267
@@ -538,7 +560,7 @@ PUSHCONT {
 	NOT
 }
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.sol, 182
+	.loc ../contracts/DexChildMiddleware.sol, 183
 	PUSH S5
 	TRUE
 	GETGLOB 14
@@ -586,7 +608,7 @@ PUSHCONT {
 }
 WHILE
 BLKDROP 6
-.loc ../contracts/DexChildMiddleware.sol, 194
+.loc ../contracts/DexChildMiddleware.sol, 195
 GETGLOB 14
 NEWC
 STSLICECONST x42_
@@ -607,7 +629,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/DexChildMiddleware.sol, 200
+.loc ../contracts/DexChildMiddleware.sol, 201
 OVER
 PUSHCONT {
 	LDREF
@@ -642,7 +664,7 @@ CALLREF {
 THROW 0
 
 .macro onAcceptTokensTransfer_e63f2284_internal_macro
-.loc ../contracts/DexChildMiddleware.sol, 200
+.loc ../contracts/DexChildMiddleware.sol, 201
 PUSH S3
 .loc ../contracts/DexChildMiddleware.sol, 76
 GETGLOB 9
@@ -721,41 +743,41 @@ THROWIFNOT 2004
 .loc ../contracts/DexChildMiddleware.sol, 92
 BLKSWAP 6, 3
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.sol, 209
+	.loc ../contracts/DexChildMiddleware.sol, 211
 	PUSH S3
 	GETGLOB 11
 	SDEQ
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.sol, 210
+		.loc ../contracts/DexChildMiddleware.sol, 213
 		BLKSWAP 2, 4
 		ROLL 3
 		CALLREF {
 			CALL $handleRootTransfer_8839ce86_internal_macro$
 		}
-		.loc ../contracts/DexChildMiddleware.sol, 211
+		.loc ../contracts/DexChildMiddleware.sol, 214
 		BLKDROP 3
 		.loc ../contracts/DexChildMiddleware.sol, 0
 	}
 	IFJMP
-	.loc ../contracts/DexChildMiddleware.sol, 213
+	.loc ../contracts/DexChildMiddleware.sol, 216
 	CTOS
-	.loc ../contracts/DexChildMiddleware.sol, 214
+	.loc ../contracts/DexChildMiddleware.sol, 217
 	DUP
 	LDU 8
 	LDU 8
 	POP S3
-	.loc ../contracts/DexChildMiddleware.sol, 216
+	.loc ../contracts/DexChildMiddleware.sol, 219
 	DROP
 	DUP
 	PUSHINT 200
 	EQUAL
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.sol, 217
+		.loc ../contracts/DexChildMiddleware.sol, 220
 		DROP
 		LDREF
 		PLDREF
 		NIP
-		.loc ../contracts/DexChildMiddleware.sol, 218
+		.loc ../contracts/DexChildMiddleware.sol, 221
 		CTOS
 		LDMSGADDR
 		DROP
@@ -765,21 +787,21 @@ PUSHCONT {
 		.loc ../contracts/DexChildMiddleware.sol, 0
 	}
 	IFJMP
-	.loc ../contracts/DexChildMiddleware.sol, 230
+	.loc ../contracts/DexChildMiddleware.sol, 233
 	PUSHINT 201
 	EQUAL
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.sol, 231
+		.loc ../contracts/DexChildMiddleware.sol, 234
 		DUP
 		LDU 16
 		LDREF
 		LDREF
 		POP S4
 		BLKDROP2 2, 1
-		.loc ../contracts/DexChildMiddleware.sol, 237
+		.loc ../contracts/DexChildMiddleware.sol, 239
 		CTOS
 		PLDU 32
-		.loc ../contracts/DexChildMiddleware.sol, 239
+		.loc ../contracts/DexChildMiddleware.sol, 240
 		BLKPUSH 5, 6
 		ROLL 5
 		CALLREF {
@@ -790,7 +812,7 @@ PUSHCONT {
 	IF
 	.loc ../contracts/DexChildMiddleware.sol, 0
 	BLKDROP 6
-	.loc ../contracts/DexChildMiddleware.sol, 200
+	.loc ../contracts/DexChildMiddleware.sol, 201
 }
 CALLX
 .loc ../contracts/DexChildMiddleware.sol, 0
@@ -1156,6 +1178,41 @@ PUSHCONT {
 }
 IF
 THROW 0
+
+.globl	console_with_obj_log_41304fac
+.type	console_with_obj_log_41304fac, @function
+CALL $console_with_obj_log_41304fac_macro$
+
+.macro console_with_obj_log_41304fac_macro
+.loc ../../ever-locklift/src/console.sol, 10
+DUP
+PUSHREFSLICE {
+	.blob xc600fffffffffffffffffffffffffffffffffffffffffffffffffe2468acf13579bc0000000000000000000000000903f4294_
+}
+NEWC
+STSLICE
+STREF
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../../ever-locklift/src/console.sol, 0
+
+.globl	console_no_obj_log_41304fac
+.type	console_no_obj_log_41304fac, @function
+CALL $console_no_obj_log_41304fac_macro$
+
+.macro console_no_obj_log_41304fac_macro
+.loc ../../ever-locklift/src/console.sol, 10
+PUSHREFSLICE {
+	.blob xc600fffffffffffffffffffffffffffffffffffffffffffffffffe2468acf13579bc0000000000000000000000000903f4294_
+}
+NEWC
+STSLICE
+STREF
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../../ever-locklift/src/console.sol, 0
 
 .macro public_function_selector
 DUP

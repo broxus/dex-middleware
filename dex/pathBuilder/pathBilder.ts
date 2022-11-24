@@ -31,6 +31,7 @@ type Options = {
   start_token: string;
   route: Array<any>;
 };
+const EMPTY_TVM_CELL = "te6ccgEBAQEAAgAAAA==";
 
 let tokens = {};
 let DexRoot;
@@ -123,11 +124,13 @@ async function dexPoolInfo(pool_tokens) {
 export type Config = {
   options: Options;
   recipient: Address;
+  callbackPayloads?: { success?: string; cancel?: string };
 };
 
 export const getPayload = async ({
   recipient,
   options: { start_token, route, amount },
+  callbackPayloads,
 }: Config): Promise<{
   payload: string;
   firstPool: Address;
@@ -478,6 +481,8 @@ export const getPayload = async ({
       _nextStepIndices: steps[next_indices[0]].nextStepIndices,
       _steps: steps,
       _recipient: Account3.address,
+      _success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
+      _cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
     };
     console.log(`Call buildCrossPairExchangePayloadV2(${firstPool.address.toString()}`);
 
@@ -501,7 +506,8 @@ export const getPayload = async ({
       outcoming: steps[next_indices[0]].outcoming,
       nextStepIndices: steps[next_indices[0]].nextStepIndices,
       steps: steps,
-
+      success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
+      cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
       recipient: recipient,
     };
     console.log(`Call buildCrossPairExchangePayload(${firstPool.address.toString()}`);

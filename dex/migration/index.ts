@@ -1,4 +1,4 @@
-import { migrationLog } from "../pathBuilder/migrationLog";
+import { migrationLog } from "./migrationLog";
 import { Address, Contract } from "locklift";
 import { factorySource } from "../../build/factorySource";
 

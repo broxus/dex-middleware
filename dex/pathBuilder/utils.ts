@@ -1,5 +1,5 @@
 import { Address, Contract } from "locklift";
-import { migrationLog } from "./migrationLog";
+import { migrationLog } from "../migration/migrationLog";
 
 export const dummyContract: Contract<any> = locklift.factory.getDeployedContract(
   "DexVault",

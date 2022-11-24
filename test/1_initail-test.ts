@@ -2,7 +2,7 @@ import { fromNano, getRandomNonce, toNano, zeroAddress } from "../../ever-lockli
 
 import { Context, preparation } from "./preparation";
 import { expect } from "chai";
-import { PreBuiltSuccessRoutes } from "./constants";
+import { PreBuiltRoutes } from "./constants";
 import { Account } from "everscale-standalone-client";
 import BigNumber from "bignumber.js";
 import { User } from "./entities/user";
@@ -33,7 +33,7 @@ describe.skip("initial test", () => {
     expect((await locklift.provider.getFullContractState({ address: contract.address })).state?.isDeployed).to.be.true;
   });
   it("should payload built", async () => {
-    const { route, leafs, start_token } = PreBuiltSuccessRoutes[0];
+    const { route, leafs, start_token } = PreBuiltRoutes[0];
 
     const START_TOKEN = "Qwe";
     const { tokenWallet, tokenDecimals } = await context.dex

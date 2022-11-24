@@ -27,6 +27,7 @@ export const preparation = async ({
                 type: WalletTypes.MsigAccount,
                 value: deployAccountValue,
                 contract: "Wallet",
+                mSigType: "SafeMultisig",
                 publicKey: signer.publicKey,
                 initParams: {
                   _randomNonce: getRandomNonce(),

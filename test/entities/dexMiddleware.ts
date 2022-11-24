@@ -1,4 +1,4 @@
-import { Contract, Address } from "locklift/everscale-provider";
+import { Contract } from "locklift/everscale-provider";
 import { DexMiddlewareAbi } from "../../build/factorySource";
 import { getRandomNonce, toNano } from "../../../ever-locklift";
 import { User } from "./user";

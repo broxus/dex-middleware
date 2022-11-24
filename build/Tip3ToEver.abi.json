@@ -19,19 +19,20 @@
 			]
 		},
 		{
-			"name": "buildExchangePayloadV2",
+			"name": "buildExchangePayload",
 			"inputs": [
 				{"name":"pair","type":"address"},
 				{"name":"id","type":"uint64"},
 				{"name":"expectedAmount","type":"uint128"},
-				{"name":"recipient","type":"address"}
+				{"name":"recipient","type":"address"},
+				{"name":"outcoming","type":"optional(address)"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
 			]
 		},
 		{
-			"name": "buildCrossPairExchangePayloadV2",
+			"name": "buildCrossPairExchangePayload",
 			"inputs": [
 				{"name":"pool","type":"address"},
 				{"name":"id","type":"uint64"},

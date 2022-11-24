@@ -170,6 +170,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     function finilizeTransaction() internal {
         TvmCell transferPayload;
         address receiver;
+            console.log(format("finalize is cnaceled {}",isCanceledTransaction ? 1:0));
 
         if (isCanceledTransaction) {
             transferPayload = cancelConfig.payload;
@@ -193,7 +194,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         }   
         remainingGasTo.transfer({
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED /*Add destroy after testing*/,
+            flag: MsgFlag.ALL_NOT_RESERVED  /*Add destroy after testing*/,
             bounce: false
         });
     }
@@ -206,7 +207,9 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         TvmCell _payload
     ) override external onlyAllowdAddresses(_sender) {
 
+
         if (_sender == root) {
+            
             handleRootTransfer(_tokenRoot, _amount, _remainingGasTo);
             return;
         }
@@ -233,9 +236,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
                 TvmCell originalPayload,
                 TvmCell bokenLeavesCell
             ) = slicePayload.decode(uint16, TvmCell, TvmCell);
-
             (uint32 bokenLeaves) = bokenLeavesCell.toSlice().decode(uint32);
-
             handleCancelDexTransfer(
                 _tokenRoot,
                 _amount,
