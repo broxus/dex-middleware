@@ -11,25 +11,25 @@ export const Constants = {
     foo: {
       name: "Foo",
       symbol: "Foo",
-      decimals: 6,
+      decimals: 18,
       upgradeable: true,
     },
     bar: {
       name: "Bar",
       symbol: "Bar",
-      decimals: 6,
+      decimals: 18,
       upgradeable: true,
     },
     qwe: {
       name: "QWE",
       symbol: "Qwe",
-      decimals: 8,
+      decimals: 18,
       upgradeable: true,
     },
     tst: {
       name: "Tst",
       symbol: "Tst",
-      decimals: 9,
+      decimals: 18,
       upgradeable: true,
     },
     coin: {

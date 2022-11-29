@@ -4,15 +4,18 @@ pragma AbiHeader pubkey;
 
 library CommonStructures {
     struct FinishTransaction {
-       address tokenReceiver;
-       TvmCell payload;
+        address tokenReceiver;
+        uint128 valueForFinalTransfer;
+        uint128 deployWalletValue;
+        TvmCell payload;
+
     }
 
     struct ChildSwapPayload {
         TvmCell swapPayload;
         address pairAddress;
         uint128 amount;
-        FinishTransaction onSuccess; 
+        FinishTransaction onSuccess;
         FinishTransaction onFail;
     }
 
@@ -21,7 +24,7 @@ library CommonStructures {
     struct PayloadForDex {
         TvmCell dexPayload;
         uint32 leaves;
-        address firtRoot;
+        address firstRoot;
         address remainingGasTo;
         uint128 tokensAmount;
         uint128 attachedValue;
@@ -32,7 +35,7 @@ library CommonStructures {
     }
 
     struct PayloadForTransfer {
-        address reseiver;
+        address receiver;
         address _remainingGasTo;
         uint128 amount;
         TvmCell payload;

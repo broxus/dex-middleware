@@ -19,7 +19,7 @@ let receivers: Array<Contract<ReceiverAfterDexAbi>>;
 let receiversFactory: Contract<ReceiversFactoryAbi>;
 const SUCCESS_EVENT_LABEL = "SUCCESS";
 const CANCEL_EVENT_LABEL = "CANCEL";
-describe("success and cancel", () => {
+describe.skip("success and cancel", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(500), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
@@ -38,7 +38,7 @@ describe("success and cancel", () => {
     );
     receiversFactory = factoryOfReceivers;
     const { traceTree } = await locklift.tracing.trace(
-      factoryOfReceivers.methods.deployReceivers({ count: 5 }).send({
+      factoryOfReceivers.methods.deployReceivers({ count: 10 }).send({
         from: user.account.address,
         amount: toNano(50),
       }),
@@ -51,9 +51,22 @@ describe("success and cancel", () => {
       locklift.factory.getDeployedContract("ReceiverAfterDex", receiver),
     );
     context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    await locklift.tracing.trace(
+      context.dex
+        .getTokenRootByName({ tokenName: "Qwe" })
+        .methods.deployWallet({
+          deployWalletValue: toNano(1),
+          walletOwner: context.dexMiddleware.contract.address,
+          answerId: 0,
+        })
+        .send({
+          from: user.account.address,
+          amount: toNano(2),
+        }),
+    );
   });
 
-  it.skip("Should 5 contracts receive only expected tokens, and emit events", async () => {
+  it("Should 5 contracts receive only expected tokens, and emit events", async () => {
     const START_TOKEN = "Qwe";
     const [tstTokenRoot, coinTokenRoot, qweTokenRoot] = (["Tst", "Coin", START_TOKEN] as const).map(tokenName =>
       context.dex.getTokenRootByName({ tokenName }),
@@ -61,8 +74,8 @@ describe("success and cancel", () => {
     const qweTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: START_TOKEN }));
 
     const { dexMiddlewarePayload, receiversConfigs } = await lastValueFrom(
-      from(receivers.slice(0, 5)).pipe(
-        map((receiver, idx) => ({ prebuildRoute: PreBuiltRoutes.successMultiRoutes(idx * 2 * -0.1), receiver })),
+      from(receivers).pipe(
+        map((receiver, idx) => ({ prebuildRoute: PreBuiltRoutes.successMultiRoutes(-0.9999999), receiver })),
         mergeMap(({ prebuildRoute: { route, start_token, successSteps, brokenSteps, leaves }, receiver }) =>
           from(
             context.dex.getPayload({
@@ -97,7 +110,10 @@ describe("success and cancel", () => {
                 rootToSendersAllowanceMap: [
                   [tstTokenRoot.address, [context.dex.getDexVault().address]],
                   [coinTokenRoot.address, [context.dex.getDexVault().address]],
-                  [qweTokenRoot.address, [context.dexMiddleware.contract.address]],
+                  [
+                    qweTokenRoot.address,
+                    [context.dexMiddleware.contract.address, context.dex.getDexPool("DexPoolFooBarQwe").address],
+                  ],
                 ] as Parameters<
                   Contract<DexMiddlewareAbi>["methods"]["buildPayload"]
                 >[0]["_payloadsForDex"][0]["rootToSendersAllowanceMap"],
@@ -105,14 +121,18 @@ describe("success and cancel", () => {
                 cancelPayload: {
                   payload: payloadForReceiver.value0,
                   tokenReceiver: rest.receiver.address,
+                  valueForFinalTransfer: toNano("0.2"),
+                  deployWalletValue: toNano("0.2"),
                 },
                 successPayload: {
                   payload: payloadForReceiver.value0,
                   tokenReceiver: rest.receiver.address,
+                  valueForFinalTransfer: toNano("0.2"),
+                  deployWalletValue: toNano("0.2"),
                 },
                 leaves: rest.leaves,
-                tokensAmount: new BigNumber(1).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
-                firtRoot: rest.firstPool,
+                tokensAmount: new BigNumber(0.1).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+                firstRoot: rest.firstPool,
                 deployWalletValue: toNano(1),
                 attachedValue: toNano(20),
               },
@@ -145,7 +165,7 @@ describe("success and cancel", () => {
       qweTokenWallet.transferTokens(
         { amount: toNano(300) },
         {
-          deployWalletValue: toNano(0.1),
+          deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: dexMiddlewarePayload,
           recipient: context.dexMiddleware.contract.address,
@@ -157,6 +177,7 @@ describe("success and cancel", () => {
     );
     await traceTree?.beautyPrint();
     console.log(`user balance changed ${fromNano(traceTree!.getBalanceDiff(user.account.address))}`);
+
     console.log(`total gas used ${fromNano(traceTree!.totalGasUsed())}`);
     await lastValueFrom(
       from(receiversConfigs).pipe(
@@ -212,8 +233,8 @@ describe("success and cancel", () => {
     const qweTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: START_TOKEN }));
 
     const { dexMiddlewarePayload, receiversConfigs } = await lastValueFrom(
-      from(receivers.slice(0, 5)).pipe(
-        map((receiver, idx) => ({ prebuildRoute: PreBuiltRoutes.failMultiRoutes(idx * 2 * -0.1), receiver })),
+      from(receivers).pipe(
+        map((receiver, idx) => ({ prebuildRoute: PreBuiltRoutes.failMultiRoutes(-0.99), receiver })),
         mergeMap(({ prebuildRoute: { route, start_token, successSteps, brokenSteps, leaves }, receiver }) =>
           from(
             context.dex.getPayload({
@@ -265,15 +286,19 @@ describe("success and cancel", () => {
                 cancelPayload: {
                   payload: cancelPayload,
                   tokenReceiver: rest.receiver.address,
+                  valueForFinalTransfer: toNano("0.2"),
+                  deployWalletValue: toNano("0.2"),
                 },
                 successPayload: {
                   payload: successPayload,
                   tokenReceiver: rest.receiver.address,
+                  valueForFinalTransfer: toNano("0.2"),
+                  deployWalletValue: toNano("0.2"),
                 },
                 leaves: rest.leaves,
-                tokensAmount: new BigNumber(1).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
-                firtRoot: rest.firstPool,
-                deployWalletValue: toNano(1),
+                tokensAmount: new BigNumber(0.1).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+                firstRoot: rest.firstPool,
+                deployWalletValue: toNano(0.1),
                 attachedValue: toNano(20),
               },
               ...rest,
@@ -305,7 +330,7 @@ describe("success and cancel", () => {
       qweTokenWallet.transferTokens(
         { amount: toNano(300) },
         {
-          deployWalletValue: toNano(0.1),
+          deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: dexMiddlewarePayload,
           recipient: context.dexMiddleware.contract.address,

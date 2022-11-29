@@ -34,7 +34,7 @@ export class Dex {
           payload: "",
           deployWalletValue: toNano(1),
           recipient: receiver,
-          notify: false,
+          notify: true,
           remainingGasTo: this.tokenGiverAccount.address,
         })
         .send({

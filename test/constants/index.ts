@@ -31,6 +31,8 @@ export const PreBuiltRoutes = {
       outcoming: "bar",
       roots: ["foo", "bar", "qwe"],
       numerator: 1,
+      amountIncrease,
+
       nextSteps: [
         {
           outcoming: "foo",
@@ -82,21 +84,23 @@ export const PreBuiltRoutes = {
             {
               outcoming: "tst",
               roots: ["tst", "foo"],
-              numerator: 2,
+              numerator: 1,
               nextSteps: [],
               amountIncrease: amountIncrease,
             },
             {
               outcoming: "coin",
               roots: ["foo", "coin"],
-              numerator: 3,
+              numerator: 1,
+              amountIncrease: amountIncrease,
+
               nextSteps: [
                 {
                   outcoming: "tst",
                   roots: ["qwe", "tst", "coin"],
                   numerator: 1,
                   nextSteps: [],
-                  amountIncrease: 100,
+                  amountIncrease: 1000000000000000000000000000000000000000000000000000000000000000000000000,
                 },
               ],
             },

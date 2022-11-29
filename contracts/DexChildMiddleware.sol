@@ -14,6 +14,8 @@ import "broxus-ton-tokens-contracts/contracts/abstract/TokenWalletDestroyableBas
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 import "locklift/src/console.sol";
+import "dex/contracts/libraries/DexOperationStatusV2.sol";
+
 
 
 contract DexChildMiddleware is IAcceptTokensTransferCallback {
@@ -27,7 +29,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     CommonStructures.FinishTransaction successConfig;
     CommonStructures.FinishTransaction cancelConfig;
     uint128 initialTokensAmount;
-    TvmCell dexPaylod;
+    TvmCell dexPayload;
 
     uint256 receivedRootsCounter;
     uint256 countOfRoots;
@@ -39,7 +41,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
     constructor(
         address _rootWallet,
-        TvmCell _dexPaylod,
+        TvmCell _dexPayload,
         uint128 _tokensAmount,
         mapping (address => address[]) _rootToSendersAllowanceMap,
         address _remainingGasTo,
@@ -52,7 +54,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         require(msg.sender == root, ErrorCodes.NOT_ROOT);
 
         rootWallet = _rootWallet;
-        dexPaylod = _dexPaylod;
+        dexPayload = _dexPayload;
         initialTokensAmount = _tokensAmount;
         rootToSenderAllowanceMap = _rootToSendersAllowanceMap;
         remainingGasTo = _remainingGasTo;
@@ -72,7 +74,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
     }
 
-    modifier onlyAllowdAddresses(address tokensSender) {
+    modifier onlyAllowedAddresses(address tokensSender) {
         require(walletToSenderAllowanceMap.exists(msg.sender), ErrorCodes.NOT_ALLOWED_TOKEN_WALLET);
         address[] allowedTokensSenders = walletToSenderAllowanceMap[msg.sender];
         bool isAllowed;
@@ -117,7 +119,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         }(nonce, rootWallet, initialTokensAmount);
     }
 
-    function handleRootTransfer(  
+    function handleRootTransfer(
         address _tokenRoot,
         uint128 _amount,
         address _remainingGasTo
@@ -128,7 +130,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
             0,
             _remainingGasTo,
             true,
-            dexPaylod
+            dexPayload
         );
     }
 
@@ -141,13 +143,13 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         address _originalSender
     ) internal {
 
-        require(address(this) == _originalSender, ErrorCodes.ONLY_SELFF_SENDER);
+        require(address(this) == _originalSender, ErrorCodes.ONLY_SELF_SENDER);
 
         necessaryLeaves -= 1;
 
         receivedTokens[msg.sender] += _amount;
         if (necessaryLeaves == 0) {
-            finilizeTransaction();
+            finalizeTransaction();
         }
     }
 
@@ -157,44 +159,38 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         address _sender,
         address _senderWallet,
         address _remainingGasTo,
-        uint32 _bokenLeaves
+        uint32 _brokenLeaves
     ) internal {
         receivedTokens[msg.sender] += _amount;
-        necessaryLeaves -= _bokenLeaves;
+        necessaryLeaves -= _brokenLeaves;
         isCanceledTransaction = true;
         if (necessaryLeaves == 0) {
-            finilizeTransaction();
+            finalizeTransaction();
         }
     }
 
-    function finilizeTransaction() internal {
-        TvmCell transferPayload;
-        address receiver;
-            console.log(format("finalize is cnaceled {}",isCanceledTransaction ? 1:0));
+    function finalizeTransaction() internal {
 
-        if (isCanceledTransaction) {
-            transferPayload = cancelConfig.payload;
-            receiver = cancelConfig.tokenReceiver;
-        } else {
-            transferPayload = successConfig.payload;
-            receiver = successConfig.tokenReceiver;
-        }
+        CommonStructures.FinishTransaction finalTransactionSettings = isCanceledTransaction ? cancelConfig : successConfig;
+
         for ((address tokenWallet, uint128 tokensAmount) : receivedTokens) {
-            ITokenWallet(tokenWallet).transfer{value: Constants.EXECUTE_TRAGET_TOKENS_TRANSFER_VALUE, bounce: false}(
+            ITokenWallet(tokenWallet).transfer{value: finalTransactionSettings.valueForFinalTransfer + finalTransactionSettings.deployWalletValue, bounce: false}(
                 tokensAmount,
-                receiver,
-                Constants.EXECUTE_TRAGET_TOKENS_TRANSFER_VALUE / 2,
+                finalTransactionSettings.tokenReceiver,
+                finalTransactionSettings.deployWalletValue,
                 remainingGasTo,
                 true,
-                transferPayload
+                finalTransactionSettings.payload
             );
-            // TODO rall it back after testing
-            // TokenWalletDestroyableBase(tokenWallet).destroy{value: 0.1 ever, bounce: false}(remainingGasTo);
+        }
 
-        }   
+        for ((address tokenWallet, address[] allowedSenders) : walletToSenderAllowanceMap) {
+            TokenWalletDestroyableBase(tokenWallet).destroy{value: 0.05 ever, bounce: false}(remainingGasTo);
+        }
+
         remainingGasTo.transfer({
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED  /*Add destroy after testing*/,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO/* Add destroy after testing*/,
             bounce: false
         });
     }
@@ -205,18 +201,17 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         address _senderWallet,
         address _remainingGasTo,
         TvmCell _payload
-    ) override external onlyAllowdAddresses(_sender) {
+    ) override external onlyAllowedAddresses(_sender) {
 
 
         if (_sender == root) {
-            
             handleRootTransfer(_tokenRoot, _amount, _remainingGasTo);
             return;
         }
         TvmSlice slicePayload = _payload.toSlice();
         (uint8 v2DexOperationType, uint8 dexOperationType) = slicePayload.decode(uint8, uint8);
-        // TODO remove hardcode
-        if (v2DexOperationType == 200) {
+
+        if (v2DexOperationType == DexOperationStatusV2.SUCCESS) {
             (TvmCell originalPayload, TvmCell originalSender) = slicePayload.decode(TvmCell, TvmCell);
             handleSuccessDexTransfer(
                 _tokenRoot,
@@ -228,22 +223,21 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
             );
             return;
         }
-        
-        // TODO remove hardcode
-        if (v2DexOperationType == 201) {
+
+        if (v2DexOperationType == DexOperationStatusV2.CANCEL) {
             (
                 uint16 errorCode,
                 TvmCell originalPayload,
-                TvmCell bokenLeavesCell
+                TvmCell brokenLeavesCell
             ) = slicePayload.decode(uint16, TvmCell, TvmCell);
-            (uint32 bokenLeaves) = bokenLeavesCell.toSlice().decode(uint32);
+            (uint32 brokenLeaves) = brokenLeavesCell.toSlice().decode(uint32);
             handleCancelDexTransfer(
                 _tokenRoot,
                 _amount,
                 _sender,
                 _senderWallet,
                 _remainingGasTo,
-                bokenLeaves
+                brokenLeaves
             );
         }
 

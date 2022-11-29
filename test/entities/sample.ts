@@ -1,6 +1,6 @@
 import { Contract, getRandomNonce, Signer, toNano, WalletTypes } from "locklift";
 import { FactorySource } from "../../build/factorySource";
-import { Account } from "everscale-standalone-client";
+import { Account } from "locklift/everscale-client";
 import { Dex, getDexInstance } from "../../dex";
 import BigNumber from "bignumber.js";
 
@@ -15,6 +15,7 @@ describe.skip("Test Sample contract", async function () {
       await locklift.factory.accounts.addNewAccount({
         type: WalletTypes.MsigAccount,
         contract: "Wallet",
+        mSigType: "SafeMultisig",
         initParams: {
           _randomNonce: getRandomNonce(),
         },

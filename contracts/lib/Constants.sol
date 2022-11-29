@@ -11,6 +11,5 @@ library Constants {
     uint128 constant DEPLOY_CHILD_VALUE = 0.1 ever;
     // CHILD
     uint128 constant CHILD_CONTRACT_MIN_BALANCE = 0.1 ever;
-    uint128 constant REQUEST_TOKEN_WALLET_ADDRES_VALUE = 0.05 ever;
-    uint128 constant EXECUTE_TRAGET_TOKENS_TRANSFER_VALUE = 0.4 ever;
+    uint128 constant REQUEST_TOKEN_WALLET_ADDRESS_VALUE = 0.05 ever;
 }

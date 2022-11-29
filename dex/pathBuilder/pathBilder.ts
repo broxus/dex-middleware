@@ -137,14 +137,7 @@ export const getPayload = async ({
   finalExpectedAmount: string;
   steps: Array<{ amount: string; roots: Array<Address>; outcoming: Address }>;
 }> => {
-  //  start_before
   keyPairs = await locklift.keystore.getSigner("0");
-
-  // DexRoot = locklift.factory.getDeployedContract("DexRoot", dexRoot);
-  // DexVault = locklift.factory.getDeployedContract("DexVault", dexRoot);
-  //
-  // logger.log("DexRoot: " + DexRoot.address);
-  // logger.log("DexVault: " + DexVault.address);
 
   DexRoot = migration.load("DexRoot");
   DexVault = migration.load("DexVault");
@@ -315,7 +308,7 @@ export const getPayload = async ({
           })
           .call()
           .then(res => res.value0);
-
+        debugger;
         expected_amount = expected.amounts[outcomingIndex];
       } else if (isLpToken(elem.outcoming, elem.roots)) {
         // receive token is lp token of the current pool
@@ -332,13 +325,14 @@ export const getPayload = async ({
         //   },
         // });
         expected = await (poolsContracts[poolName] as Contract<DexStablePoolAbi>).methods
-          .expectedDepositLiquidityV2({
-            amounts: amounts,
+          .expectedDepositLiquidityOneCoin({
             answerId: 0,
+            spent_token_root: tokenRoots[spent_token].address,
+            amount: partial_spent_amount,
           })
           .call()
           .then(res => res.value0);
-
+        debugger;
         expected_amount = expected.lp_reward;
       } else {
         if (elem.roots.length === 2) {
@@ -372,8 +366,11 @@ export const getPayload = async ({
             .call()
             .then(res => res);
         }
+
         const expectedAmount = new BigNumber(expected.expected_amount);
+
         expected_amount = expectedAmount.plus(expectedAmount.multipliedBy(elem.amountIncrease || 0)).toFixed(0);
+        console.log(`Original expected ${expectedAmount} -> ${expected_amount}`);
       }
 
       console.log();

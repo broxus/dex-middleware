@@ -57,7 +57,7 @@ const config: LockliftConfig = {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
       connection: {
         id: 1,
-        group: "localnet",
+        // group: "localnet",
         type: "graphql",
         data: {
           endpoints: [LOCAL_NETWORK_ENDPOINT],
