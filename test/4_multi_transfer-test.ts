@@ -13,12 +13,14 @@ import { getExpectedTokenAmount } from "./utils/getExpectedTokenAmount";
 
 let context: Context;
 let user: User;
-let userReceiver: User;
-describe("success and cancel", () => {
+let receivers: Array<User>;
+
+describe.skip("success and cancel", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
-    userReceiver = context.signersWithAccounts[1];
+    receivers = context.signersWithAccounts.slice(1, 3);
+
     context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
     await locklift.tracing.trace(
       context.dex
@@ -86,7 +88,7 @@ describe("success and cancel", () => {
           },
           successPayload: {
             payload: "",
-            tokenReceiver: userReceiver.account.address,
+            tokenReceiver: user.account.address,
             valueForFinalTransfer: toNano("0.2"),
             deployWalletValue: toNano("0.2"),
           },
@@ -97,17 +99,18 @@ describe("success and cancel", () => {
           tokensAmount: new BigNumber(TOKENS_AMOUNT_FOR_DEX).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
         },
       ],
-      _payloadsForTransfers: [
-        {
-          payload: "",
-          deployWalletValue: toNano(0.2),
-          attachedValue: toNano(0.2),
-          amount: new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
-          receiver: userReceiver.account.address,
-          notify: true,
-          _remainingGasTo: user.account.address,
-        },
-      ],
+      _payloadsForTransfers: receivers.map(receiver => ({
+        payload: "",
+        deployWalletValue: toNano(0.2),
+        attachedValue: toNano(0.2),
+        amount: new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER / receivers.length)
+          .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+          .toString(),
+        receiver: receiver.account.address,
+        notify: true,
+        _remainingGasTo: user.account.address,
+      })),
+      remainingTokensTo: user.account.address,
     });
 
     const { traceTree } = await locklift.tracing.trace(
@@ -125,28 +128,39 @@ describe("success and cancel", () => {
       { rise: false },
     );
     await traceTree?.beautyPrint();
-    const tstReceiverTokenWallet = await userReceiver.getTokenWalletByRoot(
+    const tstReceiverTokenWallet = await user.getTokenWalletByRoot(
       context.dex.getTokenRootByName({ tokenName: "Tst" }),
     );
-    const qweReceiverTokenWallet = await userReceiver.getTokenWalletByRoot(
-      context.dex.getTokenRootByName({ tokenName: "Qwe" }),
-    );
+
+    for (const receiver of receivers) {
+      const qweReceiverTokenWallet = await receiver.getTokenWalletByRoot(
+        context.dex.getTokenRootByName({ tokenName: "Qwe" }),
+      );
+      expect(await qweReceiverTokenWallet.getBalance()).to.be.eq(
+        new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER / receivers.length)
+          .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+          .toString(),
+      );
+    }
+
     expect(await tstReceiverTokenWallet.getBalance()).to.be.eq(new BigNumber(finalExpectedAmount).toString());
-    expect(await qweReceiverTokenWallet.getBalance()).to.be.eq(
-      new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
-    );
+
     console.log(`user balance changed ${fromNano(traceTree!.getBalanceDiff(user.account.address))}`);
     console.log(`total gas used ${fromNano(traceTree!.totalGasUsed())}`);
     console.log(fromNano(await locklift.provider.getBalance(user.account.address).then(res => res)));
   });
-  it.skip("should user receive Tst tokens and ?? tokens as a bad transaction", async () => {
+  it("should user receive Tst tokens and ?? tokens as a bad transaction", async () => {
     const { route, leaves, start_token, successSteps, brokenSteps } = PreBuiltRoutes.failSimpleRoute;
-    const TOKENS_AMOUNT = 1200;
+    const TOKENS_AMOUNT_FOR_DEX = 1200;
+    const TOKENS_AMOUNT_FOR_TRANSFER = 500;
+    const TOTAL_TOKEN_AMOUNT = TOKENS_AMOUNT_FOR_DEX + TOKENS_AMOUNT_FOR_TRANSFER;
 
     const START_TOKEN = "Qwe";
 
     const qweTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: START_TOKEN }));
-    const initialTokenBalance = new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString();
+    const initialTokenBalance = new BigNumber(TOTAL_TOKEN_AMOUNT)
+      .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+      .toString();
     await context.dex.sendTokensTo({
       tokenName: START_TOKEN,
       receiver: user.account.address,
@@ -160,7 +174,7 @@ describe("success and cancel", () => {
     const { payload, firstPool, finalExpectedAmount, steps } = await context.dex.getPayload({
       recipient: zeroAddress,
       options: {
-        amount: TOKENS_AMOUNT,
+        amount: TOKENS_AMOUNT_FOR_DEX,
         route: [route],
         start_token: start_token,
       },
@@ -192,10 +206,21 @@ describe("success and cancel", () => {
           attachedValue: toNano(10),
           firstRoot: firstPool,
           leaves,
-          tokensAmount: new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          tokensAmount: new BigNumber(TOKENS_AMOUNT_FOR_DEX).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
         },
       ],
-      _payloadsForTransfers: [],
+      _payloadsForTransfers: receivers.map(receiver => ({
+        payload: "",
+        deployWalletValue: toNano(0.2),
+        attachedValue: toNano(0.2),
+        amount: new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER / receivers.length)
+          .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+          .toString(),
+        receiver: receiver.account.address,
+        notify: true,
+        _remainingGasTo: user.account.address,
+      })),
+      remainingTokensTo: user.account.address,
     });
 
     const { traceTree } = await locklift.tracing.trace(
@@ -206,7 +231,7 @@ describe("success and cancel", () => {
           remainingGasTo: user.account.address,
           payload: payloadForDexMiddleware,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: new BigNumber(TOTAL_TOKEN_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
           notify: true,
         },
       ),
@@ -248,6 +273,16 @@ describe("success and cancel", () => {
         toArray(),
       ),
     );
+    for (const receiver of receivers) {
+      const qweReceiverTokenWallet = await receiver.getTokenWalletByRoot(
+        context.dex.getTokenRootByName({ tokenName: "Qwe" }),
+      );
+      expect(await qweReceiverTokenWallet.getBalance()).to.be.eq(
+        new BigNumber(TOKENS_AMOUNT_FOR_TRANSFER / receivers.length)
+          .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+          .toString(),
+      );
+    }
     balancesAndExpectedBalances.forEach(({ expectedBalance, balance, rootAddress, tokenRootName }) => {
       console.log(`User received ${expectedBalance} from ${tokenRootName} ${rootAddress}`);
       expect(balance).to.be.eq(expectedBalance, "extra token balances should be as expected");

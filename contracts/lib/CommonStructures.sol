@@ -43,4 +43,9 @@ library CommonStructures {
         uint128 deployWalletValue;
         bool notify;
     }
+
+    struct CalculationResult {
+        uint128 everValue;
+        uint128 tokenAmount;
+    }
 }

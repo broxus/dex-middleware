@@ -10,6 +10,8 @@ import "./DexChildMiddleware.sol";
 import "./base/DexMiddlewareBase.sol";
 
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensMintCallback.sol";
+
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/ITokenWallet.sol";
 import "broxus-ton-tokens-contracts/contracts/abstract/TokenWalletDestroyableBase.sol";
@@ -26,53 +28,47 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
 
     function onAcceptTokensTransfer(
-        address _tokenRoot,
+        address,
         uint128 _amount,
-        address _sender,
-        address _senderWallet,
+        address,
+        address,
         address _remainingGasTo,
         TvmCell _payload
     ) override external {
 
         handleTokensTransfer(
-            _tokenRoot,
             _amount,
-            _sender,
-            _senderWallet,
             _remainingGasTo,
             _payload
         );
     }
 
-    function checkIsEnoughValue(
-        CommonStructures.PayloadForDex[] _payloadsForDex,
-        CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
-        uint128 _amount
-    ) internal returns(bool) {
-        uint128 msgValue = msg.value;
-        uint128 amount = _amount;
-        for (CommonStructures.PayloadForTransfer _transferConfig : _payloadsForTransfer) {
-            if (msgValue < _transferConfig.attachedValue + _transferConfig.deployWalletValue) {
-                return false;
-            }
+    function onAcceptTokensMint(
+        address,
+        uint128 _amount,
+        address _remainingGasTo,
+        TvmCell _payload
+    ) external {
+        handleTokensTransfer(
+            _amount,
+            _remainingGasTo,
+            _payload
+        );
+    }
 
-            if (amount < _transferConfig.amount) {
-                return false;
-            }
-            amount -= _transferConfig.amount;
-            msgValue -= (_transferConfig.attachedValue + _transferConfig.deployWalletValue);
+    function calculateFeeAndTokensValue(
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfer
+    ) override public pure returns (CommonStructures.CalculationResult) {
+        uint128 requiredValue;
+        uint128 requiredTokenAmount;
+        for (CommonStructures.PayloadForTransfer _transferConfig : _payloadsForTransfer) {
+            requiredTokenAmount += _transferConfig.amount;
+            requiredValue += (_transferConfig.attachedValue + _transferConfig.deployWalletValue);
         }
 
         for (CommonStructures.PayloadForDex _dexConfig : _payloadsForDex) {
-            if (msgValue < _dexConfig.attachedValue) {
-                return false;
-            }
-
-            if (amount < _dexConfig.tokensAmount) {
-                return false;
-            }
-
-            amount -= _dexConfig.tokensAmount;
+            requiredTokenAmount += _dexConfig.tokensAmount;
 
             uint128 maxValueForFinalTransfer = math.max(_dexConfig.successPayload.valueForFinalTransfer, _dexConfig.cancelPayload.valueForFinalTransfer);
 
@@ -81,28 +77,38 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
                 Constants.DEPLOY_WALLET_VALUE
             );
 
-            uint128 requiredAttachedValue = Constants.DEPLOY_CHILD_VALUE +
+            requiredValue += Constants.DEPLOY_CHILD_VALUE +
                 _dexConfig.leaves *
                 (
                     maxValueForFinalTransfer +
                     maxDeployWalletValue +
                     DexGas.CROSS_POOL_EXCHANGE_MIN_VALUE
                 );
-
-            if  (_dexConfig.attachedValue < requiredAttachedValue) {
-                return false;
-            }
-
-            msgValue -= _dexConfig.attachedValue;
         }
-        return true;
+
+        return CommonStructures.CalculationResult({
+            everValue: requiredValue,
+            tokenAmount: requiredTokenAmount
+        });
+    }
+    function checkIsEnoughValueAndTokens(
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
+        uint128 _receivedTokensAmount
+    ) internal returns(bool, uint128) {
+        CommonStructures.CalculationResult calculationResult = calculateFeeAndTokensValue(_payloadsForDex, _payloadsForTransfer);
+        if (msg.value < calculationResult.everValue) {
+            return (false, 0);
+        }
+        if (_receivedTokensAmount < calculationResult.tokenAmount) {
+            return (false, 0);
+        }
+        uint128 extraTokensAmount = _receivedTokensAmount - calculationResult.tokenAmount;
+        return (true, _receivedTokensAmount - calculationResult.tokenAmount);
     }
 
     function handleTokensTransfer(
-        address _tokenRoot,
         uint128 _amount,
-        address _sender,
-        address _senderWallet,
         address _remainingGasTo,
         TvmCell _payload
     ) internal {
@@ -110,19 +116,38 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
         (
             CommonStructures.PayloadForDex[] payloadsForDex,
-            CommonStructures.PayloadForTransfer[] payloadsForTransfer
+            CommonStructures.PayloadForTransfer[] payloadsForTransfer,
+            address remainingTokensTo
         ) = Payload.encodePayload(_payload);
 
-        if (!checkIsEnoughValue(payloadsForDex, payloadsForTransfer, _amount)) {
+        (
+            bool isEnoughTokensAndValue,
+            uint128 extraTokensAmount
+        ) = checkIsEnoughValueAndTokens(payloadsForDex, payloadsForTransfer, _amount);
+
+        if (!isEnoughTokensAndValue || isPaused) {
             ITokenWallet(msg.sender).transfer{value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false}(
                 _amount,
-                _sender,
+                remainingTokensTo,
+                0,
+                _remainingGasTo,
+                true,
+                _payload
+            );
+            return;
+        }
+
+        if (extraTokensAmount > 0) {
+            ITokenWallet(msg.sender).transfer{value: Constants.EXTRA_TOKENS_TRANSFER_VALUE, bounce: false}(
+                extraTokensAmount,
+                remainingTokensTo,
                 0,
                 _remainingGasTo,
                 true,
                 _payload
             );
         }
+
         makeTransfers(payloadsForTransfer);
         createChildProcesses(payloadsForDex);
         _remainingGasTo.transfer({value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false});
@@ -178,8 +203,9 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
     function buildPayload(
         CommonStructures.PayloadForDex[] _payloadsForDex,
-        CommonStructures.PayloadForTransfer[] _payloadsForTransfers
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        address remainingTokensTo
     ) override external pure returns (TvmCell) {
-        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers);
+        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers, remainingTokensTo);
     }
 }

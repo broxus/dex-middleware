@@ -11,6 +11,7 @@ import { DexMiddleware } from "./entities/dexMiddleware";
 let context: Context;
 let user: User;
 describe.skip("initial test", () => {
+  const i = -1;
   before(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];

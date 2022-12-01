@@ -146,6 +146,7 @@ describe.skip("success and cancel", () => {
             context.dexMiddleware.getPayload({
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
+              remainingTokensTo: user.account.address,
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),
         ),
@@ -311,6 +312,7 @@ describe.skip("success and cancel", () => {
             context.dexMiddleware.getPayload({
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
+              remainingTokensTo: user.account.address,
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),
         ),

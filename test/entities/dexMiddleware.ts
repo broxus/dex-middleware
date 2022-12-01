@@ -13,7 +13,7 @@ export class DexMiddleware {
       .call()
       .then(res => res.value0);
   };
-  static deployDexInstance = async (owner: SignerWithAccount) => {
+  static deployDexInstance = async (owner: User) => {
     const { code: dexMiddlewareChildCode } = locklift.factory.getContractArtifacts("DexChildMiddleware");
     const { contract } = await locklift.tracing.trace(
       locklift.factory.deployContract({
@@ -22,6 +22,7 @@ export class DexMiddleware {
         value: toNano(2),
         publicKey: owner.signer.publicKey,
         initParams: {
+          owner: owner.account.address,
           nonce: getRandomNonce(),
           dexMiddlewareChildCode,
         },
@@ -29,4 +30,9 @@ export class DexMiddleware {
     );
     return new DexMiddleware(contract, owner);
   };
+  setIsPaused = (isPaused: boolean) =>
+    this.contract.methods.setIsPaused({ _isPaused: isPaused }).send({
+      from: this.owner.account.address,
+      amount: toNano(1),
+    });
 }

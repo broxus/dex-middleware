@@ -4665,9 +4665,9 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
-"dex@git+ssh://git@gitlab.broxus.com/dex/contracts#07cb6551242339f06bacd8a673b5c4dd677ce25e":
+"dex@git+ssh://git@gitlab.broxus.com/dex/contracts#e408253ce1d406b9b10fa85ee7d8fb0372f38223":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.broxus.com/dex/contracts#07cb6551242339f06bacd8a673b5c4dd677ce25e"
+  resolved "git+ssh://git@gitlab.broxus.com/dex/contracts#e408253ce1d406b9b10fa85ee7d8fb0372f38223"
   dependencies:
     "@tonclient/core" "^1.30.0"
     "@tonclient/lib-node" "^1.30.0"

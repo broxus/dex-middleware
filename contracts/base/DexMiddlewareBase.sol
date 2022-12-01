@@ -12,7 +12,6 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
 
-
 abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 
     modifier onlyChild(uint128 childNonce) {
@@ -21,11 +20,25 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         _;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, ErrorCodes.NOT_OWNER);
+        _;
+    }
+
         // utils
     function _reserve() internal pure returns (uint128) {
 		return
 			math.max(address(this).balance - msg.value, Constants.CHILD_CONTRACT_MIN_BALANCE);
 	}
+
+    function setIsPaused(bool _isPaused) onlyOwner override external {
+        isPaused = _isPaused;
+    }
+
+    function setChildCode(TvmCell _dexMiddlewareChildCode) onlyOwner override external {
+
+        dexMiddlewareChildCode = _dexMiddlewareChildCode;
+    }
 
     function _buildInitAccount(uint128 childNonce)
 		internal

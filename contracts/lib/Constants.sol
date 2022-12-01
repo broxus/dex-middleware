@@ -5,6 +5,7 @@ pragma AbiHeader pubkey;
 library Constants {
     // COMMON
     uint128 constant DEPLOY_WALLET_VALUE = 0.1 ever;
+    uint128 constant EXTRA_TOKENS_TRANSFER_VALUE = 0.1 ever;
 
     // ROOT
     uint128 constant ROOT_CONTRACT_MIN_BALANCE = 1 ever;

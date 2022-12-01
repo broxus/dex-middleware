@@ -194,6 +194,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
             bounce: false
         });
     }
+
     function onAcceptTokensTransfer(
         address _tokenRoot,
         uint128 _amount,
@@ -202,7 +203,6 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         address _remainingGasTo,
         TvmCell _payload
     ) override external onlyAllowedAddresses(_sender) {
-
 
         if (_sender == root) {
             handleRootTransfer(_tokenRoot, _amount, _remainingGasTo);

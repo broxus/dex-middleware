@@ -36,10 +36,15 @@ describe.skip("success and cancel", () => {
   it("should user receive Tst tokens", async () => {
     const { route, leaves, start_token } = PreBuiltRoutes.succesSimpleRoute;
     const TOKENS_AMOUNT = 1200;
+    const EXTRA_TOKENS = 100;
     const START_TOKEN = "Qwe";
 
     const qweTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: START_TOKEN }));
-    const initialTokenBalance = new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString();
+    const tstTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: "Tst" }));
+
+    const initialTokenBalance = new BigNumber(TOKENS_AMOUNT + EXTRA_TOKENS)
+      .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+      .toString();
     const { traceTree: sendTraceTree } = await context.dex.sendTokensTo({
       tokenName: START_TOKEN,
       receiver: user.account.address,
@@ -90,6 +95,7 @@ describe.skip("success and cancel", () => {
         },
       ],
       _payloadsForTransfers: [],
+      remainingTokensTo: user.account.address,
     });
 
     const { traceTree } = await locklift.tracing.trace(
@@ -100,14 +106,21 @@ describe.skip("success and cancel", () => {
           remainingGasTo: user.account.address,
           payload: payloadForDexMiddleware,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: new BigNumber(TOKENS_AMOUNT + EXTRA_TOKENS)
+            .shiftedBy(Number(qweTokenWallet.tokenDecimals))
+            .toString(),
           notify: true,
         },
       ),
       { rise: false },
     );
     await traceTree?.beautyPrint();
-    const tstTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: "Tst" }));
+    expect(
+      new BigNumber(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract.address))
+        .shiftedBy(-Number(qweTokenWallet.tokenDecimals))
+        .toNumber(),
+    ).to.be.eq(-TOKENS_AMOUNT, "Extra tokens should be charged back");
+
     expect(await tstTokenWallet.getBalance()).to.be.eq(new BigNumber(finalExpectedAmount).toString());
     console.log(`user balance changed ${fromNano(traceTree!.getBalanceDiff(user.account.address))}`);
     console.log(`total gas used ${fromNano(traceTree!.totalGasUsed())}`);
@@ -131,7 +144,7 @@ describe.skip("success and cancel", () => {
     );
     expect(await qweTokenWallet.getBalance()).to.be.eq(initialTokenBalance);
 
-    const { payload, firstPool, finalExpectedAmount, steps } = await context.dex.getPayload({
+    const { payload, firstPool, steps } = await context.dex.getPayload({
       recipient: zeroAddress,
       options: {
         amount: TOKENS_AMOUNT,
@@ -170,6 +183,7 @@ describe.skip("success and cancel", () => {
         },
       ],
       _payloadsForTransfers: [],
+      remainingTokensTo: user.account.address,
     });
 
     const { traceTree } = await locklift.tracing.trace(
