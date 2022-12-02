@@ -31,10 +31,15 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     uint128 initialTokensAmount;
     TvmCell dexPayload;
 
+    // TODO: не нашел использования?
     uint256 receivedRootsCounter;
+    // TODO: прям рил надо uint256?) я сторонник использования минимально необходимых типов
+    // TODO: Вижу, что сверяешь с .length, но там никогда не будет даже > uint16 на выходе по факту
     uint256 countOfRoots;
 
     mapping(address => uint128) receivedTokens;
+    // TODO: по сути эти массивы применяются далее для итерации и поиске вхождения. Мб переделать их в маппинги?
+    // TODO: У тебя будет доступ по ключу вместо итерации по всему массиву. А итерация если что и в маппинге есть
     mapping (address => address[]) rootToSenderAllowanceMap;
     mapping (address => address[]) walletToSenderAllowanceMap;
     bool isCanceledTransaction;
@@ -99,6 +104,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         _;
     }
 
+    // TODO: remove
     // utils
     function _reserve() internal pure returns (uint128) {
 		return
@@ -107,7 +113,9 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
     function handleAddressReceived(address tokenWallet) external onlyAllowedRoot {
         walletToSenderAllowanceMap[tokenWallet] = rootToSenderAllowanceMap[msg.sender];
+        // TODO: decrement countOfRoots
         if (walletToSenderAllowanceMap.keys().length == countOfRoots) {
+            // TODO: внутри идет отправка с 128 флагом, а тут нет резерва. На какой-то промежуток времени будет с 0 балансом, опасно
             requestTokensFromRoot();
         }
     }
@@ -203,6 +211,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         address _remainingGasTo,
         TvmCell _payload
     ) override external onlyAllowedAddresses(_sender) {
+        //
 
         if (_sender == root) {
             handleRootTransfer(_tokenRoot, _amount, _remainingGasTo);

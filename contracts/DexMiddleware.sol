@@ -23,6 +23,9 @@ import "locklift/src/console.sol";
 contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
     constructor() public {
+        // TODO: стандартная необходимая проверка при деплое внешним ключом
+        require (tvm.pubkey() != 0, 123123);
+        require (tvm.pubkey() == msg.pubkey(), 123123);
         tvm.accept();
     }
 
@@ -169,7 +172,6 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
     }
 
     function createChildProcesses(CommonStructures.PayloadForDex[] _payloadsForDex) internal {
-
         for (CommonStructures.PayloadForDex dexConfig : _payloadsForDex) {
             address childAddress = deployChild(
                 currentChildNonce++,
@@ -188,17 +190,17 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
     }
 
     function onChildRequestTokens(uint128 _childNonce,address _rootWallet, uint128 _tokensAmount) override external onlyChild(_childNonce) {
-            tvm.rawReserve(_reserve(), 0);
-            TvmCell dummyPayload;
-            uint128 deployChildWalletValue = msg.value / 2;
-            ITokenWallet(_rootWallet).transfer{value:0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
-                _tokensAmount,
-                msg.sender,
-                deployChildWalletValue,
-                msg.sender,
-                true,
-                dummyPayload
-            );
+        tvm.rawReserve(_reserve(), 0);
+        TvmCell dummyPayload;
+        uint128 deployChildWalletValue = msg.value / 2;
+        ITokenWallet(_rootWallet).transfer{value:0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+            _tokensAmount,
+            msg.sender,
+            deployChildWalletValue,
+            msg.sender,
+            true,
+            dummyPayload
+        );
     }
 
     function buildPayload(
