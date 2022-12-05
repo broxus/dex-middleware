@@ -16,7 +16,7 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 
     modifier onlyChild(uint128 childNonce) {
         address childAddress = getChildAddress(childNonce);
-        require(msg.sender == childAddress,ErrorCodes.NOT_CHILD_CONTRACT);
+        require(msg.sender == childAddress, ErrorCodes.NOT_CHILD_CONTRACT);
         _;
     }
 
@@ -32,11 +32,13 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 	}
 
     function setIsPaused(bool _isPaused) onlyOwner override external {
+        // TODO: желательно выпускать эвент
         isPaused = _isPaused;
     }
 
+    // TODO: сделать полноценный апгрейдебл через платформы?
     function setChildCode(TvmCell _dexMiddlewareChildCode) onlyOwner override external {
-
+        // TODO: желательно выпускать эвент
         dexMiddlewareChildCode = _dexMiddlewareChildCode;
     }
 
@@ -70,7 +72,7 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         address _remainingGasTo,
         CommonStructures.FinishTransaction _successPayload,
         CommonStructures.FinishTransaction _cancelPayload
-        ) internal returns(address) {
+    ) internal returns(address) {
         return new DexChildMiddleware{
             stateInit: _buildInitAccount(childNonce),
             value: _attachedValue
