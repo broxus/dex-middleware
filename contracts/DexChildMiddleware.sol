@@ -75,10 +75,10 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     }
 
     modifier onlyAllowedAddresses(address tokensSender) {
+
         require(walletToSenderAllowanceMap.exists(msg.sender), ErrorCodes.NOT_ALLOWED_TOKEN_WALLET);
         address[] allowedTokensSenders = walletToSenderAllowanceMap[msg.sender];
         bool isAllowed;
-
         if (tokensSender == root) {
             isAllowed = true;
 
@@ -107,7 +107,8 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
     function handleAddressReceived(address tokenWallet) external onlyAllowedRoot {
         walletToSenderAllowanceMap[tokenWallet] = rootToSenderAllowanceMap[msg.sender];
-        if (walletToSenderAllowanceMap.keys().length == countOfRoots) {
+        countOfRoots--;
+        if (countOfRoots == 0) {
             requestTokensFromRoot();
         }
     }

@@ -13,7 +13,7 @@ import { getExpectedTokenAmount } from "./utils/getExpectedTokenAmount";
 
 let context: Context;
 let user: User;
-describe.skip("success and cancel", () => {
+describe("success and cancel", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];

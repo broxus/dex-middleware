@@ -19,7 +19,7 @@ let receivers: Array<Contract<ReceiverAfterDexAbi>>;
 let receiversFactory: Contract<ReceiversFactoryAbi>;
 const SUCCESS_EVENT_LABEL = "SUCCESS";
 const CANCEL_EVENT_LABEL = "CANCEL";
-describe.skip("success and cancel", () => {
+describe("success and cancel", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(500), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
