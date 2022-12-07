@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "npx locklift test --network local"
+    "test": "npx locklift test --network local",
+    "test-2": "npx locklift test --network local --tests test/2_success_and_cancle_dex-test.ts",
+    "test-3": "npx locklift test --network local --tests test/3_multi_flow_dex-test.ts",
+    "test-4": "npx locklift test --network local --tests test/4_multi_transfer-test.ts",
+    "test-5": "npx locklift test --network local --tests test/5_validation-test.ts",
+    "test-6": "npx locklift test --network local --tests test/6_force_finalize-test.ts",
+    "test-7": "npx locklift test --network local --tests test/7_burn-test.ts"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +27,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@broxus/contracts": "^1.1.0",
     "bignumber.js": "^9.1.0",
     "mocha-logger": "^1.0.8",
     "rxjs": "^7.5.7"

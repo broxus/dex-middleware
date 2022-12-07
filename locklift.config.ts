@@ -30,8 +30,9 @@ const config: LockliftConfig = {
       "node_modules/broxus-ton-tokens-contracts/build": [
         "TokenRoot",
         "TokenWallet",
-        "TokenWalletUpgradeable",
         "TokenRootUpgradeable",
+        "TokenWalletUpgradeable",
+        "TokenWalletPlatform",
       ],
       // dex_build: fs
       //   .readdirSync(path.resolve(__dirname, "dex_build"))

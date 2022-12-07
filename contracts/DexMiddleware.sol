@@ -6,11 +6,15 @@ import "./lib/Payload.sol";
 import "./lib/Constants.sol";
 
 import "./interfaces/IDexMiddleware.sol";
+import "./interfaces/IDexChildMiddleware.sol";
+
 import "./DexChildMiddleware.sol";
 import "./base/DexMiddlewareBase.sol";
 
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensMintCallback.sol";
+import "broxus-ton-tokens-contracts/contracts/interfaces/IBurnableTokenWallet.sol";
+
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/ITokenWallet.sol";
@@ -23,9 +27,8 @@ import "locklift/src/console.sol";
 contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
     constructor() public {
-        // TODO: стандартная необходимая проверка при деплое внешним ключом
-        require (tvm.pubkey() != 0, 123123);
-        require (tvm.pubkey() == msg.pubkey(), 123123);
+        require (tvm.pubkey() != 0, ErrorCodes.NOT_OWNER);
+        require (tvm.pubkey() == msg.pubkey(), ErrorCodes.NOT_OWNER);
         tvm.accept();
     }
 
@@ -61,13 +64,19 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
     function calculateFeeAndTokensValue(
         CommonStructures.PayloadForDex[] _payloadsForDex,
-        CommonStructures.PayloadForTransfer[] _payloadsForTransfer
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn
     ) override public pure returns (CommonStructures.CalculationResult) {
         uint128 requiredValue;
         uint128 requiredTokenAmount;
         for (CommonStructures.PayloadForTransfer _transferConfig : _payloadsForTransfer) {
             requiredTokenAmount += _transferConfig.amount;
             requiredValue += (_transferConfig.attachedValue + _transferConfig.deployWalletValue);
+        }
+
+        for (CommonStructures.PayloadForBurn payloadForBurn : _payloadsForBurn) {
+            requiredValue += payloadForBurn.attachedValue;
+            requiredTokenAmount += payloadForBurn.amount;
         }
 
         for (CommonStructures.PayloadForDex _dexConfig : _payloadsForDex) {
@@ -97,16 +106,16 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
     function checkIsEnoughValueAndTokens(
         CommonStructures.PayloadForDex[] _payloadsForDex,
         CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn,
         uint128 _receivedTokensAmount
-    ) internal returns(bool, uint128) {
-        CommonStructures.CalculationResult calculationResult = calculateFeeAndTokensValue(_payloadsForDex, _payloadsForTransfer);
+    ) internal pure returns(bool, uint128) {
+        CommonStructures.CalculationResult calculationResult = calculateFeeAndTokensValue(_payloadsForDex, _payloadsForTransfer, _payloadsForBurn);
         if (msg.value < calculationResult.everValue) {
             return (false, 0);
         }
         if (_receivedTokensAmount < calculationResult.tokenAmount) {
             return (false, 0);
         }
-        uint128 extraTokensAmount = _receivedTokensAmount - calculationResult.tokenAmount;
         return (true, _receivedTokensAmount - calculationResult.tokenAmount);
     }
 
@@ -120,13 +129,14 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
         (
             CommonStructures.PayloadForDex[] payloadsForDex,
             CommonStructures.PayloadForTransfer[] payloadsForTransfer,
+            CommonStructures.PayloadForBurn[] payloadsForBurn,
             address remainingTokensTo
         ) = Payload.encodePayload(_payload);
 
         (
             bool isEnoughTokensAndValue,
             uint128 extraTokensAmount
-        ) = checkIsEnoughValueAndTokens(payloadsForDex, payloadsForTransfer, _amount);
+        ) = checkIsEnoughValueAndTokens(payloadsForDex, payloadsForTransfer, payloadsForBurn, _amount);
 
         if (!isEnoughTokensAndValue || isPaused) {
             ITokenWallet(msg.sender).transfer{value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false}(
@@ -152,11 +162,12 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
         }
 
         makeTransfers(payloadsForTransfer);
+        makeBurns(payloadsForBurn);
         createChildProcesses(payloadsForDex);
-        _remainingGasTo.transfer({value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false});
+        _remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
-    function makeTransfers(CommonStructures.PayloadForTransfer[] _payloadsForTransfer) internal {
+    function makeTransfers(CommonStructures.PayloadForTransfer[] _payloadsForTransfer) internal pure {
         for (CommonStructures.PayloadForTransfer transferConfig : _payloadsForTransfer) {
 
             ITokenWallet(msg.sender).transfer{value: transferConfig.attachedValue + transferConfig.deployWalletValue, bounce: false}(
@@ -167,13 +178,23 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
                 transferConfig.notify,
                 transferConfig.payload
             );
+        }
+    }
 
+    function makeBurns(CommonStructures.PayloadForBurn[] _payloadsForBurn) internal pure {
+        for (CommonStructures.PayloadForBurn burnConfig : _payloadsForBurn) {
+            IBurnableTokenWallet(msg.sender).burn{value: burnConfig.attachedValue, bounce: false}(
+                burnConfig.amount,
+                burnConfig.remainingGasTo,
+                burnConfig.callbackTo,
+                burnConfig.payload
+            );
         }
     }
 
     function createChildProcesses(CommonStructures.PayloadForDex[] _payloadsForDex) internal {
         for (CommonStructures.PayloadForDex dexConfig : _payloadsForDex) {
-            address childAddress = deployChild(
+            deployChild(
                 currentChildNonce++,
                 msg.sender,
                 dexConfig.dexPayload,
@@ -193,7 +214,7 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
         tvm.rawReserve(_reserve(), 0);
         TvmCell dummyPayload;
         uint128 deployChildWalletValue = msg.value / 2;
-        ITokenWallet(_rootWallet).transfer{value:0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+        ITokenWallet(_rootWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
             _tokensAmount,
             msg.sender,
             deployChildWalletValue,
@@ -203,11 +224,43 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
         );
     }
 
-    function buildPayload(
-        CommonStructures.PayloadForDex[] _payloadsForDex,
-        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
-        address remainingTokensTo
-    ) override external pure returns (TvmCell) {
-        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers, remainingTokensTo);
+
+    function forceChildsFinalize(CommonStructures.ForceChildFinalize[] childsSettings) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        uint32 countOfChilds = uint32(childsSettings.length);
+
+        require(msg.value >= countOfChilds * Constants.FORCE_CHILD_FINALIZE_VALUE);
+
+        for (CommonStructures.ForceChildFinalize childsSetting : childsSettings) {
+            IDexChildMiddleware(childsSetting.child).forceFinalize{value: Constants.FORCE_CHILD_FINALIZE_VALUE, bounce: false}(childsSetting.isSuccess);
+        }
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
+
+    function upgrade(TvmCell _newCode, uint32 _newVersion, address _sendGaTo) onlyOwner override external {
+        if (dexMiddlewareVersion == _newVersion) {
+            tvm.rawReserve(_reserve(), 0);
+            _sendGaTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+            return;
+        }
+
+        TvmCell data = abi.encode(
+            nonce, // uint128
+            owner, // address
+            _newVersion, // uint32
+            dexMiddlewareChildCode, // TvmCell
+            isPaused, // bool
+            currentChildNonce, // uint128
+            childVersion // uint32
+        );
+
+        tvm.setcode(_newCode);
+        tvm.setCurrentCode(_newCode);
+
+        onCodeUpgrade(data);
+
+    }
+
+    function onCodeUpgrade(TvmCell _upgradeData) private {}
+
 }

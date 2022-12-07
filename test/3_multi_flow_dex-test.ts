@@ -19,7 +19,7 @@ let receivers: Array<Contract<ReceiverAfterDexAbi>>;
 let receiversFactory: Contract<ReceiversFactoryAbi>;
 const SUCCESS_EVENT_LABEL = "SUCCESS";
 const CANCEL_EVENT_LABEL = "CANCEL";
-describe("success and cancel", () => {
+describe("Multi swap testing", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(500), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
@@ -147,6 +147,7 @@ describe("success and cancel", () => {
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
               remainingTokensTo: user.account.address,
+              _payloadsForBurn: [],
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),
         ),
@@ -312,6 +313,8 @@ describe("success and cancel", () => {
             context.dexMiddleware.getPayload({
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
+              _payloadsForBurn: [],
+
               remainingTokensTo: user.account.address,
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),

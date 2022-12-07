@@ -7,6 +7,8 @@ import "./lib/ErrorCodes.sol";
 import "./lib/Constants.sol";
 import "./lib/Payload.sol";
 import "./interfaces/IDexMiddleware.sol";
+import "./interfaces/IDexChildMiddleware.sol";
+
 
 import "broxus-ton-tokens-contracts/contracts/interfaces/ITokenWallet.sol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -18,7 +20,7 @@ import "dex/contracts/libraries/DexOperationStatusV2.sol";
 
 
 
-contract DexChildMiddleware is IAcceptTokensTransferCallback {
+contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddleware {
     uint128 public static nonce;
     address public static root;
 
@@ -31,17 +33,11 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     uint128 initialTokensAmount;
     TvmCell dexPayload;
 
-    // TODO: не нашел использования?
-    uint256 receivedRootsCounter;
-    // TODO: прям рил надо uint256?) я сторонник использования минимально необходимых типов
-    // TODO: Вижу, что сверяешь с .length, но там никогда не будет даже > uint16 на выходе по факту
-    uint256 countOfRoots;
+    uint16 countOfRoots;
 
     mapping(address => uint128) receivedTokens;
-    // TODO: по сути эти массивы применяются далее для итерации и поиске вхождения. Мб переделать их в маппинги?
-    // TODO: У тебя будет доступ по ключу вместо итерации по всему массиву. А итерация если что и в маппинге есть
-    mapping (address => address[]) rootToSenderAllowanceMap;
-    mapping (address => address[]) walletToSenderAllowanceMap;
+    mapping (address => mapping(address => bool)) rootToAllowedSenders;
+    mapping (address => mapping(address => bool)) walletToAllowedSenders;
     bool isCanceledTransaction;
 
     constructor(
@@ -61,16 +57,22 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         rootWallet = _rootWallet;
         dexPayload = _dexPayload;
         initialTokensAmount = _tokensAmount;
-        rootToSenderAllowanceMap = _rootToSendersAllowanceMap;
+
+        for ((address tokenRoot, address[] senders) : _rootToSendersAllowanceMap) {
+            for (address sender : senders) {
+                rootToAllowedSenders[tokenRoot][sender] = true;
+            }
+        }
+
         remainingGasTo = _remainingGasTo;
         necessaryLeaves = _leaves;
         firstRoot = _firstRoot;
         successConfig = _successConfig;
         cancelConfig = _cancelConfig;
 
-        countOfRoots = _rootToSendersAllowanceMap.keys().length;
+        countOfRoots = uint16(_rootToSendersAllowanceMap.keys().length);
 
-        for ((address rootAddress, address[] senders) : rootToSenderAllowanceMap) {
+        for ((address rootAddress, ) : rootToAllowedSenders) {
             ITokenRoot(rootAddress).walletOf{
                 value: 0.05 ever,
                 callback: DexChildMiddleware.handleAddressReceived
@@ -78,48 +80,44 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
         }
 
     }
-
+    modifier onlyRoot() {
+        require(msg.sender == root, ErrorCodes.NOT_ROOT);
+        _;
+    }
     modifier onlyAllowedAddresses(address tokensSender) {
 
-        require(walletToSenderAllowanceMap.exists(msg.sender), ErrorCodes.NOT_ALLOWED_TOKEN_WALLET);
-        address[] allowedTokensSenders = walletToSenderAllowanceMap[msg.sender];
-        bool isAllowed;
-        if (tokensSender == root) {
-            isAllowed = true;
+        require(walletToAllowedSenders.exists(msg.sender), ErrorCodes.NOT_ALLOWED_TOKEN_WALLET);
 
-        } else {
-            for (address allowedSender : allowedTokensSenders) {
-                if (allowedSender == tokensSender) {
-                    isAllowed = true;
-                }
-            }
-        }
+        bool isAllowed = tokensSender == root || walletToAllowedSenders[msg.sender].exists(tokensSender);
 
         require(isAllowed, ErrorCodes.NOT_ALLOWED_TOKENS_SENDER);
         _;
     }
 
     modifier onlyAllowedRoot() {
-        require(rootToSenderAllowanceMap.exists(msg.sender));
+        require(rootToAllowedSenders.exists(msg.sender));
         _;
     }
 
-    // TODO: remove
-    // utils
+
     function _reserve() internal pure returns (uint128) {
 		return
 			math.min(address(this).balance - msg.value, Constants.CHILD_CONTRACT_MIN_BALANCE);
 	}
 
+    function getFinalTransactionSettings() internal view returns (CommonStructures.FinishTransaction) {
+        return isCanceledTransaction ? cancelConfig : successConfig;
+    }
+
     function handleAddressReceived(address tokenWallet) external onlyAllowedRoot {
-        walletToSenderAllowanceMap[tokenWallet] = rootToSenderAllowanceMap[msg.sender];
+        walletToAllowedSenders[tokenWallet] = rootToAllowedSenders[msg.sender];
         countOfRoots--;
         if (countOfRoots == 0) {
             requestTokensFromRoot();
         }
     }
 
-    function requestTokensFromRoot() internal {
+    function requestTokensFromRoot() internal view {
         IDexMiddleware(root).onChildRequestTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -127,10 +125,10 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     }
 
     function handleRootTransfer(
-        address _tokenRoot,
+        address,
         uint128 _amount,
         address _remainingGasTo
-    ) internal {
+    ) internal view {
         ITokenWallet(msg.sender).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
             _amount,
             firstRoot,
@@ -142,11 +140,9 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
     }
 
     function handleSuccessDexTransfer(
-        address _tokenRoot,
+
         uint128 _amount,
-        address _sender,
-        address _senderWallet,
-        address _remainingGasTo,
+
         address _originalSender
     ) internal {
 
@@ -156,29 +152,23 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
         receivedTokens[msg.sender] += _amount;
         if (necessaryLeaves == 0) {
-            finalizeTransaction();
+            finalizeTransaction(getFinalTransactionSettings());
         }
     }
 
     function handleCancelDexTransfer(
-        address _tokenRoot,
         uint128 _amount,
-        address _sender,
-        address _senderWallet,
-        address _remainingGasTo,
         uint32 _brokenLeaves
     ) internal {
         receivedTokens[msg.sender] += _amount;
         necessaryLeaves -= _brokenLeaves;
         isCanceledTransaction = true;
         if (necessaryLeaves == 0) {
-            finalizeTransaction();
+            finalizeTransaction(getFinalTransactionSettings());
         }
     }
 
-    function finalizeTransaction() internal {
-
-        CommonStructures.FinishTransaction finalTransactionSettings = isCanceledTransaction ? cancelConfig : successConfig;
+    function finalizeTransaction(CommonStructures.FinishTransaction finalTransactionSettings) internal view {
 
         for ((address tokenWallet, uint128 tokensAmount) : receivedTokens) {
             ITokenWallet(tokenWallet).transfer{value: finalTransactionSettings.valueForFinalTransfer + finalTransactionSettings.deployWalletValue, bounce: false}(
@@ -191,22 +181,26 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
             );
         }
 
-        for ((address tokenWallet, address[] allowedSenders) : walletToSenderAllowanceMap) {
+        for ((address tokenWallet, ) : walletToAllowedSenders) {
             TokenWalletDestroyableBase(tokenWallet).destroy{value: 0.05 ever, bounce: false}(remainingGasTo);
         }
 
         remainingGasTo.transfer({
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO/* Add destroy after testing*/,
+            flag: MsgFlag.ALL_NOT_RESERVED/* + MsgFlag.DESTROY_IF_ZERO Add destroy after testing*/,
             bounce: false
         });
+    }
+
+    function forceFinalize(bool isSuccess) onlyRoot override external {
+        finalizeTransaction(isSuccess ? successConfig : cancelConfig);
     }
 
     function onAcceptTokensTransfer(
         address _tokenRoot,
         uint128 _amount,
         address _sender,
-        address _senderWallet,
+        address,
         address _remainingGasTo,
         TvmCell _payload
     ) override external onlyAllowedAddresses(_sender) {
@@ -216,16 +210,12 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
             return;
         }
         TvmSlice slicePayload = _payload.toSlice();
-        (uint8 v2DexOperationType, uint8 dexOperationType) = slicePayload.decode(uint8, uint8);
+        (uint8 v2DexOperationType) = slicePayload.decode(uint8);
 
         if (v2DexOperationType == DexOperationStatusV2.SUCCESS) {
-            (TvmCell originalPayload, TvmCell originalSender) = slicePayload.decode(TvmCell, TvmCell);
+            (, TvmCell originalSender) = slicePayload.decode(TvmCell, TvmCell);
             handleSuccessDexTransfer(
-                _tokenRoot,
                 _amount,
-                _sender,
-                _senderWallet,
-                _remainingGasTo,
                 originalSender.toSlice().decode(address)
             );
             return;
@@ -233,17 +223,13 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback {
 
         if (v2DexOperationType == DexOperationStatusV2.CANCEL) {
             (
-                uint16 errorCode,
-                TvmCell originalPayload,
+                ,
+                ,
                 TvmCell brokenLeavesCell
             ) = slicePayload.decode(uint16, TvmCell, TvmCell);
             (uint32 brokenLeaves) = brokenLeavesCell.toSlice().decode(uint32);
             handleCancelDexTransfer(
-                _tokenRoot,
                 _amount,
-                _sender,
-                _senderWallet,
-                _remainingGasTo,
                 brokenLeaves
             );
         }

@@ -96,6 +96,7 @@ describe("success and cancel", () => {
       ],
       _payloadsForTransfers: [],
       remainingTokensTo: user.account.address,
+      _payloadsForBurn: [],
     });
 
     const { traceTree } = await locklift.tracing.trace(
@@ -114,7 +115,9 @@ describe("success and cancel", () => {
       ),
       { rise: false },
     );
-    await traceTree?.beautyPrint();
+    await traceTree?.beautyPrint({
+      printFullAddresses: true,
+    });
     expect(
       new BigNumber(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract.address))
         .shiftedBy(-Number(qweTokenWallet.tokenDecimals))
@@ -183,6 +186,8 @@ describe("success and cancel", () => {
         },
       ],
       _payloadsForTransfers: [],
+      _payloadsForBurn: [],
+
       remainingTokensTo: user.account.address,
     });
 

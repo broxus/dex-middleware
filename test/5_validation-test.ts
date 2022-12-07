@@ -9,7 +9,7 @@ import { expect } from "chai";
 
 import { TokenWallet } from "./entities/tokenWallet";
 
-describe("success and cancel", () => {
+describe("Validation testing", () => {
   let context: Context;
   let user: User;
 
@@ -96,6 +96,8 @@ describe("success and cancel", () => {
             },
           ],
           _payloadsForTransfers: [],
+          _payloadsForBurn: [],
+
           remainingTokensTo: user.account.address,
         });
       });

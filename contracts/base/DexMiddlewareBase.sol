@@ -31,15 +31,26 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 			math.max(address(this).balance - msg.value, Constants.CHILD_CONTRACT_MIN_BALANCE);
 	}
 
-    function setIsPaused(bool _isPaused) onlyOwner override external {
-        // TODO: желательно выпускать эвент
-        isPaused = _isPaused;
+    function transferOwnership(address _newOwner) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        owner = _newOwner;
+        emit OwnerChanged(owner);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
-    // TODO: сделать полноценный апгрейдебл через платформы?
+    function setIsPaused(bool _isPaused) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        isPaused = _isPaused;
+        emit PauseStateChanged(isPaused);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
     function setChildCode(TvmCell _dexMiddlewareChildCode) onlyOwner override external {
-        // TODO: желательно выпускать эвент
+        tvm.rawReserve(_reserve(), 0);
+        childVersion++;
         dexMiddlewareChildCode = _dexMiddlewareChildCode;
+        emit ChildCodeUpdated(childVersion);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
     function _buildInitAccount(uint128 childNonce)
@@ -72,7 +83,7 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         address _remainingGasTo,
         CommonStructures.FinishTransaction _successPayload,
         CommonStructures.FinishTransaction _cancelPayload
-    ) internal returns(address) {
+    ) internal view returns(address) {
         return new DexChildMiddleware{
             stateInit: _buildInitAccount(childNonce),
             value: _attachedValue
@@ -83,5 +94,14 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(
             tvm.hash(_buildInitAccount(childNonce))
         );
+    }
+
+    function buildPayload(
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn,
+        address remainingTokensTo
+    ) override external pure returns (TvmCell) {
+        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers, _payloadsForBurn, remainingTokensTo);
     }
 }

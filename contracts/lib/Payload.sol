@@ -8,12 +8,31 @@ library Payload {
     function buildPayload(
         CommonStructures.PayloadForDex[] _payloadsForDex,
         CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        CommonStructures.PayloadForBurn[] _payloadForBurn,
         address remainingTokensTo
     ) public  returns(TvmCell) {
-        return abi.encode(_payloadsForDex, _payloadsForTransfers, remainingTokensTo);
+        return abi.encode(
+            _payloadsForDex,
+            _payloadsForTransfers,
+            _payloadForBurn,
+            remainingTokensTo
+        );
     }
 
-    function encodePayload(TvmCell _payload) internal returns (CommonStructures.PayloadForDex[], CommonStructures.PayloadForTransfer[], address) {
-        return abi.decode(_payload, (CommonStructures.PayloadForDex[], CommonStructures.PayloadForTransfer[], address));
+    function encodePayload(TvmCell _payload) internal returns (
+        CommonStructures.PayloadForDex[],
+        CommonStructures.PayloadForTransfer[],
+        CommonStructures.PayloadForBurn[],
+        address
+    ) {
+        return abi.decode(
+            _payload,
+            (
+                CommonStructures.PayloadForDex[],
+                CommonStructures.PayloadForTransfer[],
+                CommonStructures.PayloadForBurn[],
+                address
+            )
+        );
     }
 }

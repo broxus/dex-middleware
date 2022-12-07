@@ -15,7 +15,7 @@ let context: Context;
 let user: User;
 let receivers: Array<User>;
 
-describe("success and cancel", () => {
+describe("Multi transfer testing", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
@@ -110,6 +110,7 @@ describe("success and cancel", () => {
         notify: true,
         _remainingGasTo: user.account.address,
       })),
+      _payloadsForBurn: [],
       remainingTokensTo: user.account.address,
     });
 
@@ -220,6 +221,8 @@ describe("success and cancel", () => {
         notify: true,
         _remainingGasTo: user.account.address,
       })),
+      _payloadsForBurn: [],
+
       remainingTokensTo: user.account.address,
     });
 

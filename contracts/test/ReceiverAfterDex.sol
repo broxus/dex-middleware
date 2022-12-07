@@ -3,26 +3,41 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
+
 import "locklift/src/console.sol";
 
 
-contract ReceiverAfterDex is IAcceptTokensTransferCallback {
+contract ReceiverAfterDex is IAcceptTokensTransferCallback, IAcceptTokensBurnCallback  {
     uint128 private static _nonce;
     address private static root;
     constructor() public {}
     event onReceiveTokens(address from, uint128 amount, string message);
+    event onHandleTokensBurn(address from, uint128 amount, string  message);
 
 
     function onAcceptTokensTransfer(
-        address _tokenRoot,
+        address,
         uint128 _amount,
         address _sender,
-        address _senderWallet,
-        address _remainingGasTo,
+        address,
+        address,
         TvmCell _payload
     ) override external {
         TvmSlice messageSlice = _payload.toSlice();
         string message = messageSlice.decode(string);
         emit onReceiveTokens(_sender, _amount, message);
+    }
+
+    function onAcceptTokensBurn(
+        uint128 _amount,
+        address _walletOwner,
+        address,
+        address,
+        TvmCell _payload
+    ) override external {
+        TvmSlice messageSlice = _payload.toSlice();
+        string message = messageSlice.decode(string);
+        emit onHandleTokensBurn(_walletOwner, _amount, message);
     }
 }

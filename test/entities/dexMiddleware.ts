@@ -1,6 +1,6 @@
-import { Contract } from "locklift/everscale-provider";
+import { Contract, Address } from "locklift/everscale-provider";
 import { DexMiddlewareAbi } from "../../build/factorySource";
-import { getRandomNonce, toNano } from "../../../ever-locklift";
+import { getRandomNonce, toNano } from "locklift";
 import { User } from "./user";
 export type DexMiddlewareContract = Contract<DexMiddlewareAbi>;
 
@@ -35,4 +35,17 @@ export class DexMiddleware {
       from: this.owner.account.address,
       amount: toNano(1),
     });
+
+  forceChildFinalize = (childs: Array<{ address: Address; isSuccess: boolean }>) =>
+    this.contract.methods
+      .forceChildsFinalize({
+        childsSettings: childs.map(({ isSuccess, address }) => ({
+          child: address,
+          isSuccess,
+        })),
+      })
+      .send({
+        from: this.owner.account.address,
+        amount: toNano(1),
+      });
 }

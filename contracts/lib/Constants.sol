@@ -10,6 +10,8 @@ library Constants {
     // ROOT
     uint128 constant ROOT_CONTRACT_MIN_BALANCE = 1 ever;
     uint128 constant DEPLOY_CHILD_VALUE = 0.1 ever;
+    uint128 constant MIN_WITHDRAW_FROM_CHILD_VALUE = 1 ever;
+    uint128 constant FORCE_CHILD_FINALIZE_VALUE = 0.05 ever;
     // CHILD
     uint128 constant CHILD_CONTRACT_MIN_BALANCE = 0.1 ever;
     uint128 constant REQUEST_TOKEN_WALLET_ADDRESS_VALUE = 0.05 ever;

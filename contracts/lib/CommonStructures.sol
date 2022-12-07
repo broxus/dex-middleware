@@ -3,6 +3,19 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 library CommonStructures {
+
+    struct EmergencyWithdrawFromChildConfig {
+        address childTokenWallet;
+        uint128 amount;
+        uint128 deployWalletValue;
+        uint128 attachedValue;
+    }
+
+    struct ForceChildFinalize {
+        address child;
+        bool isSuccess;
+    }
+
     struct FinishTransaction {
         address tokenReceiver;
         uint128 valueForFinalTransfer;
@@ -42,6 +55,14 @@ library CommonStructures {
         uint128 attachedValue;
         uint128 deployWalletValue;
         bool notify;
+    }
+
+    struct PayloadForBurn {
+        address callbackTo;
+        address remainingGasTo;
+        uint128 amount;
+        TvmCell payload;
+        uint128 attachedValue;
     }
 
     struct CalculationResult {

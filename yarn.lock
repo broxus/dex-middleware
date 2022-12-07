@@ -193,7 +193,7 @@
   resolved "https://registry.yarnpkg.com/@broxus/await-semaphore/-/await-semaphore-0.1.5.tgz#e5fcf641dfa71ffc29210b1138e2157a32b422d9"
   integrity sha512-g464HtHHKxk6r6bkZc+lET1PuSgcFxlLHVb7EAqfxTlx6DRcYkjPRIQQhRHB3BQ6zRpfMrYkppL0tBtRED+HNA==
 
-"@broxus/contracts@^1.0.3", "@broxus/contracts@^1.0.4":
+"@broxus/contracts@^1.0.3", "@broxus/contracts@^1.0.4", "@broxus/contracts@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@broxus/contracts/-/contracts-1.1.0.tgz#16ed70234c755bafded6aee662e4ad2d7012c325"
   integrity sha512-9a13iXHSLNil3I+QMs3o+t8EVG1aM7pBNv31ckdTjhLLgydqP131xibg0Qw8BBFkbvEPA6nT9yfeFrGKrfPTHA==
