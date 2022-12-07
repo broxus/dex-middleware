@@ -4,9 +4,20 @@ pragma AbiHeader expire;
 import "../lib/CommonStructures.sol";
 
 interface IDexMiddleware {
+
+    struct Details {
+        uint128  nonce;
+        address  owner;
+        uint32 dexMiddlewareVersion;
+        bool isPaused;
+        uint128 currentChildNonce;
+        uint32 childVersion;
+    }
+
     event OwnerChanged(address newOwner);
     event PauseStateChanged(bool newState);
     event ChildCodeUpdated(uint128 newVersion);
+    function getDetails() external responsible view returns (Details);
     function transferOwnership(address _newOwner) external;
     function buildPayload(
     CommonStructures.PayloadForDex[] _payloadsForDex,

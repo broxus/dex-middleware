@@ -53,6 +53,17 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
+    function getDetails() override external responsible view returns (Details) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} Details(
+            nonce,
+            owner,
+            dexMiddlewareVersion,
+            isPaused,
+            currentChildNonce,
+            childVersion
+        );
+    }
+
     function _buildInitAccount(uint128 childNonce)
 		internal
 		view
