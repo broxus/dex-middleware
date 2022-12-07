@@ -1,6 +1,6 @@
 import { LockliftConfig } from "locklift";
 import { FactorySource } from "./build/factorySource";
-import { SimpleGiver, GiverWallet, GiverWalletV2_3 } from "./giverSettings";
+import { SimpleGiver, GiverWallet, GiverWalletV2_3, TestnetGiver } from "./giverSettings";
 import * as chai from "chai";
 import { lockliftChai } from "locklift/chaiPlugin";
 chai.use(lockliftChai);
@@ -112,31 +112,18 @@ const config: LockliftConfig = {
     },
     main: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
-      connection: {
-        id: 1,
-        type: "graphql",
-        group: "main",
-        data: {
-          endpoints: [MAIN_NET_NETWORK_ENDPOINT],
-          latencyDetectionInterval: 1000,
-          local: false,
-        },
-      },
-      // This giver is default Wallet
+      connection: "mainnetJrpc",
       giver: {
-        giverFactory: (ever, keyPair, address) => new GiverWalletV2_3(ever, keyPair, address),
-        address: "",
-        phrase: "",
-        accountId: 0,
+        giverFactory: (ever, keyPair, address) => new TestnetGiver(ever, keyPair, address),
+        address: "0:3bcef54ea5fe3e68ac31b17799cdea8b7cffd4da75b0b1a70b93a18b5c87f723",
+        key: process.env.MAIN_GIVER_KEY ?? "",
       },
       tracing: {
         endpoint: MAIN_NET_NETWORK_ENDPOINT,
       },
       keys: {
-        // Use everdev to generate your phrase
-        // !!! Never commit it in your repos !!!
-        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
-        amount: 20,
+        phrase: process.env.SEED ?? "",
+        amount: 500,
       },
     },
   },

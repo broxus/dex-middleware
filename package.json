@@ -28,8 +28,10 @@
   },
   "dependencies": {
     "@broxus/contracts": "^1.1.0",
+    "@types/prompts": "^2.4.2",
     "bignumber.js": "^9.1.0",
     "mocha-logger": "^1.0.8",
+    "prompts": "^2.4.2",
     "rxjs": "^7.5.7"
   }
 }
