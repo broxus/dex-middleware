@@ -53,11 +53,9 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
     ) public {
 
         require(msg.sender == root, ErrorCodes.NOT_ROOT);
-
         rootWallet = _rootWallet;
         dexPayload = _dexPayload;
         initialTokensAmount = _tokensAmount;
-
         for ((address tokenRoot, address[] senders) : _rootToSendersAllowanceMap) {
             for (address sender : senders) {
                 rootToAllowedSenders[tokenRoot][sender] = true;
@@ -222,11 +220,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
         }
 
         if (v2DexOperationType == DexOperationStatusV2.CANCEL) {
-            (
-                ,
-                ,
-                TvmCell brokenLeavesCell
-            ) = slicePayload.decode(uint16, TvmCell, TvmCell);
+            (, , TvmCell brokenLeavesCell) = slicePayload.decode(uint16, TvmCell, TvmCell);
             (uint32 brokenLeaves) = brokenLeavesCell.toSlice().decode(uint32);
             handleCancelDexTransfer(
                 _amount,

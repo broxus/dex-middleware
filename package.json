@@ -19,7 +19,7 @@
     "@types/node": "^18.11.8",
     "broxus-ton-tokens-contracts": "github:broxus/ton-eth-bridge-token-contracts#d3c1cd920c0320ffaab03b54c878dd0e06fed3c7",
     "chai": "^4.3.6",
-    "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#e408253ce1d406b9b10fa85ee7d8fb0372f38223",
+    "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#c095bd43cdecda0ee67a671c2c9177f2aca1c7eb",
     "everscale-standalone-client": "^2.1.1",
     "locklift": "^2.4.4",
     "prettier": "^2.7.1",

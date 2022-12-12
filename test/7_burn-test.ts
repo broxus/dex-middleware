@@ -1,7 +1,6 @@
 import { fromNano, getRandomNonce, toNano } from "locklift";
 
 import { Context, preparation } from "./preparation";
-import BigNumber from "bignumber.js";
 import { DexMiddleware } from "./entities/dexMiddleware";
 import { User } from "./entities/user";
 import { expect } from "chai";

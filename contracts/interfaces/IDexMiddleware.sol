@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 import "../lib/CommonStructures.sol";
 
 interface IDexMiddleware {
-
+    event DeployChild(address childAddress);
     struct Details {
         uint128  nonce;
         address  owner;

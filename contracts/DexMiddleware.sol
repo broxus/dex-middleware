@@ -24,7 +24,7 @@ import "dex/contracts/libraries/DexGas.sol";
 import "locklift/src/console.sol";
 
 
-contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
+contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, DexMiddlewareBase {
 
     constructor() public {
         require (tvm.pubkey() != 0, ErrorCodes.NOT_OWNER);
@@ -54,7 +54,7 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
         uint128 _amount,
         address _remainingGasTo,
         TvmCell _payload
-    ) external {
+    ) override external {
         handleTokensTransfer(
             _amount,
             _remainingGasTo,
@@ -194,7 +194,7 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
 
     function createChildProcesses(CommonStructures.PayloadForDex[] _payloadsForDex) internal {
         for (CommonStructures.PayloadForDex dexConfig : _payloadsForDex) {
-            deployChild(
+            address child = deployChild(
                 currentChildNonce++,
                 msg.sender,
                 dexConfig.dexPayload,
@@ -207,6 +207,7 @@ contract DexMiddleware is IAcceptTokensTransferCallback, DexMiddlewareBase {
                 dexConfig.successPayload,
                 dexConfig.cancelPayload
             );
+            emit DeployChild(child);
         }
     }
 

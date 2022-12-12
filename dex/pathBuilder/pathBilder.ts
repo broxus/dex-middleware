@@ -1,4 +1,4 @@
-import { Address, Contract, toNano } from "locklift";
+import { Address, Contract, toNano, zeroAddress } from "locklift";
 import { Migration } from "../migration";
 import { DexPairAbi, DexStablePairAbi, DexStablePoolAbi } from "../../build/factorySource";
 import BigNumber from "bignumber.js";
@@ -480,6 +480,7 @@ export const getPayload = async ({
       _recipient: Account3.address,
       _success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
       _cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
+      _referral: zeroAddress,
     };
     console.log(`Call buildCrossPairExchangePayloadV2(${firstPool.address.toString()}`);
 
@@ -506,6 +507,7 @@ export const getPayload = async ({
       success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
       cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
       recipient: recipient,
+      referral: zeroAddress,
     };
     console.log(`Call buildCrossPairExchangePayload(${firstPool.address.toString()}`);
 
