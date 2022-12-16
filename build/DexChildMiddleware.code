@@ -1,0 +1,1331 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+LDU 128
+LDDICT
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 128
+LDREF
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 128
+LDREF
+ROLLREV 4
+TUPLE 4
+SWAP
+ENDS
+.loc ../contracts/DexChildMiddleware.sol, 55
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 2001
+.loc ../contracts/DexChildMiddleware.sol, 56
+ROLL 8
+SETGLOB 12
+.loc ../contracts/DexChildMiddleware.sol, 57
+ROLL 7
+SETGLOB 19
+.loc ../contracts/DexChildMiddleware.sol, 58
+ROLL 6
+SETGLOB 18
+.loc ../contracts/DexChildMiddleware.sol, 59
+PUSH2 S5, S5
+PUSHINT 267
+DICTMIN
+PUSHCONT {
+	DUP
+	ROT
+	LDU 32
+	PLDDICT
+	PAIR
+}
+PUSHCONT {
+	NULL
+	BLKPUSH 2, 0
+}
+IFELSE
+PUSHCONT {
+	PUSH S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 60
+	SECOND
+	PUSHINT 0
+	NULL
+	PUSHCONT {
+		PUSH2 S1, S2
+		PUSHINT 32
+		DICTUGET
+		NULLSWAPIFNOT
+		DROP
+		DUP
+		POP S2
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		.loc ../contracts/DexChildMiddleware.sol, 61
+		PUSH S3
+		GETGLOB 22
+		DUP2
+		PUSHINT 267
+		DICTGET
+		PUSHCONT {
+			PLDDICT
+		}
+		PUSHCONT {
+			NEWDICT
+		}
+		IFELSE
+		PUXC S3, S-1
+		NEWC
+		STONE
+		ROTREV
+		PUSHINT 267
+		DICTSETB
+		NEWC
+		STDICT
+		ROTREV
+		PUSHINT 267
+		DICTSETB
+		SETGLOB 22
+		.loc ../contracts/DexChildMiddleware.sol, 0
+		OVER
+		INC
+		POP S2
+	}
+	WHILE
+	BLKDROP 3
+	.loc ../contracts/DexChildMiddleware.sol, 0
+	PUSH2 S1, S2
+	PUSHINT 267
+	DICTGETNEXT
+	PUSHCONT {
+		DUP
+		ROT
+		LDU 32
+		PLDDICT
+		PAIR
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	BLKDROP2 2, 3
+}
+WHILE
+BLKDROP 4
+.loc ../contracts/DexChildMiddleware.sol, 65
+ROLL 4
+SETGLOB 14
+.loc ../contracts/DexChildMiddleware.sol, 66
+ROLL 3
+SETGLOB 13
+.loc ../contracts/DexChildMiddleware.sol, 67
+ROT
+SETGLOB 15
+.loc ../contracts/DexChildMiddleware.sol, 68
+SWAP
+SETGLOB 16
+.loc ../contracts/DexChildMiddleware.sol, 69
+SETGLOB 17
+.loc ../contracts/DexChildMiddleware.sol, 71
+PUSHINT 0
+NEWDICT
+PAIR
+XCPU S1, S0
+PUSHINT 267
+DICTMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	LDU 32
+	PLDDICT
+	PAIR
+	PAIR
+}
+IF
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSH2 S2, S0
+	FIRST
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	POP S3
+	FIRST
+	OVER
+	PUSHINT 267
+	DICTGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		LDU 32
+		PLDDICT
+		PAIR
+		PAIR
+	}
+	IF
+}
+WHILE
+DROP2
+FIRST
+UFITS 16
+SETGLOB 20
+.loc ../contracts/DexChildMiddleware.sol, 73
+GETGLOB 22
+DUP
+PUSHINT 267
+DICTMIN
+PUSHCONT {
+	DUP
+	ROT
+	PLDDICT
+}
+PUSHCONT {
+	NULL
+	BLKPUSH 2, 0
+}
+IFELSE
+PUSHCONT {
+	PUSH S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 74
+	DROP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 2795706113657788560861543684595451588247553
+	STUR 143
+	MYADDR
+	PUSHSLICE x2c1605453f5a6456
+	NEWC
+	STSLICE
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexChildMiddleware.sol, 0
+	PUSH2 S0, S1
+	PUSHINT 267
+	DICTGETNEXT
+	PUSHCONT {
+		DUP
+		ROT
+		PLDDICT
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	BLKDROP2 1, 3
+}
+WHILE
+BLKDROP 4
+.loc ../contracts/DexChildMiddleware.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	_reserve_413ab4a8_internal
+.type	_reserve_413ab4a8_internal, @function
+CALL $_reserve_413ab4a8_internal_macro$
+
+.macro _reserve_413ab4a8_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 103
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 100000000
+MIN
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.globl	getFinalTransactionSettings_64609f54_internal
+.type	getFinalTransactionSettings_64609f54_internal, @function
+CALL $getFinalTransactionSettings_64609f54_internal_macro$
+
+.macro getFinalTransactionSettings_64609f54_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 107
+GETGLOB 24
+PUSHCONT {
+	GETGLOB 17
+}
+PUSHCONT {
+	GETGLOB 16
+}
+IFELSE
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.macro handleAddressReceived
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexChildMiddleware.sol, 110
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/DexChildMiddleware.sol, 0
+CALLREF {
+	CALL $handleAddressReceived_49c917ee_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro handleAddressReceived_49c917ee_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 96
+GETGLOB 9
+GETGLOB 22
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+NIP
+THROWIFNOT 100
+.loc ../contracts/DexChildMiddleware.sol, 111
+GETGLOB 9
+GETGLOB 22
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+GETGLOB 23
+SWAP
+NEWC
+STDICT
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 23
+.loc ../contracts/DexChildMiddleware.sol, 112
+GETGLOB 20
+DEC
+UFITS 16
+DUP
+SETGLOB 20
+.loc ../contracts/DexChildMiddleware.sol, 113
+IFNOTREF {
+	CALL $requestTokensFromRoot_15e3b399_internal_macro$
+}
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.globl	requestTokensFromRoot_15e3b399_internal
+.type	requestTokensFromRoot_15e3b399_internal, @function
+CALL $requestTokensFromRoot_15e3b399_internal_macro$
+
+.macro requestTokensFromRoot_15e3b399_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 119
+GETGLOB 18
+GETGLOB 12
+GETGLOB 10
+GETGLOB 11
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 3
+NEWC
+STSLICECONST x726d1ede
+STU 128
+STSLICE
+STU 128
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.globl	handleRootTransfer_8839ce86_internal
+.type	handleRootTransfer_8839ce86_internal, @function
+CALL $handleRootTransfer_8839ce86_internal_macro$
+
+.macro handleRootTransfer_8839ce86_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 130
+GETGLOB 19
+TRUE
+ROT
+PUSHINT 0
+GETGLOB 15
+ROLL 5
+GETGLOB 9
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x73e22143
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/DexChildMiddleware.sol, 0
+DROP
+
+.globl	handleSuccessDexTransfer_8d08a069_internal
+.type	handleSuccessDexTransfer_8d08a069_internal, @function
+CALL $handleSuccessDexTransfer_8d08a069_internal_macro$
+
+.macro handleSuccessDexTransfer_8d08a069_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 147
+MYADDR
+SDEQ
+THROWIFNOT 2002
+.loc ../contracts/DexChildMiddleware.sol, 149
+GETGLOB 13
+DEC
+UFITS 32
+SETGLOB 13
+.loc ../contracts/DexChildMiddleware.sol, 151
+GETGLOB 9
+GETGLOB 21
+DUP2
+PUSHINT 267
+DICTGET
+ZEROSWAPIFNOT
+PUSHCONT {
+	PLDU 128
+}
+IF
+ROLL 3
+ADD
+UFITS 128
+NEWC
+STU 128
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 21
+.loc ../contracts/DexChildMiddleware.sol, 152
+GETGLOB 13
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 153
+	CALLREF {
+		CALL $getFinalTransactionSettings_64609f54_internal_macro$
+	}
+	CALLREF {
+		CALL $finalizeTransaction_14e33342_internal_macro$
+	}
+	.loc ../contracts/DexChildMiddleware.sol, 0
+}
+IFNOT
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.globl	handleCancelDexTransfer_83d430b4_internal
+.type	handleCancelDexTransfer_83d430b4_internal, @function
+CALL $handleCancelDexTransfer_83d430b4_internal_macro$
+
+.macro handleCancelDexTransfer_83d430b4_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 161
+SWAP
+GETGLOB 9
+GETGLOB 21
+DUP2
+PUSHINT 267
+DICTGET
+ZEROSWAPIFNOT
+PUSHCONT {
+	PLDU 128
+}
+IF
+ROLL 3
+ADD
+UFITS 128
+NEWC
+STU 128
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 21
+.loc ../contracts/DexChildMiddleware.sol, 162
+GETGLOB 13
+SUBR
+UFITS 32
+SETGLOB 13
+.loc ../contracts/DexChildMiddleware.sol, 163
+TRUE
+SETGLOB 24
+.loc ../contracts/DexChildMiddleware.sol, 164
+GETGLOB 13
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 165
+	CALLREF {
+		CALL $getFinalTransactionSettings_64609f54_internal_macro$
+	}
+	CALLREF {
+		CALL $finalizeTransaction_14e33342_internal_macro$
+	}
+	.loc ../contracts/DexChildMiddleware.sol, 0
+}
+IFNOT
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.globl	finalizeTransaction_14e33342_internal
+.type	finalizeTransaction_14e33342_internal, @function
+CALL $finalizeTransaction_14e33342_internal_macro$
+
+.macro finalizeTransaction_14e33342_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 171
+GETGLOB 21
+DUP
+PUSHINT 267
+DICTMIN
+PUSHCONT {
+	DUP
+	ROT
+	PLDU 128
+}
+PUSHCONT {
+	NULL
+	BLKPUSH 2, 0
+}
+IFELSE
+PUSHCONT {
+	PUSH S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 172
+	PUSH S4
+	INDEX 3
+	TRUE
+	GETGLOB 14
+	PUSH S7
+	THIRD
+	PUSH S8
+	FIRST
+	PUSH2 S5, S9
+	SECOND
+	PUSH S11
+	THIRD
+	ADD
+	UFITS 128
+	ROLL 8
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexChildMiddleware.sol, 0
+	PUSH2 S1, S2
+	PUSHINT 267
+	DICTGETNEXT
+	PUSHCONT {
+		DUP
+		ROT
+		PLDU 128
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	BLKDROP2 2, 3
+}
+WHILE
+BLKDROP 5
+.loc ../contracts/DexChildMiddleware.sol, 181
+GETGLOB 23
+DUP
+PUSHINT 267
+DICTMIN
+PUSHCONT {
+	DUP
+	ROT
+	PLDDICT
+}
+PUSHCONT {
+	NULL
+	BLKPUSH 2, 0
+}
+IFELSE
+PUSHCONT {
+	PUSH S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 182
+	DROP
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 2795706113657788560861543684595451588247553
+	STUR 143
+	GETGLOB 14
+	NEWC
+	STSLICECONST x0f0258aa
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexChildMiddleware.sol, 0
+	PUSH2 S0, S1
+	PUSHINT 267
+	DICTGETNEXT
+	PUSHCONT {
+		DUP
+		ROT
+		PLDDICT
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	BLKDROP2 1, 3
+}
+WHILE
+BLKDROP 4
+.loc ../contracts/DexChildMiddleware.sol, 185
+GETGLOB 14
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+ADDCONST 32
+UFITS 8
+SENDRAWMSG
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.macro forceFinalize
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexChildMiddleware.sol, 192
+LDI 1
+ENDS
+.loc ../contracts/DexChildMiddleware.sol, 0
+CALLREF {
+	CALL $forceFinalize_f9d3d0fc_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro forceFinalize_f9d3d0fc_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 82
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 2001
+.loc ../contracts/DexChildMiddleware.sol, 193
+PUSHCONT {
+	GETGLOB 16
+}
+PUSHCONT {
+	GETGLOB 17
+}
+IFELSE
+CALLREF {
+	CALL $finalizeTransaction_14e33342_internal_macro$
+}
+.loc ../contracts/DexChildMiddleware.sol, 0
+
+.macro onAcceptTokensTransfer
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexChildMiddleware.sol, 196
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/DexChildMiddleware.sol, 0
+CALLREF {
+	CALL $onAcceptTokensTransfer_e63f2284_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onAcceptTokensTransfer_e63f2284_internal_macro
+.loc ../contracts/DexChildMiddleware.sol, 196
+PUSH S3
+.loc ../contracts/DexChildMiddleware.sol, 87
+GETGLOB 9
+GETGLOB 23
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+NIP
+THROWIFNOT 2003
+.loc ../contracts/DexChildMiddleware.sol, 89
+DUP
+GETGLOB 11
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	DUP
+	GETGLOB 9
+	GETGLOB 23
+	PUSHINT 267
+	DICTGET
+	PUSHCONT {
+		PLDDICT
+	}
+	PUSHCONT {
+		NEWDICT
+	}
+	IFELSE
+	PUSHINT 267
+	DICTGET
+	NULLSWAPIFNOT
+	NIP
+}
+IFNOT
+.loc ../contracts/DexChildMiddleware.sol, 91
+DUP
+THROWIFNOT 2004
+.loc ../contracts/DexChildMiddleware.sol, 92
+BLKSWAP 6, 2
+PUSHCONT {
+	.loc ../contracts/DexChildMiddleware.sol, 205
+	ROLL 3
+	GETGLOB 11
+	SDEQ
+	PUSHCONT {
+		.loc ../contracts/DexChildMiddleware.sol, 206
+		BLKSWAP 2, 3
+		ROLL 3
+		CALLREF {
+			CALL $handleRootTransfer_8839ce86_internal_macro$
+		}
+		.loc ../contracts/DexChildMiddleware.sol, 207
+		DROP2
+		.loc ../contracts/DexChildMiddleware.sol, 0
+	}
+	IFJMP
+	.loc ../contracts/DexChildMiddleware.sol, 209
+	CTOS
+	.loc ../contracts/DexChildMiddleware.sol, 210
+	DUP
+	LDU 8
+	POP S2
+	.loc ../contracts/DexChildMiddleware.sol, 212
+	DUP
+	PUSHINT 200
+	EQUAL
+	PUSHCONT {
+		.loc ../contracts/DexChildMiddleware.sol, 213
+		DROP
+		LDREF
+		PLDREF
+		NIP
+		.loc ../contracts/DexChildMiddleware.sol, 214
+		ROLL 3
+		SWAP
+		CTOS
+		LDMSGADDR
+		DROP
+		CALLREF {
+			CALL $handleSuccessDexTransfer_8d08a069_internal_macro$
+		}
+		.loc ../contracts/DexChildMiddleware.sol, 218
+		BLKDROP 3
+		.loc ../contracts/DexChildMiddleware.sol, 0
+	}
+	IFJMP
+	.loc ../contracts/DexChildMiddleware.sol, 221
+	PUSHINT 201
+	EQUAL
+	PUSHCONT {
+		.loc ../contracts/DexChildMiddleware.sol, 222
+		DUP
+		LDU 16
+		LDREF
+		LDREF
+		POP S4
+		BLKDROP2 2, 1
+		.loc ../contracts/DexChildMiddleware.sol, 223
+		CTOS
+		PLDU 32
+		.loc ../contracts/DexChildMiddleware.sol, 224
+		PUXC S4, S-1
+		CALLREF {
+			CALL $handleCancelDexTransfer_83d430b4_internal_macro$
+		}
+		.loc ../contracts/DexChildMiddleware.sol, 0
+	}
+	IF
+	.loc ../contracts/DexChildMiddleware.sol, 0
+	BLKDROP 5
+	.loc ../contracts/DexChildMiddleware.sol, 196
+}
+CALLX
+.loc ../contracts/DexChildMiddleware.sol, 0
+DROP2
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 128
+LDREF
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 128
+LDREF
+ROLLREV 4
+TUPLE 4
+SWAP
+LDU 128
+LDREF
+LDU 16
+LDDICT
+LDREF
+ENDS
+CTOS
+LDDICT
+LDDICT
+LDI 1
+ENDS
+SETGLOB 24
+SETGLOB 23
+SETGLOB 22
+SETGLOB 21
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 1
+	OVER
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 128
+	}
+	IF
+	PUSHINT 2
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+	}
+	IFNOT
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	DUP
+	PUSHREF {
+	}
+	TUPLE 4
+	DUP
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	NEWDICT
+	BLKPUSH 2, 0
+	PUSHINT 0
+	SETGLOB 24
+	SETGLOB 23
+	SETGLOB 22
+	SETGLOB 21
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 24
+GETGLOB 23
+GETGLOB 22
+GETGLOB 21
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STU 128
+ROLLREV 14
+NEWC
+STSLICE
+ROLLREV 13
+NEWC
+STSLICE
+STU 32
+ROLLREV 11
+NEWC
+STSLICE
+ROLLREV 10
+NEWC
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+ROLLREV 12
+NEWC
+STSLICE
+STU 128
+STU 128
+STREF
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+ROLLREV 11
+NEWC
+STSLICE
+STU 128
+STU 128
+STREF
+STU 128
+STREF
+STU 16
+STDICT
+ROLLREV 3
+NEWC
+STDICT
+STDICT
+STI 1
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro nonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000c6cca7d1
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro root
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000b7295e20
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1187817425
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 925457952
+	EQUAL
+	IFJMPREF {
+		CALL $root$
+	}
+	DUP
+	PUSHINT 977001244
+	EQUAL
+	IFJMPREF {
+		CALL $forceFinalize$
+	}
+	DUP
+	PUSHINT 1062888534
+	EQUAL
+	IFJMPREF {
+		CALL $handleAddressReceived$
+	}
+	DUP
+	PUSHINT 1187817425
+	EQUAL
+	IFJMPREF {
+		CALL $nonce$
+	}
+}
+DUP
+PUSHINT 1987540846
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1893244873
+	EQUAL
+	IFJMPREF {
+		CALL $onAcceptTokensTransfer$
+	}
+	DUP
+	PUSHINT 1987540846
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+

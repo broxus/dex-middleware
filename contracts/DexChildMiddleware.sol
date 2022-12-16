@@ -178,14 +178,13 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
                 finalTransactionSettings.payload
             );
         }
-
         for ((address tokenWallet, ) : walletToAllowedSenders) {
             TokenWalletDestroyableBase(tokenWallet).destroy{value: 0.05 ever, bounce: false}(remainingGasTo);
         }
 
         remainingGasTo.transfer({
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED/* + MsgFlag.DESTROY_IF_ZERO Add destroy after testing*/,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO,
             bounce: false
         });
     }
