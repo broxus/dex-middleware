@@ -1,9 +1,9 @@
-import { Address, fromNano, Signer, toNano, WalletTypes, zeroAddress } from "locklift";
+import { Address, fromNano, Signer, toNano } from "locklift";
 import { isValidAddress, logger } from "./utils";
 import prompts from "prompts";
 import BigNumber from "bignumber.js";
 
-const deployAndSetupStEverVault = async ({
+const deployDexMiddleware = async ({
   signer,
   adminAddress,
   deployVaultValue,
@@ -83,7 +83,7 @@ const main = async () => {
     throw new Error(`Giver balance should gt ${fromNano(DEPLOY_DEX_MIDDLEWARE_VALUE)} ever`);
   }
 
-  await deployAndSetupStEverVault({
+  await deployDexMiddleware({
     adminAddress,
     signer,
     deployVaultValue: DEPLOY_DEX_MIDDLEWARE_VALUE,

@@ -1,10 +1,17 @@
-# DEX middleware
-## Defi utility for making multi swaps, multi sends, multi burn
+# DEX middleware - DeFi utility for making multi swaps, multi sends, multi burn and combine it
 
-## Overview
-This project developed for combining operation in a single transaction.
+## Deploy
+
+```shell
+cross-env SEED="{}" \
+MAIN_GIVER_KEY={} \
+npx locklift run --disable-build --network main -s scripts/1-deploy-dex-middleware.ts
+```
+
+
+
 ## Entry point overview
-1. First of all need to create transfer payload via `DexMiddleware.buildPayload`. Each of prams can be an empty array
+1. First of all need to create transfer payload via `DexMiddleware.buildPayload`. Each of prams (except remainingTokensTo) can be an empty array
 ```solidity
     function buildPayload(
         CommonStructures.PayloadForDex[] _payloadsForDex, // multi-swap config
