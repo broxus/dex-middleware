@@ -6,7 +6,9 @@ export const dummyContract: Contract<any> = locklift.factory.getDeployedContract
   new Address(migrationLog.Account1.address),
 );
 
-export const Constants = {
+export const Constants: {
+  tokens: Record<string, { name: string; symbol: string; decimals: number; upgradeable: boolean }>;
+} = {
   tokens: {
     foo: {
       name: "Foo",

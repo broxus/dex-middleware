@@ -1,8 +1,8 @@
-import { getPayload } from "./pathBuilder/pathBilder";
 import { Migration } from "./migration";
 import { Account } from "everscale-standalone-client";
 import { Address, Contract, toNano, WalletTypes } from "locklift";
 import { DexStablePoolAbi, DexVaultAbi, TokenRootUpgradeableAbi } from "../build/factorySource";
+import { getPayload } from "./pathBuilder";
 
 export class Dex {
   getPayload = getPayload;

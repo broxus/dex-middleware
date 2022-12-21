@@ -35,16 +35,16 @@
   resolved "https://registry.yarnpkg.com/@broxus/await-semaphore/-/await-semaphore-0.1.5.tgz#e5fcf641dfa71ffc29210b1138e2157a32b422d9"
   integrity sha512-g464HtHHKxk6r6bkZc+lET1PuSgcFxlLHVb7EAqfxTlx6DRcYkjPRIQQhRHB3BQ6zRpfMrYkppL0tBtRED+HNA==
 
-"@broxus/contracts@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@broxus/contracts/-/contracts-1.1.0.tgz#16ed70234c755bafded6aee662e4ad2d7012c325"
-  integrity sha512-9a13iXHSLNil3I+QMs3o+t8EVG1aM7pBNv31ckdTjhLLgydqP131xibg0Qw8BBFkbvEPA6nT9yfeFrGKrfPTHA==
+"@broxus/contracts@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@broxus/contracts/-/contracts-1.1.1.tgz#50c4342d833409398a67a747b025228900f385b0"
+  integrity sha512-QmkogQxPe0orw3DQI+d73iBC5lHti6ltNuTEuULfsMC06Nelcjv+co3Ijsjrs+u7lpgb+gyemNXnWoiCtW9Wug==
   dependencies:
     "@types/chai-as-promised" "^7.1.5"
     chai "^4.3.4"
     chai-as-promised "^7.1.1"
     everscale-crypto "^0.1.1"
-    locklift "^2.1.6"
+    locklift "^2.4.6"
     mocha-logger "^1.0.7"
 
 "@octokit/auth-token@^2.4.4":
@@ -505,9 +505,9 @@ browser-stdout@1.3.1:
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.1.tgz#baa559ee14ced73452229bad7326467c61fabd60"
   integrity sha512-qhAVI1+Av2X7qelOfAIYwXONood6XlZE/fXaBSmW/T5SzLAmCgzi+eiWE7fUvbHaeNBQH13UftjpXxsfLkMpgw==
 
-"broxus-ton-tokens-contracts@github:broxus/ton-eth-bridge-token-contracts#d3c1cd920c0320ffaab03b54c878dd0e06fed3c7":
+"broxus-ton-tokens-contracts@git+ssh://git@gitlab.broxus.com/tokens/tip3#3997abf036025c8b771100b1d6c75d478c6a607a":
   version "1.0.0"
-  resolved "https://codeload.github.com/broxus/ton-eth-bridge-token-contracts/tar.gz/d3c1cd920c0320ffaab03b54c878dd0e06fed3c7"
+  resolved "git+ssh://git@gitlab.broxus.com/tokens/tip3#3997abf036025c8b771100b1d6c75d478c6a607a"
   dependencies:
     bignumber.js "^9.0.1"
     chai-as-promised "^7.1.1"
@@ -914,10 +914,15 @@ everscale-crypto@^0.1.1:
   resolved "https://registry.yarnpkg.com/everscale-crypto/-/everscale-crypto-0.1.1.tgz#7e354f122b2673036d40cd6aebf44630b0392f34"
   integrity sha512-DoocTqkz1cayTu4UDdP7dUEcDMfCqchNNKhIgsXQAqhlwRExsNQ1Omo2C/JiuQ3rMzr3XxvqrCwLeLTiOrbXYQ==
 
-everscale-inpage-provider@^0.3.41, everscale-inpage-provider@^0.3.43:
+everscale-inpage-provider@^0.3.41:
   version "0.3.43"
   resolved "https://registry.yarnpkg.com/everscale-inpage-provider/-/everscale-inpage-provider-0.3.43.tgz#2f2c533a9b44237893b3f6f747b5b1c61e1523ee"
   integrity sha512-AFqo6RAurwpnz7UvHu2O/3BK8nHElBQ7vfvUaDOJB8zzcd28pD26TflZbYRWzgoP7RNOM69h3WcmiWtlHl8pVw==
+
+everscale-inpage-provider@^0.3.45:
+  version "0.3.46"
+  resolved "https://registry.yarnpkg.com/everscale-inpage-provider/-/everscale-inpage-provider-0.3.46.tgz#738f3f849b8ee80f3587b1234cb596c38779bc37"
+  integrity sha512-7+7Jm2lsLxOMc8wrp1EQ4QM+a193mTJoz9ZgYRze+8fbPfGyWK0ozYeLJEc0jNl3jeGeSQy2m5Gw140BoS70xw==
 
 everscale-standalone-client@^2.1.1:
   version "2.1.1"
@@ -928,6 +933,19 @@ everscale-standalone-client@^2.1.1:
     bignumber.js "^9.1.0"
     events "^3.3.0"
     everscale-inpage-provider "^0.3.41"
+    fast-safe-stringify "^2.1.1"
+    nekoton-wasm "^1.0.5"
+    node-fetch "^2.6.7"
+
+everscale-standalone-client@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/everscale-standalone-client/-/everscale-standalone-client-2.1.5.tgz#070012e2385a894e334f9682e7bf365837f56166"
+  integrity sha512-dp5pCABzJsW+ZSfBUlSr3f8xRjYBOCxM8t7YaiA7dhMsC1rfmDRVoT5mgnOeyJPLq9k21XgZvLOJAF97PhmnRA==
+  dependencies:
+    "@broxus/await-semaphore" "^0.1.5"
+    bignumber.js "^9.1.0"
+    events "^3.3.0"
+    everscale-inpage-provider "^0.3.45"
     fast-safe-stringify "^2.1.1"
     nekoton-wasm "^1.0.5"
     node-fetch "^2.6.7"
@@ -1399,10 +1417,10 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
-locklift@^2.1.6, locklift@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/locklift/-/locklift-2.4.4.tgz#758beb3416e96ff217b8f04a438ea0f8cf68acbb"
-  integrity sha512-G6mUkgEq/2/RJ5Lr0/WP/E+pSGTYnh8/TyKKt8p1d8xyL3F5zIN/9nSD4IEOXj4biKzZWVyOGtxyW2253S6gHA==
+locklift@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/locklift/-/locklift-2.4.6.tgz#e3fd856834a5bbb813001bd6e964012c9d442ffa"
+  integrity sha512-1x9PP6JIl2rfB+E+iI7QL0ZhTrm1N3l96KWjoC128zGVbRNWkecXaYHTxPxV1w9mQ8kEMidZq0w2GFS5iUD3WA==
   dependencies:
     "@types/yargs" "^17.0.13"
     axios "^0.27.2"
@@ -1413,8 +1431,8 @@ locklift@^2.1.6, locklift@^2.4.4:
     ejs "^3.1.6"
     env-paths "^2.2.1"
     everscale-crypto "^0.1.1"
-    everscale-inpage-provider "^0.3.43"
-    everscale-standalone-client "^2.1.1"
+    everscale-inpage-provider "^0.3.45"
+    everscale-standalone-client "^2.1.5"
     fs-extra "^10.1.0"
     lodash "^4.17.21"
     mocha "^10.0.0"

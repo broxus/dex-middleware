@@ -10,7 +10,7 @@ IFREF {
 GETGLOB 6
 THROWIF 51
 ENDS
-.loc ../contracts/test/ReceiverAfterDex.sol, 0
+.loc ../contracts/test/ReceiverAfterDex.tsol, 0
 CALLREF {
 	CALL $c7_to_c4$
 }
@@ -25,7 +25,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/test/ReceiverAfterDex.sol, 19
+.loc ../contracts/test/ReceiverAfterDex.tsol, 19
 OVER
 PUSHCONT {
 	LDREF
@@ -49,7 +49,7 @@ CTOS
 LDMSGADDR
 LDREF
 ENDS
-.loc ../contracts/test/ReceiverAfterDex.sol, 0
+.loc ../contracts/test/ReceiverAfterDex.tsol, 0
 CALLREF {
 	CALL $onAcceptTokensTransfer_e63f2284_internal_macro$
 }
@@ -60,11 +60,11 @@ CALLREF {
 THROW 0
 
 .macro onAcceptTokensTransfer_e63f2284_internal_macro
-.loc ../contracts/test/ReceiverAfterDex.sol, 27
+.loc ../contracts/test/ReceiverAfterDex.tsol, 27
 CTOS
-.loc ../contracts/test/ReceiverAfterDex.sol, 28
+.loc ../contracts/test/ReceiverAfterDex.tsol, 28
 PLDREF
-.loc ../contracts/test/ReceiverAfterDex.sol, 29
+.loc ../contracts/test/ReceiverAfterDex.tsol, 29
 BLKSWAP 2, 3
 PUSHSLICE xc00000000000000000000000004c0fa939
 NEWC
@@ -76,7 +76,7 @@ ENDC
 PUSHINT 0
 SENDRAWMSG
 BLKDROP 3
-.loc ../contracts/test/ReceiverAfterDex.sol, 0
+.loc ../contracts/test/ReceiverAfterDex.tsol, 0
 
 .macro onAcceptTokensBurn
 DROP
@@ -87,7 +87,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/test/ReceiverAfterDex.sol, 32
+.loc ../contracts/test/ReceiverAfterDex.tsol, 32
 OVER
 PUSHCONT {
 	LDREF
@@ -107,7 +107,7 @@ CTOS
 LDMSGADDR
 LDREF
 ENDS
-.loc ../contracts/test/ReceiverAfterDex.sol, 0
+.loc ../contracts/test/ReceiverAfterDex.tsol, 0
 CALLREF {
 	CALL $onAcceptTokensBurn_07d14114_internal_macro$
 }
@@ -118,11 +118,11 @@ CALLREF {
 THROW 0
 
 .macro onAcceptTokensBurn_07d14114_internal_macro
-.loc ../contracts/test/ReceiverAfterDex.sol, 39
+.loc ../contracts/test/ReceiverAfterDex.tsol, 39
 CTOS
-.loc ../contracts/test/ReceiverAfterDex.sol, 40
+.loc ../contracts/test/ReceiverAfterDex.tsol, 40
 PLDREF
-.loc ../contracts/test/ReceiverAfterDex.sol, 41
+.loc ../contracts/test/ReceiverAfterDex.tsol, 41
 BLKSWAP 2, 3
 PUSHSLICE xc0000000000000000000000000269063d1
 NEWC
@@ -134,7 +134,7 @@ ENDC
 PUSHINT 0
 SENDRAWMSG
 DROP2
-.loc ../contracts/test/ReceiverAfterDex.sol, 0
+.loc ../contracts/test/ReceiverAfterDex.tsol, 0
 
 .macro c4_to_c7
 PUSHROOT

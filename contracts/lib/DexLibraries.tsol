@@ -1,0 +1,12 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+library DexGas {
+    uint128 constant CROSS_POOL_EXCHANGE_MIN_VALUE = 0.5 ever;
+}
+
+library DexOperationStatusV2 {
+    uint8 constant SUCCESS = 200;
+    uint8 constant CANCEL = 201;
+}

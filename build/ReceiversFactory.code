@@ -10,9 +10,9 @@ IFREF {
 GETGLOB 6
 THROWIF 51
 ENDS
-.loc ../contracts/test/ReceiversFactory.sol, 14
+.loc ../contracts/test/ReceiversFactory.tsol, 14
 ACCEPT
-.loc ../contracts/test/ReceiversFactory.sol, 0
+.loc ../contracts/test/ReceiversFactory.tsol, 0
 CALLREF {
 	CALL $c7_to_c4$
 }
@@ -22,10 +22,10 @@ THROW 0
 DROP
 GETGLOB 6
 THROWIFNOT 76
-.loc ../contracts/test/ReceiversFactory.sol, 17
+.loc ../contracts/test/ReceiversFactory.tsol, 17
 LDREF
 ENDS
-.loc ../contracts/test/ReceiversFactory.sol, 0
+.loc ../contracts/test/ReceiversFactory.tsol, 0
 CALLREF {
 	CALL $getChildPayload_0d1fafce_internal_macro$
 }
@@ -61,11 +61,11 @@ THROW 0
 CALL $getChildPayload_0d1fafce_internal_macro$
 
 .macro getChildPayload_0d1fafce_internal_macro
-.loc ../contracts/test/ReceiversFactory.sol, 18
+.loc ../contracts/test/ReceiversFactory.tsol, 18
 NEWC
 STREF
 ENDC
-.loc ../contracts/test/ReceiversFactory.sol, 0
+.loc ../contracts/test/ReceiversFactory.tsol, 0
 
 .macro deployReceivers
 DROP
@@ -76,7 +76,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/test/ReceiversFactory.sol, 22
+.loc ../contracts/test/ReceiversFactory.tsol, 22
 OVER
 PUSHCONT {
 	LDREF
@@ -86,7 +86,7 @@ PUSHCONT {
 IF
 LDU 128
 ENDS
-.loc ../contracts/test/ReceiversFactory.sol, 0
+.loc ../contracts/test/ReceiversFactory.tsol, 0
 CALLREF {
 	CALL $deployReceivers_095b9548_internal_macro$
 }
@@ -101,14 +101,14 @@ THROW 0
 CALL $deployReceivers_095b9548_internal_macro$
 
 .macro deployReceivers_095b9548_internal_macro
-.loc ../contracts/test/ReceiversFactory.sol, 23
+.loc ../contracts/test/ReceiversFactory.tsol, 23
 PUSHINT 0
 PUSHCONT {
 	PUSH2 S0, S1
 	LESS
 }
 PUSHCONT {
-	.loc ../contracts/test/ReceiversFactory.sol, 24
+	.loc ../contracts/test/ReceiversFactory.tsol, 24
 	PUSHINT 0
 	NEWC
 	STU 256
@@ -183,7 +183,7 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/test/ReceiversFactory.sol, 36
+	.loc ../contracts/test/ReceiversFactory.tsol, 36
 	PUSHSLICE xc00000000000000000000000007f769862
 	NEWC
 	STSLICE
@@ -191,14 +191,14 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/test/ReceiversFactory.sol, 23
+	.loc ../contracts/test/ReceiversFactory.tsol, 23
 	INC
 	UFITS 128
-	.loc ../contracts/test/ReceiversFactory.sol, 0
+	.loc ../contracts/test/ReceiversFactory.tsol, 0
 }
 WHILE
 DROP2
-.loc ../contracts/test/ReceiversFactory.sol, 0
+.loc ../contracts/test/ReceiversFactory.tsol, 0
 
 .macro c4_to_c7
 PUSHROOT
