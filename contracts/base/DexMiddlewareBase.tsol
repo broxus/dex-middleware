@@ -1,0 +1,118 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./DexMiddlewareStorage.tsol";
+import "../DexChildMiddleware.tsol";
+import "../lib/ErrorCodes.tsol";
+import "../lib/Constants.tsol";
+import "../lib/CommonStructures.tsol";
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+
+abstract contract DexMiddlewareBase is DexMiddlewareStorage {
+
+    modifier onlyChild(uint128 childNonce) {
+        address childAddress = getChildAddress(childNonce);
+        require(msg.sender == childAddress, ErrorCodes.NOT_CHILD_CONTRACT);
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, ErrorCodes.NOT_OWNER);
+        _;
+    }
+
+        // utils
+    function _reserve() internal pure returns (uint128) {
+		return
+			math.max(address(this).balance - msg.value, Constants.CHILD_CONTRACT_MIN_BALANCE);
+	}
+
+    function transferOwnership(address _newOwner) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        owner = _newOwner;
+        emit OwnerChanged(owner);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
+    function setIsPaused(bool _isPaused) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        isPaused = _isPaused;
+        emit PauseStateChanged(isPaused);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
+    function setChildCode(TvmCell _dexMiddlewareChildCode) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        childVersion++;
+        dexMiddlewareChildCode = _dexMiddlewareChildCode;
+        emit ChildCodeUpdated(childVersion);
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
+    function getDetails() override external responsible view returns (Details) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} Details(
+            nonce,
+            owner,
+            dexMiddlewareVersion,
+            isPaused,
+            currentChildNonce,
+            childVersion
+        );
+    }
+
+    function _buildInitAccount(uint128 childNonce)
+		internal
+		view
+		virtual
+		returns (TvmCell)
+	{
+		return
+			tvm.buildStateInit({
+				contr: DexChildMiddleware,
+				varInit: {
+					root: address(this),
+                    nonce: childNonce
+				},
+				pubkey: 0,
+				code: dexMiddlewareChildCode
+			});
+	}
+
+    function deployChild(
+        uint128 childNonce,
+        address _rootWallet,
+        TvmCell _dexPayload,
+        uint128 _tokensAmount,
+        uint128 _attachedValue,
+        mapping (address => address[]) _rootToSendersAllowanceMap,
+        uint32 _leaves,
+        address _firstRoot,
+        address _remainingGasTo,
+        CommonStructures.FinishTransaction _successPayload,
+        CommonStructures.FinishTransaction _cancelPayload
+    ) internal view returns(address) {
+        return new DexChildMiddleware{
+            stateInit: _buildInitAccount(childNonce),
+            value: _attachedValue
+        }(_rootWallet, _dexPayload, _tokensAmount, _rootToSendersAllowanceMap, _remainingGasTo, _leaves, _firstRoot, _successPayload, _cancelPayload);
+    }
+
+    function getChildAddress(uint128 childNonce) public view responsible returns(address) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(
+            tvm.hash(_buildInitAccount(childNonce))
+        );
+    }
+
+    function buildPayload(
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn,
+        address remainingTokensTo
+    ) override external pure returns (TvmCell) {
+        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers, _payloadsForBurn, remainingTokensTo);
+    }
+}
