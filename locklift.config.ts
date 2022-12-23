@@ -2,6 +2,8 @@ import { LockliftConfig } from "locklift";
 import { FactorySource } from "./build/factorySource";
 import { SimpleGiver, GiverWallet, GiverWalletV2_3, TestnetGiver } from "./giverSettings";
 import * as chai from "chai";
+require("dotenv").config();
+
 import { lockliftChai } from "locklift/chaiPlugin";
 chai.use(lockliftChai);
 import * as fs from "fs";

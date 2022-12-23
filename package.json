@@ -9,7 +9,8 @@
     "test-4": "npx locklift test --network local --tests test/4_multi_transfer-test.ts",
     "test-5": "npx locklift test --network local --tests test/5_validation-test.ts",
     "test-6": "npx locklift test --network local --tests test/6_force_finalize-test.ts",
-    "test-7": "npx locklift test --network local --tests test/7_burn-test.ts"
+    "test-7": "npx locklift test --network local --tests test/7_burn-test.ts",
+    "deploy-main": "npx locklift run --disable-build --network main -s scripts/1-deploy-dex-middleware.ts"
   },
   "author": "",
   "license": "ISC",
