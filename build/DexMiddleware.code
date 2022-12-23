@@ -2122,59 +2122,6 @@ PUSHCONT {
 IF
 THROW 0
 
-.globl	Payload_with_obj_encodePayload_86811bec
-.type	Payload_with_obj_encodePayload_86811bec, @function
-CALL $Payload_with_obj_encodePayload_86811bec_macro$
-
-.macro Payload_with_obj_encodePayload_86811bec_macro
-.loc ../contracts/lib/Payload.tsol, 28
-DUP
-CTOS
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDMSGADDR
-ENDS
-.loc ../contracts/lib/Payload.tsol, 0
-
-.globl	Payload_no_obj_encodePayload_86811bec
-.type	Payload_no_obj_encodePayload_86811bec, @function
-CALL $Payload_no_obj_encodePayload_86811bec_macro$
-
-.macro Payload_no_obj_encodePayload_86811bec_macro
-.loc ../contracts/lib/Payload.tsol, 28
-CTOS
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDMSGADDR
-ENDS
-.loc ../contracts/lib/Payload.tsol, 0
-
 .globl	Payload_with_obj_buildPayload_d970a82c
 .type	Payload_with_obj_buildPayload_d970a82c, @function
 CALL $Payload_with_obj_buildPayload_d970a82c_macro$
@@ -2227,6 +2174,59 @@ STU 32
 STDICT
 STSLICE
 ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_with_obj_encodePayload_86811bec
+.type	Payload_with_obj_encodePayload_86811bec, @function
+CALL $Payload_with_obj_encodePayload_86811bec_macro$
+
+.macro Payload_with_obj_encodePayload_86811bec_macro
+.loc ../contracts/lib/Payload.tsol, 28
+DUP
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDMSGADDR
+ENDS
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_no_obj_encodePayload_86811bec
+.type	Payload_no_obj_encodePayload_86811bec, @function
+CALL $Payload_no_obj_encodePayload_86811bec_macro$
+
+.macro Payload_no_obj_encodePayload_86811bec_macro
+.loc ../contracts/lib/Payload.tsol, 28
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDMSGADDR
+ENDS
 .loc ../contracts/lib/Payload.tsol, 0
 
 .macro public_function_selector
