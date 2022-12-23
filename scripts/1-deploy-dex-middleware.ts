@@ -2,6 +2,7 @@ import { Address, fromNano, Signer, toNano } from "locklift";
 import { isValidAddress, logger } from "./utils";
 import prompts from "prompts";
 import BigNumber from "bignumber.js";
+require("dotenv").config();
 
 const deployDexMiddleware = async ({
   signer,

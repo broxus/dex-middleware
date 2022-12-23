@@ -1,10 +1,8 @@
 # DEX middleware - DeFi utility for making multi swaps, multi sends, multi burn and combine it
 
 ## Deploy
-
+Update `.env` file
 ```shell
-cross-env SEED="{}" \
-MAIN_GIVER_KEY={} \
 npx locklift run --disable-build --network main -s scripts/1-deploy-dex-middleware.ts
 ```
 

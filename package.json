@@ -18,7 +18,6 @@
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.8",
     "broxus-ton-tokens-contracts": "git+ssh://git@gitlab.broxus.com/tokens/tip3#3997abf036025c8b771100b1d6c75d478c6a607a",
-
     "chai": "^4.3.6",
     "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#c095bd43cdecda0ee67a671c2c9177f2aca1c7eb",
     "everscale-standalone-client": "^2.1.1",
@@ -31,6 +30,7 @@
     "@broxus/contracts": "^1.1.1",
     "@types/prompts": "^2.4.2",
     "bignumber.js": "^9.1.0",
+    "dotenv": "^16.0.3",
     "mocha-logger": "^1.0.8",
     "prompts": "^2.4.2",
     "rxjs": "^7.5.7"

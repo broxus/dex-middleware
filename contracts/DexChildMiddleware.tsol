@@ -88,7 +88,6 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
         require(walletToAllowedSenders.exists(msg.sender), ErrorCodes.NOT_ALLOWED_TOKEN_WALLET);
 
         bool isAllowed = tokensSender == root || walletToAllowedSenders[msg.sender].exists(tokensSender);
-
         require(isAllowed, ErrorCodes.NOT_ALLOWED_TOKENS_SENDER);
         _;
     }
