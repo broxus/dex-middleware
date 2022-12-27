@@ -5,9 +5,9 @@ import { DexMiddleware } from "./entities/dexMiddleware";
 import { User } from "./entities/user";
 import { expect } from "chai";
 
-import { Contract } from "../../ever-locklift/everscale-provider";
+import { Contract } from "locklift/everscale-provider";
 import { ReceiverAfterDexAbi, ReceiversFactoryAbi, TokenRootUpgradeableAbi } from "../build/factorySource";
-import { Address } from "../../ever-locklift";
+import { Address } from "locklift/everscale-provider";
 
 let context: Context;
 let user: User;
@@ -128,15 +128,21 @@ describe("Burn testing", () => {
       remainingTokensTo: user.account.address,
     });
     const stEverTokenWallet = await user.getTokenWalletByRoot(stEverTokenRoot);
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: payloadForDexMiddleware,
+      })
+      .call()
+      .then(res => res.value0);
     const { traceTree } = await locklift.tracing.trace(
       stEverTokenWallet.transferTokens(
-        { amount: toNano(20) },
+        { amount: everValue },
         {
           deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: payloadForDexMiddleware,
           recipient: context.dexMiddleware.contract.address,
-          amount: toNano(500),
+          amount: tokenAmount,
           notify: true,
         },
       ),

@@ -162,16 +162,21 @@ describe("Multi swap testing", () => {
     });
 
     expect(await qweTokenWallet.getBalance()).to.be.eq(initialTokenBalance);
-
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: dexMiddlewarePayload,
+      })
+      .call()
+      .then(res => res.value0);
     const { traceTree } = await locklift.tracing.trace(
       qweTokenWallet.transferTokens(
-        { amount: toNano(300) },
+        { amount: everValue },
         {
           deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: dexMiddlewarePayload,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(500).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: tokenAmount,
           notify: true,
         },
       ),
@@ -328,18 +333,23 @@ describe("Multi swap testing", () => {
       receiver: user.account.address,
       amount: initialTokenBalance,
     });
-
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: dexMiddlewarePayload,
+      })
+      .call()
+      .then(res => res.value0);
     expect(await qweTokenWallet.getBalance()).to.be.eq(initialTokenBalance);
 
     const { traceTree } = await locklift.tracing.trace(
       qweTokenWallet.transferTokens(
-        { amount: toNano(300) },
+        { amount: everValue },
         {
           deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: dexMiddlewarePayload,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(500).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: tokenAmount,
           notify: true,
         },
       ),

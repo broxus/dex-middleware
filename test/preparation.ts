@@ -1,7 +1,7 @@
 import { Account, Signer } from "locklift/everscale-client";
 import { Dex, getDexInstance } from "../dex";
 import { concatMap, filter, from, lastValueFrom, map, range, switchMap, toArray } from "rxjs";
-import { getRandomNonce, toNano, WalletTypes } from "../../ever-locklift";
+import { getRandomNonce, toNano, WalletTypes } from "locklift";
 import { DexMiddleware, DexMiddlewareContract } from "./entities/dexMiddleware";
 import { User } from "./entities/user";
 

@@ -61,12 +61,25 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
             _payload
         );
     }
+    function calculateFeeAndTokensValue(TvmCell _transferPayload) override public pure returns (CommonStructures.CalculationResult) {
+        (
+            CommonStructures.PayloadForDex[] payloadsForDex,
+            CommonStructures.PayloadForTransfer[] payloadsForTransfer,
+            CommonStructures.PayloadForBurn[] payloadsForBurn,
+        ) = Payload.encodePayload(_transferPayload);
 
-    function calculateFeeAndTokensValue(
+        CommonStructures.CalculationResult calculationResult = _calculateFeeAndTokensValue(payloadsForDex, payloadsForTransfer, payloadsForBurn);
+        calculationResult.everValue +=
+            uint128(payloadsForDex.length) * Constants.ADDITIONAL_EVER_VALUE +
+            uint128(payloadsForTransfer.length) * Constants.ADDITIONAL_EVER_VALUE +
+            uint128(payloadsForBurn.length) * Constants.ADDITIONAL_EVER_VALUE;
+        return calculationResult;
+    }
+    function _calculateFeeAndTokensValue(
         CommonStructures.PayloadForDex[] _payloadsForDex,
         CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
         CommonStructures.PayloadForBurn[] _payloadsForBurn
-    ) override public pure returns (CommonStructures.CalculationResult) {
+    ) internal pure returns (CommonStructures.CalculationResult) {
         uint128 requiredValue;
         uint128 requiredTokenAmount;
         for (CommonStructures.PayloadForTransfer _transferConfig : _payloadsForTransfer) {
@@ -90,11 +103,11 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
             );
 
             requiredValue += Constants.DEPLOY_CHILD_VALUE +
+                _dexConfig.attachedValue +
                 _dexConfig.leaves *
                 (
                     maxValueForFinalTransfer +
-                    maxDeployWalletValue +
-                    DexGas.CROSS_POOL_EXCHANGE_MIN_VALUE
+                    maxDeployWalletValue
                 );
         }
 
@@ -109,7 +122,8 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
         CommonStructures.PayloadForBurn[] _payloadsForBurn,
         uint128 _receivedTokensAmount
     ) internal pure returns(bool, uint128) {
-        CommonStructures.CalculationResult calculationResult = calculateFeeAndTokensValue(_payloadsForDex, _payloadsForTransfer, _payloadsForBurn);
+        CommonStructures.CalculationResult calculationResult = _calculateFeeAndTokensValue(_payloadsForDex, _payloadsForTransfer, _payloadsForBurn);
+
         if (msg.value < calculationResult.everValue) {
             return (false, 0);
         }

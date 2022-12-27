@@ -146,16 +146,22 @@ describe("Validation testing", () => {
         );
       });
       it("all tokens should charged back because middleware is paused", async () => {
+        const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+          .calculateFeeAndTokensValue({
+            _transferPayload: payloadForDexMiddleware,
+          })
+          .call()
+          .then(res => res.value0);
         await context.dexMiddleware.setIsPaused(true);
         const { traceTree } = await locklift.tracing.trace(
           qweTokenWallet.transferTokens(
-            { amount: toNano(20) },
+            { amount: everValue },
             {
               deployWalletValue: toNano(0),
               remainingGasTo: user.account.address,
               payload: payloadForDexMiddleware,
               recipient: context.dexMiddleware.contract.address,
-              amount: new BigNumber(TOKENS_AMOUNT_FOR_DEX).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+              amount: tokenAmount,
               notify: true,
             },
           ),

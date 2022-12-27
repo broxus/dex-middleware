@@ -20,7 +20,7 @@
     "@types/node": "^18.11.8",
     "broxus-ton-tokens-contracts": "git+ssh://git@gitlab.broxus.com/tokens/tip3#3997abf036025c8b771100b1d6c75d478c6a607a",
     "chai": "^4.3.6",
-    "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#c095bd43cdecda0ee67a671c2c9177f2aca1c7eb",
+    "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#050e3a01ea7eeea0fab07ee2192e6e6d5ddbdf1b",
     "everscale-standalone-client": "^2.1.1",
     "locklift": "^2.4.6",
     "prettier": "^2.7.1",

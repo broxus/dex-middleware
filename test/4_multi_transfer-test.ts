@@ -113,16 +113,21 @@ describe("Multi transfer testing", () => {
       _payloadsForBurn: [],
       remainingTokensTo: user.account.address,
     });
-
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: payloadForDexMiddleware,
+      })
+      .call()
+      .then(res => res.value0);
     const { traceTree } = await locklift.tracing.trace(
       qweTokenWallet.transferTokens(
-        { amount: toNano(20) },
+        { amount: everValue },
         {
           deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: payloadForDexMiddleware,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(TOTAL_TOKEN_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: tokenAmount,
           notify: true,
         },
       ),
@@ -225,16 +230,21 @@ describe("Multi transfer testing", () => {
 
       remainingTokensTo: user.account.address,
     });
-
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: payloadForDexMiddleware,
+      })
+      .call()
+      .then(res => res.value0);
     const { traceTree } = await locklift.tracing.trace(
       qweTokenWallet.transferTokens(
-        { amount: toNano(20) },
+        { amount: everValue },
         {
           deployWalletValue: toNano(0),
           remainingGasTo: user.account.address,
           payload: payloadForDexMiddleware,
           recipient: context.dexMiddleware.contract.address,
-          amount: new BigNumber(TOTAL_TOKEN_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+          amount: tokenAmount,
           notify: true,
         },
       ),

@@ -480,7 +480,7 @@ export const getPayload = async ({
       _recipient: Account3.address,
       _success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
       _cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
-      _referral: zeroAddress,
+      _referrer: zeroAddress,
     };
     console.log(`Call buildCrossPairExchangePayloadV2(${firstPool.address.toString()}`);
 
@@ -507,7 +507,7 @@ export const getPayload = async ({
       success_payload: callbackPayloads?.success ?? EMPTY_TVM_CELL,
       cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
       recipient: recipient,
-      referral: zeroAddress,
+      referrer: zeroAddress,
     };
     console.log(`Call buildCrossPairExchangePayload(${firstPool.address.toString()}`);
 
@@ -520,7 +520,11 @@ export const getPayload = async ({
     payload = await (firstPool as unknown as Contract<DexStablePoolAbi>).methods
       .buildCrossPairExchangePayload(params)
       .call()
-      .then(res => res.value0);
+      .then(res => res.value0)
+      .catch(e => {
+        params;
+        debugger;
+      });
   }
   //  end build
   return { payload, firstPool: firstPool.address, finalExpectedAmount: finalExpectedAmount.toString(), steps };

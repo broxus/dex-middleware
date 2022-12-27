@@ -1,4 +1,4 @@
-import { Address } from "../../../ever-locklift/everscale-provider";
+import { Address } from "locklift/everscale-provider";
 
 export const getExpectedTokenAmount = ({
   steps,

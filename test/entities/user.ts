@@ -2,7 +2,7 @@ import { Account, Signer } from "locklift/everscale-client";
 import { Address } from "locklift/everscale-provider";
 
 import { TokenWallet } from "./tokenWallet";
-import { Contract } from "../../../ever-locklift/everscale-provider";
+import { Contract } from "locklift/everscale-provider";
 import { TokenRootUpgradeableAbi } from "../../build/factorySource";
 
 export class User {
