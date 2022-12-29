@@ -81,7 +81,7 @@ describe("success and cancel", () => {
             deployWalletValue: toNano("0.2"),
           },
           deployWalletValue: toNano(1),
-          attachedValue: toNano(10),
+          valueForDexOperation: toNano(10),
           firstRoot: firstPool,
           leaves: leaves + 1,
           tokensAmount: new BigNumber(TOKENS_AMOUNT).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),

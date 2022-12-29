@@ -143,9 +143,9 @@ export const getPayload = async ({
   DexVault = migration.load("DexVault");
   Account3 = migration.load("Account3");
 
-  console.log("DexRoot: " + DexRoot.address);
-  console.log("DexVault: " + DexVault.address);
-  console.log("Account#3: " + Account3.address);
+  // console.log("DexRoot: " + DexRoot.address);
+  // console.log("DexVault: " + DexVault.address);
+  // console.log("Account#3: " + Account3.address);
 
   async function loadPoolsData(route) {
     for (let elem of route) {
@@ -163,7 +163,7 @@ export const getPayload = async ({
 
           const root = migration.load(tokens[token].symbol + "Root");
           tokenRoots[token] = root;
-          console.log(`${tokens[token].symbol}TokenRoot: ${root.address}`);
+          // console.log(`${tokens[token].symbol}TokenRoot: ${root.address}`);
         }
       }
       let poolName = getPoolName(pool_tokens);
@@ -183,19 +183,19 @@ export const getPayload = async ({
         const tokenRight = tokens[pool_tokens[1]];
         if (migration.exists(`DexPair${tokenLeft.symbol}${tokenRight.symbol}`)) {
           pool = migration.load(`DexPair${tokenLeft.symbol}${tokenRight.symbol}`);
-          console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol}: ${pool.address}`);
+          // console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol}: ${pool.address}`);
         } else if (migration.exists(`DexPair${tokenRight.symbol}${tokenLeft.symbol}`)) {
           pool = migration.load(`DexPair${tokenRight.symbol}${tokenLeft.symbol}`);
-          console.log(`DexPair${tokenRight.symbol}${tokenLeft.symbol}: ${pool.address}`);
+          // console.log(`DexPair${tokenRight.symbol}${tokenLeft.symbol}: ${pool.address}`);
         } else {
-          console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol} NOT EXISTS`);
+          // console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol} NOT EXISTS`);
         }
       } else {
         if (migration.exists(`DexPool${poolName}`)) {
           pool = migration.load(`DexPool${poolName}`);
-          console.log(`DexPool${poolName}: ${pool.address}`);
+          // console.log(`DexPool${poolName}: ${pool.address}`);
         } else {
-          console.log(`DexPool${poolName} NOT EXISTS`);
+          // console.log(`DexPool${poolName} NOT EXISTS`);
         }
       }
       poolsContracts[poolName] = pool;
@@ -218,13 +218,13 @@ export const getPayload = async ({
       tokens[tokenId] = { name: tokenId, symbol: tokenName, decimals: Constants.LP_DECIMALS, upgradeable: true };
       const root = migration.load(tokenName + "Root");
       tokenRoots[tokenId] = root;
-      console.log(`${tokenName}TokenRoot: ${root.address}`);
+      // console.log(`${tokenName}TokenRoot: ${root.address}`);
     }
     if (accountWallets[tokenId] === undefined || dexWallets[tokenId] === undefined) {
       dexWallet = migration.load(tokenName + "VaultWallet");
       dexWallets[tokenId] = dexWallet;
       accountWallets[tokenId] = accountWallet;
-      console.log(`${tokenName}VaultWallet: ${dexWallet.address}`);
+      // console.log(`${tokenName}VaultWallet: ${dexWallet.address}`);
     }
   }
 
@@ -241,7 +241,7 @@ export const getPayload = async ({
 
   //  end before
   //  start build
-  console.log("#################################################");
+  // console.log("#################################################");
 
   async function getRouteDexPoolsInfo(route, poolsMap) {
     for (let elem of route) {
@@ -271,7 +271,7 @@ export const getPayload = async ({
   let lastStepPools = [];
 
   // Calculate expected result
-  console.log(`### EXPECTED ###`);
+  // console.log(`### EXPECTED ###`);
 
   async function getExpectedAmount(route, spent_token, spent_amount) {
     let denominator = route.reduce((partialSum, elem) => partialSum + elem.numerator, 0);
@@ -370,10 +370,10 @@ export const getPayload = async ({
         const expectedAmount = new BigNumber(expected.expected_amount);
 
         expected_amount = expectedAmount.plus(expectedAmount.multipliedBy(elem.amountIncrease || 0)).toFixed(0);
-        console.log(`Original expected ${expectedAmount} -> ${expected_amount}`);
+        // console.log(`Original expected ${expectedAmount} -> ${expected_amount}`);
       }
 
-      console.log();
+      // console.log();
       let tokenLeft = tokens[spent_token];
       let tokenRight = tokens[elem.outcoming];
       let logStr = `${new BigNumber(partial_spent_amount).shiftedBy(-tokenLeft.decimals)} ${tokenLeft.symbol}`;
@@ -399,7 +399,7 @@ export const getPayload = async ({
       } else {
         logStr += `, fee = ${new BigNumber(expected.expected_fee).shiftedBy(-tokenLeft.decimals)} ${tokenLeft.symbol}`;
       }
-      console.log(logStr);
+      // console.log(logStr);
 
       const expected_balances = [];
       elem.roots.forEach((root, idx) => {
@@ -462,7 +462,7 @@ export const getPayload = async ({
   }
 
   let next_indices = await getExpectedAmount(route, start_token, currentAmount);
-  console.log("");
+  // console.log("");
 
   let poolName = getPoolName(route[0].roots);
   const firstPool = poolsContracts[poolName] as Contract<DexPairAbi>;
@@ -482,9 +482,9 @@ export const getPayload = async ({
       _cancel_payload: callbackPayloads?.cancel ?? EMPTY_TVM_CELL,
       _referrer: zeroAddress,
     };
-    console.log(`Call buildCrossPairExchangePayloadV2(${firstPool.address.toString()}`);
+    // console.log(`Call buildCrossPairExchangePayloadV2(${firstPool.address.toString()}`);
 
-    console.log(`Call buildCrossPairExchangePayloadV2(${JSON.stringify(params, null, 4)})`);
+    // console.log(`Call buildCrossPairExchangePayloadV2(${JSON.stringify(params, null, 4)})`);
     //TODO
     // payload = await firstPool.call({
     //   method: "buildCrossPairExchangePayloadV2",
@@ -509,9 +509,9 @@ export const getPayload = async ({
       recipient: recipient,
       referrer: zeroAddress,
     };
-    console.log(`Call buildCrossPairExchangePayload(${firstPool.address.toString()}`);
+    // console.log(`Call buildCrossPairExchangePayload(${firstPool.address.toString()}`);
 
-    console.log(`Call buildCrossPairExchangePayload(${JSON.stringify(params, null, 4)})`);
+    // console.log(`Call buildCrossPairExchangePayload(${JSON.stringify(params, null, 4)})`);
     //TODO
     // payload = await firstPool.call({
     //   method: "buildCrossPairExchangePayload",

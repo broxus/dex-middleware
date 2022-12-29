@@ -40,7 +40,7 @@ library CommonStructures {
         address firstRoot;
         address remainingGasTo;
         uint128 tokensAmount;
-        uint128 attachedValue;
+        uint128 valueForDexOperation;
         uint128 deployWalletValue;
         mapping (address => address[]) rootToSendersAllowanceMap;
         FinishTransaction successPayload;

@@ -20,6 +20,32 @@ const DEV_NET_NETWORK_ENDPOINT = process.env.DEV_NET_NETWORK_ENDPOINT || "https:
 const MAIN_NET_NETWORK_ENDPOINT = process.env.MAIN_NET_NETWORK_ENDPOINT || "https://mainnet.evercloud.dev/XXX/graphql";
 
 const config: LockliftConfig = {
+  // sold: {
+  //   // Specify path to your TON-Solidity-Compiler
+  //   // path: "/mnt/o/projects/broxus/TON-Solidity-Compiler/build/solc/solc",
+  //
+  //   // Or specify version of compiler
+  //   version: "0.64.0",
+  //
+  //   // Specify config for extarnal contracts as in exapmple
+  //   externalContracts: {
+  //     "node_modules/broxus-ton-tokens-contracts/build": [
+  //       "TokenRoot",
+  //       "TokenWallet",
+  //       "TokenRootUpgradeable",
+  //       "TokenWalletUpgradeable",
+  //       "TokenWalletPlatform",
+  //     ],
+  //     // dex_build: fs
+  //     //   .readdirSync(path.resolve(__dirname, "dex_build"))
+  //     //   .filter(el => el.includes(".abi.json"))
+  //     //   .map(el => el.replace(".abi.json", "")),
+  //     "node_modules/dex/build": fs
+  //       .readdirSync(path.resolve(__dirname, "node_modules/dex/build"))
+  //       .filter(el => el.includes(".abi.json") && el !== "Wallet.abi.json")
+  //       .map(el => el.replace(".abi.json", "")),
+  //   },
+  // },
   compiler: {
     // Specify path to your TON-Solidity-Compiler
     // path: "/mnt/o/projects/broxus/TON-Solidity-Compiler/build/solc/solc",

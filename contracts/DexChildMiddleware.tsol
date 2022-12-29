@@ -30,6 +30,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
     uint32 necessaryLeaves;
     address remainingGasTo;
     address firstRoot;
+    uint128 valueForDex;
     CommonStructures.FinishTransaction successConfig;
     CommonStructures.FinishTransaction cancelConfig;
     uint128 initialTokensAmount;
@@ -45,6 +46,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
     constructor(
         address _rootWallet,
         TvmCell _dexPayload,
+        uint128 _valueForDex,
         uint128 _tokensAmount,
         mapping (address => address[]) _rootToSendersAllowanceMap,
         address _remainingGasTo,
@@ -57,6 +59,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
         require(msg.sender == root, ErrorCodes.NOT_ROOT);
         rootWallet = _rootWallet;
         dexPayload = _dexPayload;
+        valueForDex = _valueForDex;
         initialTokensAmount = _tokensAmount;
         for ((address tokenRoot, address[] senders) : _rootToSendersAllowanceMap) {
             for (address sender : senders) {
@@ -129,7 +132,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
         address _remainingGasTo
     ) internal {
         tokenWalletFromRootTransfer = _tokenWallet;
-        ITokenWallet(msg.sender).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+        ITokenWallet(msg.sender).transfer{value: valueForDex, bounce: false}(
             _amount,
             firstRoot,
             0,

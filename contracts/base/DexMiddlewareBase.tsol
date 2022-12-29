@@ -87,7 +87,8 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         address _rootWallet,
         TvmCell _dexPayload,
         uint128 _tokensAmount,
-        uint128 _attachedValue,
+        uint128 _attachedValueForDex,
+        uint128 _totalAttachedValue,
         mapping (address => address[]) _rootToSendersAllowanceMap,
         uint32 _leaves,
         address _firstRoot,
@@ -97,8 +98,19 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
     ) internal view returns(address) {
         return new DexChildMiddleware{
             stateInit: _buildInitAccount(childNonce),
-            value: _attachedValue
-        }(_rootWallet, _dexPayload, _tokensAmount, _rootToSendersAllowanceMap, _remainingGasTo, _leaves, _firstRoot, _successPayload, _cancelPayload);
+            value: _totalAttachedValue
+        }(
+            _rootWallet,
+            _dexPayload,
+            _attachedValueForDex,
+            _tokensAmount,
+            _rootToSendersAllowanceMap,
+            _remainingGasTo,
+            _leaves,
+            _firstRoot,
+            _successPayload,
+            _cancelPayload
+        );
     }
 
     function getChildAddress(uint128 childNonce) public view responsible returns(address) {

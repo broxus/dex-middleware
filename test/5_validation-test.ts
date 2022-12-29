@@ -32,7 +32,89 @@ describe("Validation testing", () => {
         }),
     );
   });
+  it("Dex should return tokens back with bad valueForDexOperation", async () => {
+    const { route, leaves, start_token } = PreBuiltRoutes.succesSimpleRoute;
+    const TOKENS_AMOUNT_FOR_DEX = 1200;
+    const START_TOKEN = "Qwe";
+    let qweTokenWallet: TokenWallet = await user.getTokenWalletByRoot(
+      context.dex.getTokenRootByName({ tokenName: START_TOKEN }),
+    );
+    const initialTokenBalance = new BigNumber(1200).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString();
+    await context.dex.sendTokensTo({
+      tokenName: START_TOKEN,
+      receiver: user.account.address,
+      amount: initialTokenBalance,
+    });
 
+    const [tstTokenRoot, coinTokenRoot, qweTokenRoot] = (["Tst", "Coin", START_TOKEN] as const).map(tokenName =>
+      context.dex.getTokenRootByName({ tokenName }),
+    );
+    const dexPoolFooBarQwe = context.dex.getDexPool("DexPoolFooBarQwe");
+    const { payload, firstPool } = await context.dex.getPayload({
+      recipient: zeroAddress,
+      options: {
+        amount: TOKENS_AMOUNT_FOR_DEX,
+        route: [route],
+        start_token: start_token,
+      },
+    });
+    const payloadForDexMiddleware = await context.dexMiddleware.getPayload({
+      _payloadsForDex: [
+        {
+          dexPayload: payload,
+          rootToSendersAllowanceMap: [
+            [tstTokenRoot.address, [context.dex.getDexVault().address]],
+            [coinTokenRoot.address, [context.dex.getDexVault().address]],
+            [qweTokenRoot.address, [context.dexMiddleware.contract.address, dexPoolFooBarQwe.address]],
+          ],
+          remainingGasTo: user.account.address,
+          cancelPayload: {
+            payload: "",
+            tokenReceiver: user.account.address,
+            valueForFinalTransfer: toNano("0.2"),
+            deployWalletValue: toNano("0.2"),
+          },
+          successPayload: {
+            payload: "",
+            tokenReceiver: user.account.address,
+            valueForFinalTransfer: toNano("0.2"),
+            deployWalletValue: toNano("0.2"),
+          },
+          deployWalletValue: toNano(1),
+          valueForDexOperation: toNano(1),
+          firstRoot: firstPool,
+          leaves,
+          tokensAmount: new BigNumber(TOKENS_AMOUNT_FOR_DEX).shiftedBy(Number(qweTokenWallet.tokenDecimals)).toString(),
+        },
+      ],
+      _payloadsForTransfers: [],
+      _payloadsForBurn: [],
+
+      remainingTokensTo: user.account.address,
+    });
+    const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
+      .calculateFeeAndTokensValue({
+        _transferPayload: payloadForDexMiddleware,
+      })
+      .call()
+      .then(res => res.value0);
+    const { traceTree } = await locklift.tracing.trace(
+      qweTokenWallet.transferTokens(
+        { amount: everValue },
+        {
+          deployWalletValue: toNano(0),
+          remainingGasTo: user.account.address,
+          payload: payloadForDexMiddleware,
+          recipient: context.dexMiddleware.contract.address,
+          amount: tokenAmount,
+          notify: true,
+        },
+      ),
+      { rise: false },
+    );
+    await traceTree?.beautyPrint();
+    expect(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract)).to.be.eq("0");
+  });
   it("user should receive tokens back", async () => {
     const { route, leaves, start_token } = PreBuiltRoutes.succesSimpleRoute;
     const TOKENS_AMOUNT_FOR_DEX = 1200;
@@ -87,7 +169,7 @@ describe("Validation testing", () => {
                 deployWalletValue: toNano("0.2"),
               },
               deployWalletValue: toNano(1),
-              attachedValue: toNano(10),
+              valueForDexOperation: toNano(10),
               firstRoot: firstPool,
               leaves,
               tokensAmount: new BigNumber(TOKENS_AMOUNT_FOR_DEX)
@@ -101,6 +183,7 @@ describe("Validation testing", () => {
           remainingTokensTo: user.account.address,
         });
       });
+
       it("all tokens should charged back because bad value attached", async () => {
         const { traceTree } = await locklift.tracing.trace(
           qweTokenWallet.transferTokens(

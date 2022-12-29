@@ -1,0 +1,2401 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 30
+GETGLOB 2
+THROWIFNOT 1000
+.loc ../contracts/DexMiddleware.tsol, 31
+GETGLOB 2
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+EQUAL
+THROWIFNOT 1000
+.loc ../contracts/DexMiddleware.tsol, 32
+ACCEPT
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onAcceptTokensTransfer
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexMiddleware.tsol, 36
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $onAcceptTokensTransfer_e63f2284_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onAcceptTokensTransfer_e63f2284_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 45
+ROLL 4
+ROTREV
+CALLREF {
+	CALL $handleTokensTransfer_5229c374_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 0
+BLKDROP 3
+
+.macro onAcceptTokensMint
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexMiddleware.tsol, 52
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $onAcceptTokensMint_2bd1475b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onAcceptTokensMint_2bd1475b_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 58
+CALLREF {
+	CALL $handleTokensTransfer_5229c374_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 0
+DROP
+
+.macro calculateFeeAndTokensValue
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/DexMiddleware.tsol, 64
+LDREF
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $calculateFeeAndTokensValue_d7cd1aae_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2853371488
+	STUR 130
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 128
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	calculateFeeAndTokensValue_d7cd1aae_internal
+.type	calculateFeeAndTokensValue_d7cd1aae_internal, @function
+CALL $calculateFeeAndTokensValue_d7cd1aae_internal_macro$
+
+.macro calculateFeeAndTokensValue_d7cd1aae_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 65
+CALLREF {
+	CALL $Payload_no_obj_encodePayload_86811bec_macro$
+}
+DROP
+.loc ../contracts/DexMiddleware.tsol, 71
+BLKPUSH 3, 2
+CALLREF {
+	CALL $_calculateFeeAndTokensValue_98a19028_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 72
+ROLL 3
+FIRST
+UFITS 128
+PUSHINT 500000000
+MUL
+UFITS 128
+ROLL 3
+FIRST
+UFITS 128
+PUSHINT 500000000
+MUL
+UFITS 128
+ADD
+UFITS 128
+ROT
+FIRST
+UFITS 128
+PUSHINT 500000000
+MUL
+UFITS 128
+ADD
+UFITS 128
+XCPU S1, S0
+FIRST
+ROT
+ADD
+UFITS 128
+SETINDEX 0
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	_calculateFeeAndTokensValue_98a19028_internal
+.type	_calculateFeeAndTokensValue_98a19028_internal, @function
+CALL $_calculateFeeAndTokensValue_98a19028_internal_macro$
+
+.macro _calculateFeeAndTokensValue_98a19028_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 83
+PUSHINT 0
+DUP
+.loc ../contracts/DexMiddleware.tsol, 85
+ROLL 3
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDREF
+			LDU 128
+			LDU 128
+			LDI 1
+			ENDS
+			TUPLE 7
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 86
+	DUP
+	THIRD
+	PUSH S4
+	ADD
+	UFITS 128
+	POP S4
+	.loc ../contracts/DexMiddleware.tsol, 87
+	DUP
+	INDEX 4
+	OVER
+	INDEX 5
+	ADD
+	UFITS 128
+	PUSH S5
+	ADD
+	UFITS 128
+	POP S5
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 90
+ROT
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDREF
+			LDU 128
+			ENDS
+			TUPLE 5
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 91
+	DUP
+	INDEX 4
+	PUSH S5
+	ADD
+	UFITS 128
+	POP S5
+	.loc ../contracts/DexMiddleware.tsol, 92
+	DUP
+	THIRD
+	PUSH S4
+	ADD
+	UFITS 128
+	POP S4
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 95
+ROT
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDREF
+			LDU 32
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDU 128
+			LDDICT
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDREF
+			ROLLREV 4
+			TUPLE 4
+			SWAP
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDREF
+			ROLLREV 4
+			TUPLE 4
+			SWAP
+			ENDS
+			TUPLE 10
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 96
+	DUP
+	INDEX 4
+	PUSH S4
+	ADD
+	UFITS 128
+	POP S4
+	.loc ../contracts/DexMiddleware.tsol, 98
+	DUP
+	CALLREF {
+		CALL $getTotalValueForDexOperation_078272a1_internal_macro$
+	}
+	PUSH S5
+	ADD
+	UFITS 128
+	POP S5
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 101
+PAIR
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	getTotalValueForDexOperation_078272a1_internal
+.type	getTotalValueForDexOperation_078272a1_internal, @function
+CALL $getTotalValueForDexOperation_078272a1_internal_macro$
+
+.macro getTotalValueForDexOperation_078272a1_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 109
+DUP
+INDEX 8
+SECOND
+OVER
+INDEX 9
+SECOND
+MAX
+.loc ../contracts/DexMiddleware.tsol, 111
+OVER
+INDEX 8
+THIRD
+PUSH S2
+INDEX 9
+THIRD
+MAX
+PUSHINT 100000000
+MAX
+.loc ../contracts/DexMiddleware.tsol, 116
+PUSHINT 100000000
+PUSH S3
+INDEX 5
+ADD
+UFITS 128
+ROLL 3
+SECOND
+SWAP2
+ADD
+UFITS 128
+MUL
+UFITS 128
+ADD
+UFITS 128
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	checkIsEnoughValueAndTokens_98c90273_internal
+.type	checkIsEnoughValueAndTokens_98c90273_internal, @function
+CALL $checkIsEnoughValueAndTokens_98c90273_internal_macro$
+
+.macro checkIsEnoughValueAndTokens_98c90273_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 131
+ROLLREV 3
+CALLREF {
+	CALL $_calculateFeeAndTokensValue_98a19028_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 133
+DEPTH
+ADDCONST -2
+PICK
+OVER
+FIRST
+LESS
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 134
+	FALSE
+	DUP
+	BLKDROP2 2, 2
+	.loc ../contracts/DexMiddleware.tsol, 0
+}
+IFJMP
+.loc ../contracts/DexMiddleware.tsol, 136
+DUP2
+SECOND
+LESS
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 137
+	FALSE
+	DUP
+	BLKDROP2 2, 2
+	.loc ../contracts/DexMiddleware.tsol, 0
+}
+IFJMP
+.loc ../contracts/DexMiddleware.tsol, 139
+SECOND
+SUB
+UFITS 128
+TRUE
+SWAP
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	handleTokensTransfer_5229c374_internal
+.type	handleTokensTransfer_5229c374_internal, @function
+CALL $handleTokensTransfer_5229c374_internal_macro$
+
+.macro handleTokensTransfer_5229c374_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 147
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/DexMiddleware.tsol, 149
+DUP
+CALLREF {
+	CALL $Payload_no_obj_encodePayload_86811bec_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 156
+BLKPUSH 3, 3
+PUSH S9
+CALLREF {
+	CALL $checkIsEnoughValueAndTokens_98c90273_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 161
+SWAP
+NOT
+GETGLOB 14
+OR
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 162
+	ROLL 5
+	TRUE
+	ROLL 7
+	PUSHINT 0
+	ROLL 5
+	ROLL 9
+	GETGLOB 9
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 170
+	BLKDROP 4
+	.loc ../contracts/DexMiddleware.tsol, 0
+}
+IFJMP
+.loc ../contracts/DexMiddleware.tsol, 173
+DUP
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 174
+	PUSH S5
+	TRUE
+	PUSH S8
+	PUSHINT 0
+	BLKPUSH 2, 5
+	GETGLOB 9
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 2803819077499249229031122585109857988247553
+	STUR 143
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 0
+}
+IF
+.loc ../contracts/DexMiddleware.tsol, 184
+DROP2
+SWAP
+CALLREF {
+	CALL $makeTransfers_7c57bb33_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 185
+CALLREF {
+	CALL $makeBurns_4e0caff5_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 186
+CALLREF {
+	CALL $createChildProcesses_cb56b957_internal_macro$
+}
+.loc ../contracts/DexMiddleware.tsol, 187
+DROP
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/DexMiddleware.tsol, 0
+DROP
+
+.globl	makeTransfers_7c57bb33_internal
+.type	makeTransfers_7c57bb33_internal, @function
+CALL $makeTransfers_7c57bb33_internal_macro$
+
+.macro makeTransfers_7c57bb33_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 191
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDREF
+			LDU 128
+			LDU 128
+			LDI 1
+			ENDS
+			TUPLE 7
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 193
+	DUP
+	INDEX 3
+	OVER
+	INDEX 6
+	PUSH S2
+	SECOND
+	PUSH S3
+	INDEX 5
+	PUSH S4
+	FIRST
+	PUSH S5
+	THIRD
+	PUSH S6
+	INDEX 4
+	PUSH S7
+	INDEX 5
+	ADD
+	UFITS 128
+	GETGLOB 9
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	makeBurns_4e0caff5_internal
+.type	makeBurns_4e0caff5_internal, @function
+CALL $makeBurns_4e0caff5_internal_macro$
+
+.macro makeBurns_4e0caff5_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 205
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDREF
+			LDU 128
+			ENDS
+			TUPLE 5
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 206
+	DUP
+	INDEX 3
+	OVER
+	FIRST
+	PUSH S2
+	SECOND
+	PUSH S3
+	THIRD
+	PUSH S4
+	INDEX 4
+	GETGLOB 9
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 4
+	NEWC
+	STSLICECONST x562548ad
+	STU 128
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.globl	createChildProcesses_cb56b957_internal
+.type	createChildProcesses_cb56b957_internal, @function
+CALL $createChildProcesses_cb56b957_internal_macro$
+
+.macro createChildProcesses_cb56b957_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 216
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGETREF
+	NULLSWAPIFNOT
+	IFREF {
+		CTOS
+		CALLREF {
+			LDREF
+			LDU 32
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDU 128
+			LDDICT
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDREF
+			ROLLREV 4
+			TUPLE 4
+			SWAP
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			LDU 128
+			LDU 128
+			LDREF
+			ROLLREV 4
+			TUPLE 4
+			SWAP
+			ENDS
+			TUPLE 10
+		}
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 218
+	DUP
+	CALLREF {
+		CALL $getTotalValueForDexOperation_078272a1_internal_macro$
+	}
+	.loc ../contracts/DexMiddleware.tsol, 220
+	GETGLOB 15
+	DUP
+	INC
+	UFITS 128
+	SETGLOB 15
+	GETGLOB 9
+	PUSH S3
+	FIRST
+	PUSH S4
+	INDEX 4
+	PUSH S5
+	INDEX 5
+	ROLL 5
+	PUSH S6
+	INDEX 7
+	PUSH S7
+	SECOND
+	PUSH S8
+	THIRD
+	PUSH S9
+	INDEX 3
+	PUSH S10
+	INDEX 8
+	PUSH S11
+	INDEX 9
+	CALLREF {
+		CALL $deployChild_dfeb2bef_internal_macro$
+	}
+	.loc ../contracts/DexMiddleware.tsol, 234
+	PUSHSLICE xc00000000000000000000000004c6a0867
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.macro onChildRequestTokens
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexMiddleware.tsol, 238
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDMSGADDR
+LDU 128
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $onChildRequestTokens_92a5c0f3_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onChildRequestTokens_92a5c0f3_internal_macro
+.loc ../contracts/DexMiddleware.tsol, 238
+ROT
+.loc ../contracts/base/DexMiddlewareBase.tsol, 18
+CALLREF {
+	CALL $getChildAddress_aa4e19c2_internal_macro$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 19
+GETGLOB 9
+SDEQ
+THROWIFNOT 1001
+.loc ../contracts/DexMiddleware.tsol, 239
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/DexMiddleware.tsol, 241
+DEPTH
+ADDCONST -2
+PICK
+RSHIFT 1
+.loc ../contracts/DexMiddleware.tsol, 242
+PUSHREF {
+}
+TRUE
+GETGLOB 9
+ROLL 3
+GETGLOB 9
+BLKSWAP 2, 5
+SWAP
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x73e22143
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.macro forceChildsFinalize
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexMiddleware.tsol, 253
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $forceChildsFinalize_140f19bb_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro forceChildsFinalize_140f19bb_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 24
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1000
+.loc ../contracts/DexMiddleware.tsol, 254
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/DexMiddleware.tsol, 255
+DUP
+FIRST
+UFITS 32
+.loc ../contracts/DexMiddleware.tsol, 257
+DEPTH
+ADDCONST -2
+PICK
+SWAP
+PUSHINT 50000000
+MUL
+UFITS 128
+GEQ
+THROWIFNOT 100
+.loc ../contracts/DexMiddleware.tsol, 259
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	IFREF {
+		LDMSGADDR
+		LDI 1
+		ENDS
+		PAIR
+	}
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 260
+	DUP
+	SECOND
+	OVER
+	FIRST
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 12007466327387460804583235709412803561874494769060636
+	STUR 175
+	STI 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/DexMiddleware.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/DexMiddleware.tsol, 262
+GETGLOB 9
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/DexMiddleware.tsol, 265
+OVER
+PUSHCONT {
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $upgrade_fb9d1513_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_fb9d1513_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 24
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1000
+.loc ../contracts/base/DexMiddlewareBase.tsol, 25
+PUSHCONT {
+	.loc ../contracts/DexMiddleware.tsol, 266
+	GETGLOB 12
+	PUSH S2
+	EQUAL
+	PUSHCONT {
+		.loc ../contracts/DexMiddleware.tsol, 267
+		CALLREF {
+			CALL $_reserve_413ab4a8_internal_macro$
+		}
+		PUSHINT 0
+		RAWRESERVE
+		.loc ../contracts/DexMiddleware.tsol, 268
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 111
+		STZEROES
+		ENDC
+		PUSHPOW2 7
+		SENDRAWMSG
+		.loc ../contracts/DexMiddleware.tsol, 269
+		DROP2
+		.loc ../contracts/DexMiddleware.tsol, 0
+	}
+	IFJMP
+	.loc ../contracts/DexMiddleware.tsol, 272
+	DROP
+	GETGLOB 16
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	ROLL 4
+	GETGLOB 11
+	GETGLOB 10
+	NEWC
+	STU 128
+	STSLICE
+	STU 32
+	STREF
+	STI 1
+	STU 128
+	STU 32
+	ENDC
+	.loc ../contracts/DexMiddleware.tsol, 282
+	OVER
+	SETCODE
+	.loc ../contracts/DexMiddleware.tsol, 283
+	SWAP
+	CTOS
+	DUP
+	PUSHSLICE x8adb35
+	SDEQ
+	PUSHCONT {
+		PLDREFIDX 1
+		CTOS
+	}
+	IF
+	PLDREF
+	CTOS
+	BLESS
+	POP C3
+	.loc ../contracts/DexMiddleware.tsol, 285
+	CALLREF {
+		CALL $:onCodeUpgrade$
+	}
+	.loc ../contracts/DexMiddleware.tsol, 265
+}
+CALLX
+.loc ../contracts/DexMiddleware.tsol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+DROP
+.loc ../contracts/DexMiddleware.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.globl	_reserve_413ab4a8_internal
+.type	_reserve_413ab4a8_internal, @function
+CALL $_reserve_413ab4a8_internal_macro$
+
+.macro _reserve_413ab4a8_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 31
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 100000000
+MAX
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro transferOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 34
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $transferOwnership_f2fde38b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro transferOwnership_f2fde38b_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 24
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1000
+.loc ../contracts/base/DexMiddlewareBase.tsol, 35
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/base/DexMiddlewareBase.tsol, 36
+DUP
+SETGLOB 11
+.loc ../contracts/base/DexMiddlewareBase.tsol, 37
+PUSHSLICE xc00000000000000000000000004ecc6b88
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 38
+GETGLOB 9
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro setIsPaused
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 41
+LDI 1
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $setIsPaused_240976bf_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setIsPaused_240976bf_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 24
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1000
+.loc ../contracts/base/DexMiddlewareBase.tsol, 42
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/base/DexMiddlewareBase.tsol, 43
+DUP
+SETGLOB 14
+.loc ../contracts/base/DexMiddlewareBase.tsol, 44
+PUSHSLICE xc0000000000000000000000000462a4ece
+NEWC
+STSLICE
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 45
+GETGLOB 9
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro setChildCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 48
+LDREF
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $setChildCode_8fa2d8f9_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setChildCode_8fa2d8f9_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 24
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1000
+.loc ../contracts/base/DexMiddlewareBase.tsol, 49
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/base/DexMiddlewareBase.tsol, 50
+GETGLOB 16
+INC
+UFITS 32
+SETGLOB 16
+.loc ../contracts/base/DexMiddlewareBase.tsol, 51
+SETGLOB 13
+.loc ../contracts/base/DexMiddlewareBase.tsol, 52
+GETGLOB 16
+PUSHSLICE xc000000000000000000000000010043808
+NEWC
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 53
+GETGLOB 9
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 56
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $getDetails_fbbf93a0_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xfd4d5669
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 128
+	STSLICE
+	STU 32
+	STI 1
+	STU 128
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 128
+	STSLICE
+	STU 32
+	STI 1
+	STU 128
+	STU 32
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getDetails_fbbf93a0_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 57
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 10
+GETGLOB 11
+GETGLOB 12
+GETGLOB 14
+GETGLOB 15
+GETGLOB 16
+TUPLE 6
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.globl	_buildInitAccount_39b32d57_internal
+.type	_buildInitAccount_39b32d57_internal, @function
+CALL $_buildInitAccount_39b32d57_internal_macro$
+
+.macro _buildInitAccount_39b32d57_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 74
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSET
+SWAP
+NEWC
+STU 128
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETB
+NEWC
+STDICT
+ENDC
+GETGLOB 13
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.globl	deployChild_dfeb2bef_internal
+.type	deployChild_dfeb2bef_internal, @function
+CALL $deployChild_dfeb2bef_internal_macro$
+
+.macro deployChild_dfeb2bef_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 99
+ROT
+ROLLREV 4
+XCHG S6, S8
+REVERSE 8, 0
+BLKSWAP 3, 9
+XCHG S2
+CALLREF {
+	CALL $_buildInitAccount_39b32d57_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+ROLLREV 11
+ROLL 12
+PUSH S12
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 3
+STUR 107
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 10
+NEWC
+STSLICECONST x42ded1f4
+STSLICE
+STREF
+STU 128
+STU 128
+STDICT
+ROLLREV 5
+NEWC
+STSLICE
+STU 32
+ROLLREV 3
+NEWC
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+ROLLREV 5
+NEWC
+STSLICE
+STU 128
+STU 128
+STREF
+SWAP
+UNTUPLE 4
+REVERSE 4, 0
+NEWC
+STSLICE
+STU 128
+STU 128
+STREF
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro getChildAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 116
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $getChildAddress_aa4e19c2_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xec2624e0
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getChildAddress_aa4e19c2_internal
+.type	getChildAddress_aa4e19c2_internal, @function
+CALL $getChildAddress_aa4e19c2_internal_macro$
+
+.macro getChildAddress_aa4e19c2_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 117
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+CALLREF {
+	CALL $_buildInitAccount_39b32d57_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro buildPayload
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/base/DexMiddlewareBase.tsol, 122
+OVER
+PUSHCONT {
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+CALLREF {
+	CALL $buildPayload_d970a82c_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3599223967
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro buildPayload_d970a82c_internal_macro
+.loc ../contracts/base/DexMiddlewareBase.tsol, 128
+CALLREF {
+	CALL $Payload_no_obj_buildPayload_d970a82c_macro$
+}
+.loc ../contracts/base/DexMiddlewareBase.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDREF
+LDI 1
+LDU 128
+LDU 32
+ENDS
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 1
+	OVER
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 128
+	}
+	IF
+	PUSHINT 2
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+	}
+	IFNOT
+	PUSHINT 0
+	PUSHINT 3
+	PUSH S4
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		PUSHREF {
+		}
+	}
+	IFNOT
+	PUSHINT 0
+	BLKPUSH 2, 0
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 1
+	SETGLOB 12
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STU 128
+ROLLREV 6
+NEWC
+STSLICE
+STU 32
+STREF
+STI 1
+STU 128
+STU 32
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	DUP
+	SETGLOB 5
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro nonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000c6cca7d1
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro owner
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000df0bcfde
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro dexMiddlewareChildCode
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000e444b464
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.globl	Payload_with_obj_buildPayload_d970a82c
+.type	Payload_with_obj_buildPayload_d970a82c, @function
+CALL $Payload_with_obj_buildPayload_d970a82c_macro$
+
+.macro Payload_with_obj_buildPayload_d970a82c_macro
+.loc ../contracts/lib/Payload.tsol, 14
+XCHG S2
+NEWC
+PUSH S4
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STSLICE
+ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_no_obj_buildPayload_d970a82c
+.type	Payload_no_obj_buildPayload_d970a82c, @function
+CALL $Payload_no_obj_buildPayload_d970a82c_macro$
+
+.macro Payload_no_obj_buildPayload_d970a82c_macro
+.loc ../contracts/lib/Payload.tsol, 14
+REVERSE 4, 0
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STSLICE
+ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_with_obj_encodePayload_86811bec
+.type	Payload_with_obj_encodePayload_86811bec, @function
+CALL $Payload_with_obj_encodePayload_86811bec_macro$
+
+.macro Payload_with_obj_encodePayload_86811bec_macro
+.loc ../contracts/lib/Payload.tsol, 28
+DUP
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDMSGADDR
+ENDS
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_no_obj_encodePayload_86811bec
+.type	Payload_no_obj_encodePayload_86811bec, @function
+CALL $Payload_no_obj_encodePayload_86811bec_macro$
+
+.macro Payload_no_obj_encodePayload_86811bec_macro
+.loc ../contracts/lib/Payload.tsol, 28
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDMSGADDR
+ENDS
+.loc ../contracts/lib/Payload.tsol, 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1451740319
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 235197086
+	EQUAL
+	IFJMPREF {
+		CALL $transferOwnership$
+	}
+	DUP
+	PUSHINT 705887840
+	EQUAL
+	IFJMPREF {
+		CALL $calculateFeeAndTokensValue$
+	}
+	DUP
+	PUSHINT 1187817425
+	EQUAL
+	IFJMPREF {
+		CALL $nonce$
+	}
+	DUP
+	PUSHINT 1451740319
+	EQUAL
+	IFJMPREF {
+		CALL $buildPayload$
+	}
+}
+DUP
+PUSHINT 1675925518
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1488186515
+	EQUAL
+	IFJMPREF {
+		CALL $setChildCode$
+	}
+	DUP
+	PUSHINT 1566551745
+	EQUAL
+	IFJMPREF {
+		CALL $setIsPaused$
+	}
+	DUP
+	PUSHINT 1594609630
+	EQUAL
+	IFJMPREF {
+		CALL $owner$
+	}
+	DUP
+	PUSHINT 1675925518
+	EQUAL
+	IFJMPREF {
+		CALL $forceChildsFinalize$
+	}
+}
+DUP
+PUSHINT 1814439136
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1682224228
+	EQUAL
+	IFJMPREF {
+		CALL $dexMiddlewareChildCode$
+	}
+	DUP
+	PUSHINT 1688565960
+	EQUAL
+	IFJMPREF {
+		CALL $upgrade$
+	}
+	DUP
+	PUSHINT 1756716863
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+	DUP
+	PUSHINT 1814439136
+	EQUAL
+	IFJMPREF {
+		CALL $getChildAddress$
+	}
+}
+DUP
+PUSHINT 2102220393
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1893244873
+	EQUAL
+	IFJMPREF {
+		CALL $onAcceptTokensTransfer$
+	}
+	DUP
+	PUSHINT 1919753950
+	EQUAL
+	IFJMPREF {
+		CALL $onChildRequestTokens$
+	}
+	DUP
+	PUSHINT 2057231915
+	EQUAL
+	IFJMPREF {
+		CALL $onAcceptTokensMint$
+	}
+	DUP
+	PUSHINT 2102220393
+	EQUAL
+	IFJMPREF {
+		CALL $getDetails$
+	}
+}
+

@@ -95,20 +95,7 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
         for (CommonStructures.PayloadForDex _dexConfig : _payloadsForDex) {
             requiredTokenAmount += _dexConfig.tokensAmount;
 
-            uint128 maxValueForFinalTransfer = math.max(_dexConfig.successPayload.valueForFinalTransfer, _dexConfig.cancelPayload.valueForFinalTransfer);
-
-            uint128 maxDeployWalletValue = math.max(
-                math.max(_dexConfig.successPayload.deployWalletValue, _dexConfig.cancelPayload.deployWalletValue),
-                Constants.DEPLOY_WALLET_VALUE
-            );
-
-            requiredValue += Constants.DEPLOY_CHILD_VALUE +
-                _dexConfig.attachedValue +
-                _dexConfig.leaves *
-                (
-                    maxValueForFinalTransfer +
-                    maxDeployWalletValue
-                );
+            requiredValue += getTotalValueForDexOperation(_dexConfig);
         }
 
         return CommonStructures.CalculationResult({
@@ -116,6 +103,25 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
             tokenAmount: requiredTokenAmount
         });
     }
+
+    function getTotalValueForDexOperation(CommonStructures.PayloadForDex _dexConfig) internal pure returns (uint128) {
+
+        uint128 maxValueForFinalTransfer = math.max(_dexConfig.successPayload.valueForFinalTransfer, _dexConfig.cancelPayload.valueForFinalTransfer);
+
+        uint128 maxDeployWalletValue = math.max(
+            math.max(_dexConfig.successPayload.deployWalletValue, _dexConfig.cancelPayload.deployWalletValue),
+            Constants.DEPLOY_WALLET_VALUE
+        );
+
+        return Constants.DEPLOY_CHILD_VALUE +
+            _dexConfig.valueForDexOperation +
+            _dexConfig.leaves *
+            (
+                maxValueForFinalTransfer +
+                maxDeployWalletValue
+            );
+    }
+
     function checkIsEnoughValueAndTokens(
         CommonStructures.PayloadForDex[] _payloadsForDex,
         CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
@@ -208,12 +214,16 @@ contract DexMiddleware is IAcceptTokensTransferCallback, IAcceptTokensMintCallba
 
     function createChildProcesses(CommonStructures.PayloadForDex[] _payloadsForDex) internal {
         for (CommonStructures.PayloadForDex dexConfig : _payloadsForDex) {
+
+            uint128 totalValueForDexOperation = getTotalValueForDexOperation(dexConfig);
+
             address child = deployChild(
                 currentChildNonce++,
                 msg.sender,
                 dexConfig.dexPayload,
                 dexConfig.tokensAmount,
-                dexConfig.attachedValue,
+                dexConfig.valueForDexOperation,
+                totalValueForDexOperation,
                 dexConfig.rootToSendersAllowanceMap,
                 dexConfig.leaves,
                 dexConfig.firstRoot,
