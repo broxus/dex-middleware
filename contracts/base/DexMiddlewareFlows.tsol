@@ -1,0 +1,151 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "broxus-ton-tokens-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
+
+
+import "./DexMiddlewareBase.tsol";
+
+
+abstract contract DexMiddlewareFlows is DexMiddlewareBase {
+    // Operations
+    // - DEX
+    function getTotalValueForDexOperation(CommonStructures.PayloadForDex _dexConfig) internal pure returns (uint128) {
+
+        uint128 maxValueForFinalTransfer = math.max(_dexConfig.successPayload.valueForFinalTransfer, _dexConfig.cancelPayload.valueForFinalTransfer);
+
+        uint128 maxDeployWalletValue = math.max(
+            math.max(_dexConfig.successPayload.deployWalletValue, _dexConfig.cancelPayload.deployWalletValue),
+            Constants.DEPLOY_WALLET_VALUE
+        );
+
+        return Constants.DEPLOY_CHILD_VALUE +
+            _dexConfig.valueForDexOperation +
+            _dexConfig.leaves *
+                (
+                maxValueForFinalTransfer +
+                maxDeployWalletValue
+                );
+    }
+
+    function createChildProcesses(CommonStructures.PayloadForDex[] _payloadsForDex, optional(uint128) _tokensAmount) internal {
+        for (CommonStructures.PayloadForDex dexConfig : _payloadsForDex) {
+
+            uint128 totalValueForDexOperation = getTotalValueForDexOperation(dexConfig);
+
+            address child = deployDexChild(
+                currentChildNonce++,
+                msg.sender,
+                dexConfig.dexPayload,
+                _tokensAmount.hasValue() ? _tokensAmount.get() : dexConfig.tokensAmount,
+                dexConfig.valueForDexOperation,
+                totalValueForDexOperation,
+                dexConfig.rootToSendersAllowanceMap,
+                dexConfig.leaves,
+                dexConfig.firstRoot,
+                dexConfig.remainingGasTo,
+                dexConfig.successPayload,
+                dexConfig.cancelPayload
+            );
+            emit DeployChild(child);
+        }
+    }
+
+    function onChildRequestTokens(uint128 _childNonce,address _rootWallet, uint128 _tokensAmount) override external onlyChild(_childNonce) {
+        tvm.rawReserve(_reserve(), 0);
+        TvmCell dummyPayload;
+        uint128 deployChildWalletValue = msg.value / 2;
+        ITokenWallet(_rootWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+            _tokensAmount,
+            msg.sender,
+            deployChildWalletValue,
+            msg.sender,
+            true,
+            dummyPayload
+        );
+    }
+
+
+    function forceChildsFinalize(CommonStructures.ForceChildFinalize[] childsSettings) onlyOwner override external {
+        tvm.rawReserve(_reserve(), 0);
+        uint32 countOfChilds = uint32(childsSettings.length);
+
+        require(msg.value >= countOfChilds * Constants.FORCE_CHILD_FINALIZE_VALUE);
+
+        for (CommonStructures.ForceChildFinalize childsSetting : childsSettings) {
+            IDexChildMiddleware(childsSetting.child).forceFinalize{value: Constants.FORCE_CHILD_FINALIZE_VALUE, bounce: false}(childsSetting.isSuccess);
+        }
+        msg.sender.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
+    function makeTransfers(CommonStructures.PayloadForTransfer[] _payloadsForTransfer, optional(uint128) _tokensAmount) internal pure {
+        for (CommonStructures.PayloadForTransfer transferConfig : _payloadsForTransfer) {
+
+            ITokenWallet(msg.sender).transfer{
+                    value: transferConfig.attachedValue + transferConfig.deployWalletValue,
+                    bounce: false,
+                    flag: 1
+            }(
+                _tokensAmount.hasValue() ? _tokensAmount.get() : transferConfig.amount,
+                transferConfig.receiver,
+                transferConfig.deployWalletValue,
+                transferConfig._remainingGasTo,
+                transferConfig.notify,
+                transferConfig.payload
+            );
+        }
+    }
+
+    // Operations
+    // - BURN
+    function makeBurns(CommonStructures.PayloadForBurn[] _payloadsForBurn, optional(uint128) _tokensAmount) internal pure {
+        for (CommonStructures.PayloadForBurn burnConfig : _payloadsForBurn) {
+            IBurnableTokenWallet(msg.sender).burn{value: burnConfig.attachedValue, bounce: false}(
+                _tokensAmount.hasValue() ? _tokensAmount.get() : burnConfig.amount,
+                burnConfig.remainingGasTo,
+                burnConfig.callbackTo,
+                burnConfig.payload
+            );
+        }
+    }
+
+    // Operations
+    // - UNWRAP
+    function makeUnwraps(CommonStructures.PayloadForUnwrap[] _payloadsForUnwrap, optional(uint128) _tokensAmount) internal view {
+        for (CommonStructures.PayloadForUnwrap unwrapConfig : _payloadsForUnwrap) {
+            // attach destination address to original payload
+            TvmCell payload = abi.encode(unwrapConfig.destination, unwrapConfig.payload);
+
+            ITokenWallet(msg.sender).transfer{value: unwrapConfig.attachedValue, bounce: false}(
+                _tokensAmount.hasValue() ? _tokensAmount.get() : unwrapConfig.amount,
+                weverVault,
+                0,
+                unwrapConfig.remainingGasTo,
+                true,
+                payload
+            );
+        }
+    }
+
+    function handleWeverBurn(TvmCell _payload, uint128 _amount, address _remainingGasTo) internal view {
+        tvm.rawReserve(_reserve(), 0);
+        (address destination, TvmCell originalPayload) = abi.decode(_payload, (address, TvmCell));
+
+        destination.transfer({
+            value: _amount,
+            body: originalPayload,
+            bounce: false,
+            flag: 1
+        });
+
+        _remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            bounce: false
+        });
+    }
+
+
+
+}

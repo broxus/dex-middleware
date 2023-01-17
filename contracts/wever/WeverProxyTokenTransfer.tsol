@@ -1,0 +1,10 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./wever/everscale/contracts/bridge-integration/ProxyTokenTransfer.tsol";
+
+
+contract WeverProxyTokenTransfer is ProxyTokenTransfer {
+    constructor(address owner_) public ProxyTokenTransfer(owner_) {}
+}

@@ -1,4 +1,4 @@
-import { fromNano, toNano, zeroAddress } from "locklift";
+import { fromNano, toNano, WalletTypes, zeroAddress } from "locklift";
 
 import { Context, preparation } from "./preparation";
 import { PreBuiltRoutes } from "./constants";
@@ -10,6 +10,7 @@ import { Address } from "locklift/everscale-provider";
 
 import { from, lastValueFrom, map, mergeMap, switchMap, toArray } from "rxjs";
 import { getExpectedTokenAmount } from "./utils/getExpectedTokenAmount";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
@@ -17,7 +18,11 @@ describe("success and cancel", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await locklift.tracing.trace(
       context.dex
         .getTokenRootByName({ tokenName: "Qwe" })
@@ -95,8 +100,10 @@ describe("success and cancel", () => {
         },
       ],
       _payloadsForTransfers: [],
-      remainingTokensTo: user.account.address,
       _payloadsForBurn: [],
+      _payloadForUnwrap: [],
+      _remainingTokensTo: user.account.address,
+      _tokensDistributionType: 0,
     });
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({
@@ -191,8 +198,10 @@ describe("success and cancel", () => {
       ],
       _payloadsForTransfers: [],
       _payloadsForBurn: [],
+      _payloadForUnwrap: [],
 
-      remainingTokensTo: user.account.address,
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({
@@ -237,7 +246,12 @@ describe("success and cancel", () => {
         mergeMap(([rootAddress, expectedBalance]) =>
           from(user.getTokenWalletByRootAddress(new Address(rootAddress))).pipe(
             switchMap(tokenWallet =>
-              from(tokenWallet.getBalance()).pipe(map(balance => ({ balance, tokenRootName: tokenWallet.rootName }))),
+              from(tokenWallet.getBalance()).pipe(
+                map(balance => ({
+                  balance,
+                  tokenRootName: tokenWallet.rootName,
+                })),
+              ),
             ),
             map(({ balance, tokenRootName }) => ({ balance, expectedBalance, rootAddress, tokenRootName })),
           ),

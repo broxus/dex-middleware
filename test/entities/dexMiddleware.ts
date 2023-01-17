@@ -13,7 +13,7 @@ export class DexMiddleware {
       .call()
       .then(res => res.value0);
   };
-  static deployDexInstance = async (owner: User) => {
+  static deployDexInstance = async (owner: User, weverVaultAddress: Address, weverRoot: Address) => {
     const { code: dexMiddlewareChildCode } = locklift.factory.getContractArtifacts("DexChildMiddleware");
     const { contract } = await locklift.tracing.trace(
       locklift.factory.deployContract({
@@ -25,6 +25,8 @@ export class DexMiddleware {
           owner: owner.account.address,
           nonce: getRandomNonce(),
           dexMiddlewareChildCode,
+          weverVault: weverVaultAddress,
+          weverRoot,
         },
       }),
     );

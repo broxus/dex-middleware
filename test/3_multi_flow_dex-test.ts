@@ -12,6 +12,7 @@ import { defer, filter, forkJoin, from, lastValueFrom, map, mergeMap, of, switch
 import { getExpectedTokenAmount } from "./utils/getExpectedTokenAmount";
 import { Context, isT, preparation } from "./preparation";
 import { DexMiddlewareAbi, ReceiverAfterDexAbi, ReceiversFactoryAbi } from "../build/factorySource";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
@@ -50,7 +51,11 @@ describe("Multi swap testing", () => {
     receivers = deployReceiverEvents!.map(({ receiver }) =>
       locklift.factory.getDeployedContract("ReceiverAfterDex", receiver),
     );
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await locklift.tracing.trace(
       context.dex
         .getTokenRootByName({ tokenName: "Qwe" })
@@ -146,8 +151,10 @@ describe("Multi swap testing", () => {
             context.dexMiddleware.getPayload({
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
-              remainingTokensTo: user.account.address,
               _payloadsForBurn: [],
+              _payloadForUnwrap: [],
+              _remainingTokensTo: user.account.address,
+              _tokensDistributionType: 0,
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),
         ),
@@ -319,8 +326,10 @@ describe("Multi swap testing", () => {
               _payloadsForDex: receiversConfigs.map(({ payloadForDex }) => payloadForDex),
               _payloadsForTransfers: [],
               _payloadsForBurn: [],
+              _payloadForUnwrap: [],
 
-              remainingTokensTo: user.account.address,
+              _tokensDistributionType: 0,
+              _remainingTokensTo: user.account.address,
             }),
           ).pipe(map(dexMiddlewarePayload => ({ dexMiddlewarePayload, receiversConfigs }))),
         ),

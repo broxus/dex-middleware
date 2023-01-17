@@ -7,8 +7,12 @@ import "../interfaces/IDexMiddleware.tsol";
 abstract contract DexMiddlewareStorage is IDexMiddleware {
     uint128 public static nonce;
     address public static owner;
-    uint32 dexMiddlewareVersion = 1;
+    address public static weverRoot;
+    address public static weverVault;
+
     TvmCell public static dexMiddlewareChildCode;
+    address weverTokenWallet;
+    uint32 dexMiddlewareVersion = 1;
     bool isPaused;
 
     uint128 currentChildNonce;

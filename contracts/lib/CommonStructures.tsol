@@ -3,7 +3,10 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 library CommonStructures {
-
+    enum TokensDistributionType {
+        Exact,
+        AllToSingleFlow
+    }
     struct EmergencyWithdrawFromChildConfig {
         address childTokenWallet;
         uint128 amount;
@@ -59,6 +62,14 @@ library CommonStructures {
 
     struct PayloadForBurn {
         address callbackTo;
+        address remainingGasTo;
+        uint128 amount;
+        TvmCell payload;
+        uint128 attachedValue;
+    }
+
+    struct PayloadForUnwrap {
+        address destination;
         address remainingGasTo;
         uint128 amount;
         TvmCell payload;

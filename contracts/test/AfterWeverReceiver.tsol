@@ -1,0 +1,20 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+
+
+contract AfterWeverReceiver  {
+    uint128 private static _nonce;
+
+    constructor() public {
+        tvm.accept();
+    }
+    event onReceiveEvers(address from, uint128 amount, string message);
+
+
+
+    function handleEversEndEmitEvent(string _msg) public {
+        emit onReceiveEvers(msg.sender, msg.value, _msg);
+    }
+}

@@ -10,6 +10,7 @@ import { Address } from "locklift/everscale-provider";
 
 import { from, lastValueFrom, map, mergeMap, switchMap, toArray } from "rxjs";
 import { getExpectedTokenAmount } from "./utils/getExpectedTokenAmount";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
@@ -21,7 +22,11 @@ describe("Multi transfer testing", () => {
     user = context.signersWithAccounts[0];
     receivers = context.signersWithAccounts.slice(1, 3);
 
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await locklift.tracing.trace(
       context.dex
         .getTokenRootByName({ tokenName: "Qwe" })
@@ -111,7 +116,9 @@ describe("Multi transfer testing", () => {
         _remainingGasTo: user.account.address,
       })),
       _payloadsForBurn: [],
-      remainingTokensTo: user.account.address,
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({
@@ -227,8 +234,9 @@ describe("Multi transfer testing", () => {
         _remainingGasTo: user.account.address,
       })),
       _payloadsForBurn: [],
-
-      remainingTokensTo: user.account.address,
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({

@@ -1,0 +1,14 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./wever/everscale/contracts/Tunnel.tsol";
+
+
+contract WeverTunnel is Tunnels {
+    constructor(
+        address[] sources,
+        address[] destinations,
+        address owner_
+    ) public Tunnels(sources,destinations,owner_) {}
+}

@@ -6,14 +6,19 @@ import BigNumber from "bignumber.js";
 import { DexMiddleware } from "./entities/dexMiddleware";
 import { User } from "./entities/user";
 import { expect } from "chai";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
-describe("success and cancel", () => {
+describe("Force child finalize", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await locklift.tracing.trace(
       context.dex
         .getTokenRootByName({ tokenName: "Qwe" })
@@ -89,7 +94,9 @@ describe("success and cancel", () => {
       ],
       _payloadsForTransfers: [],
       _payloadsForBurn: [],
-      remainingTokensTo: user.account.address,
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
 
     const { traceTree } = await locklift.tracing.trace(

@@ -132,7 +132,11 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
         address _remainingGasTo
     ) internal {
         tokenWalletFromRootTransfer = _tokenWallet;
-        ITokenWallet(msg.sender).transfer{value: valueForDex, bounce: false}(
+        ITokenWallet(msg.sender).transfer{
+                value: valueForDex,
+                bounce: false,
+                flag: 1
+        }(
             _amount,
             firstRoot,
             0,

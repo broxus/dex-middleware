@@ -9,6 +9,7 @@ import { expect } from "chai";
 import { Contract } from "../../ever-locklift/everscale-provider";
 import { ReceiverAfterDexAbi, ReceiversFactoryAbi } from "../build/factorySource";
 import { from, lastValueFrom, map, mergeMap, toArray } from "rxjs";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
@@ -16,11 +17,15 @@ let receivers: Array<Contract<ReceiverAfterDexAbi>>;
 
 let receiversFactory: Contract<ReceiversFactoryAbi>;
 
-describe("success and cancel", () => {
+describe("Complex flow", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await locklift.tracing.trace(
       context.dex
         .getTokenRootByName({ tokenName: "Qwe" })
@@ -119,7 +124,9 @@ describe("success and cancel", () => {
           toArray(),
         ),
       ),
-      remainingTokensTo: user.account.address,
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
     const { everValue: everValueForTokensTransfer } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({
@@ -158,8 +165,10 @@ describe("success and cancel", () => {
         },
       ],
       _payloadsForTransfers: [],
-      remainingTokensTo: user.account.address,
       _payloadsForBurn: [],
+      _payloadForUnwrap: [],
+      _remainingTokensTo: user.account.address,
+      _tokensDistributionType: 0,
     });
     console.log(`Payload for swap built`);
     const { everValue: everValueForSwap, tokenAmount: tokensAmountForSwap } =

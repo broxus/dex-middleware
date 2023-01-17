@@ -11,6 +11,7 @@
     "test-6": "npx locklift test --network local --tests test/6_force_finalize-test.ts",
     "test-7": "npx locklift test --network local --tests test/7_burn-test.ts",
     "test-8": "npx locklift test --network local --tests test/8_complex_flow_swap_and_multi_send-test.ts",
+    "test-wever-1": "npx locklift test --network local --tests test/wever/1-test.ts",
     "deploy-main": "npx locklift run --disable-build --network main -s scripts/1-deploy-dex-middleware.ts"
   },
   "author": "",
@@ -23,10 +24,10 @@
     "chai": "^4.3.6",
     "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#050e3a01ea7eeea0fab07ee2192e6e6d5ddbdf1b",
     "everscale-standalone-client": "^2.1.1",
-    "locklift": "^2.4.6",
     "prettier": "^2.7.1",
     "ts-mocha": "^10.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "wever": "git+ssh://git@gitlab.broxus.com/tokens/ever-wever#9d23d426c96c21029be2d3b09eaf3a21a77306a5"
   },
   "dependencies": {
     "@broxus/contracts": "^1.1.1",
@@ -34,6 +35,7 @@
     "axios": "^1.2.2",
     "bignumber.js": "^9.1.0",
     "dotenv": "^16.0.3",
+    "locklift": "^2.4.7",
     "mocha-logger": "^1.0.8",
     "prompts": "^2.4.2",
     "rxjs": "^7.5.7"

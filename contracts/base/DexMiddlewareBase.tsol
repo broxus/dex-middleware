@@ -31,6 +31,11 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 			math.max(address(this).balance - msg.value, Constants.CHILD_CONTRACT_MIN_BALANCE);
 	}
 
+    function receiveTokenWalletAddress(address _wallet) external virtual {
+        require (msg.sender == weverRoot, ErrorCodes.NOT_WEVER_ROOT);
+        weverTokenWallet = _wallet;
+    }
+
     function transferOwnership(address _newOwner) onlyOwner override external {
         tvm.rawReserve(_reserve(), 0);
         owner = _newOwner;
@@ -64,25 +69,45 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         );
     }
 
-    function _buildInitAccount(uint128 childNonce)
-		internal
-		view
-		virtual
-		returns (TvmCell)
-	{
-		return
-			tvm.buildStateInit({
-				contr: DexChildMiddleware,
-				varInit: {
-					root: address(this),
-                    nonce: childNonce
-				},
-				pubkey: 0,
-				code: dexMiddlewareChildCode
-			});
-	}
 
-    function deployChild(
+    function buildPayload(
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn,
+        CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
+        CommonStructures.TokensDistributionType _tokensDistributionType,
+        address _remainingTokensTo
+    ) override external pure returns (TvmCell) {
+        return Payload.buildPayload(
+            _payloadsForDex,
+            _payloadsForTransfers,
+            _payloadsForBurn,
+            _payloadForUnwrap,
+            _tokensDistributionType,
+            _remainingTokensTo
+    );
+    }
+    //Children
+    // - Dex
+    function _buildInitDexChild(uint128 childNonce)
+        internal
+        view
+        virtual
+        returns (TvmCell)
+    {
+        return
+        tvm.buildStateInit({
+                contr: DexChildMiddleware,
+                varInit: {
+                    root: address(this),
+                    nonce: childNonce
+                },
+                pubkey: 0,
+                code: dexMiddlewareChildCode
+        });
+    }
+
+    function deployDexChild(
         uint128 childNonce,
         address _rootWallet,
         TvmCell _dexPayload,
@@ -97,8 +122,9 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         CommonStructures.FinishTransaction _cancelPayload
     ) internal view returns(address) {
         return new DexChildMiddleware{
-            stateInit: _buildInitAccount(childNonce),
-            value: _totalAttachedValue
+                stateInit: _buildInitDexChild(childNonce),
+                value: _totalAttachedValue,
+                flag: 1
         }(
             _rootWallet,
             _dexPayload,
@@ -115,16 +141,7 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
 
     function getChildAddress(uint128 childNonce) public view responsible returns(address) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(
-            tvm.hash(_buildInitAccount(childNonce))
+            tvm.hash(_buildInitDexChild(childNonce))
         );
-    }
-
-    function buildPayload(
-        CommonStructures.PayloadForDex[] _payloadsForDex,
-        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
-        CommonStructures.PayloadForBurn[] _payloadsForBurn,
-        address remainingTokensTo
-    ) override external pure returns (TvmCell) {
-        return Payload.buildPayload(_payloadsForDex, _payloadsForTransfers, _payloadsForBurn, remainingTokensTo);
     }
 }

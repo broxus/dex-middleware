@@ -8,6 +8,7 @@ import { expect } from "chai";
 import { Contract } from "locklift/everscale-provider";
 import { ReceiverAfterDexAbi, ReceiversFactoryAbi, TokenRootUpgradeableAbi } from "../build/factorySource";
 import { Address } from "locklift/everscale-provider";
+import { getWeverInstance } from "./wever/utils";
 
 let context: Context;
 let user: User;
@@ -65,7 +66,11 @@ describe("Burn testing", () => {
         amount: toNano(2),
       });
 
-    context.setDexMiddleware(await DexMiddleware.deployDexInstance(user));
+    const wever = await getWeverInstance();
+    context.setWever(wever);
+    context.setDexMiddleware(
+      await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
+    );
     await stEverTokenRoot.methods
       .deployWallet({
         deployWalletValue: toNano(1),
@@ -125,7 +130,9 @@ describe("Burn testing", () => {
           callbackTo: receivers[0].address,
         },
       ],
-      remainingTokensTo: user.account.address,
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,
     });
     const stEverTokenWallet = await user.getTokenWalletByRoot(stEverTokenRoot);
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods

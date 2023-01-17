@@ -23,6 +23,8 @@ interface IDexMiddleware {
     CommonStructures.PayloadForDex[] _payloadsForDex,
     CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
     CommonStructures.PayloadForBurn[] _payloadsForBurn,
+    CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
+    CommonStructures.TokensDistributionType _tokensDistributionType,
     address remainingTokensTo
     ) external pure returns (TvmCell);
 
