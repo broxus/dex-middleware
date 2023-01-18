@@ -3,7 +3,7 @@
 
 разберём кейсы
 
-1) chain1_erc20_A -> tip3_A -> swap to tip3_B (min amount)-> send tokens with notify + custom payload
+### 1) chain1_erc20_A -> tip3_A -> swap to tip3_B (min amount)-> send tokens with notify + custom payload
    Входные данные от коллера
 - In token
 - In amount
@@ -78,7 +78,7 @@ struct Response {
 }
 ```
 
-2) chain1_erc20_A -> tip3_A -> swap to tip3_wToken (min amount) -> unwrap to native -> send call with custom payload
+### 2) chain1_erc20_A -> tip3_A -> swap to tip3_wToken (min amount) -> unwrap to native -> send call with custom payload
 Данный кейс основывается на предидущем, но тут начинается древовидная структура. Разделим данный флоу на условные две стратегии
 
 
