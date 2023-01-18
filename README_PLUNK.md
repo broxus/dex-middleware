@@ -106,7 +106,7 @@ const payloadForUnwrap = await context.dexMiddleware.contract.methods
         _payloadsForTransfers: [],
         _payloadForUnwrap: [
           {
-            amount: 0, // <- because we don't not particular amount after swap
+            amount: 0, // <- because we don't know particular amount after swap
             payload: "",
             remainingGasTo: user.account.address,
             destination: user.account.address,
