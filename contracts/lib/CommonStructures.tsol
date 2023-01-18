@@ -24,7 +24,6 @@ library CommonStructures {
         uint128 valueForFinalTransfer;
         uint128 deployWalletValue;
         TvmCell payload;
-
     }
 
     struct ChildSwapPayload {
