@@ -77,3 +77,45 @@ struct Response {
     token_amount_receive: u128,
 }
 ```
+
+2) chain1_erc20_A -> tip3_A -> swap to tip3_wToken (min amount) -> unwrap to native -> send call with custom payload
+Данный кейс основывается на предидущем, но тут начинается древовидная структура. Разделим данный флоу на условные две стратегии
+
+
+  Входные данные от коллера
+- In token
+- In amount
+- Out token, in this case out token should be marked as `native`
+- Destintaion
+- Custom payload for success scenario
+- Custom payload for cancel scenario
+
+  Наши действия
+- формируем обычный пейлоад для свопа из (`In token`, `In amount`, `Out token(WEVER)`)
+- Взаимодействуем с DexMiddleware
+
+Для простоты понимания разделим данный флоу на две шага, и эти шаги идут в обратном порядке
+1. unwrap to native -> send call with custom payload
+- получаем пейлоад для анврапа, тут важный момент, так как мы не знаем сколько точно получим токенов после свопа нам не нужно
+указывать точное значение в `amount`, поэтому можно просто поставить 0, но поставить тип у  `_tokensDistributionType` как `1`
+```typescript
+const payloadForUnwrap = await context.dexMiddleware.contract.methods
+      .buildPayload({
+        _payloadsForDex: [],
+        _payloadsForBurn: [],
+        _payloadsForTransfers: [],
+        _payloadForUnwrap: [
+          {
+            amount: 0, // <- because we don't not particular amount after swap
+            payload: "",
+            remainingGasTo: user.account.address,
+            destination: user.account.address,
+            attachedValue: toNano(0.5),
+          },
+        ],
+        _tokensDistributionType: 1, // <- we want to unwrap all tokens
+        _remainingTokensTo: user.account.address,
+      })
+```
+- Считаем необходимое кол-вл 
+

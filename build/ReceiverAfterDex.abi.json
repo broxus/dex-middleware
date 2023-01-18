@@ -1,0 +1,72 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"value0","type":"address"},
+				{"name":"_amount","type":"uint128"},
+				{"name":"_sender","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"value4","type":"address"},
+				{"name":"_payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensBurn",
+			"inputs": [
+				{"name":"_amount","type":"uint128"},
+				{"name":"_walletOwner","type":"address"},
+				{"name":"value2","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"_payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"_nonce","type":"uint128"},
+		{"key":2,"name":"root","type":"address"}
+	],
+	"events": [
+		{
+			"name": "onReceiveTokens",
+			"inputs": [
+				{"name":"from","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"message","type":"string"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onHandleTokensBurn",
+			"inputs": [
+				{"name":"from","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"message","type":"string"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_nonce","type":"uint128"},
+		{"name":"root","type":"address"}
+	]
+}
