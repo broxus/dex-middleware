@@ -138,7 +138,7 @@ describe("Multi transfer testing", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     const tstReceiverTokenWallet = await user.getTokenWalletByRoot(
@@ -256,7 +256,7 @@ describe("Multi transfer testing", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     console.log(`user balance changed ${fromNano(traceTree!.getBalanceDiff(user.account.address))}`);

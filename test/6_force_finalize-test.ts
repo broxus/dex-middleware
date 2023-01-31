@@ -111,7 +111,7 @@ describe("Force child finalize", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint({
       printFullAddresses: true,
@@ -144,7 +144,7 @@ describe("Force child finalize", () => {
           isSuccess: true,
         },
       ]),
-      { rise: false },
+      { raise: false },
     );
 
     await forceFinalizeTraceTree!.beautyPrint();

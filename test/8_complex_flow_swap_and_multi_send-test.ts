@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { DexMiddleware } from "./entities/dexMiddleware";
 import { User } from "./entities/user";
 import { expect } from "chai";
-import { Contract } from "../../ever-locklift/everscale-provider";
+import { Contract } from "locklift/everscale-provider";
 import { ReceiverAfterDexAbi, ReceiversFactoryAbi } from "../build/factorySource";
 import { from, lastValueFrom, map, mergeMap, toArray } from "rxjs";
 import { getWeverInstance } from "./wever/utils";
@@ -192,7 +192,7 @@ describe("Complex flow", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     receivers.forEach(receiver => {

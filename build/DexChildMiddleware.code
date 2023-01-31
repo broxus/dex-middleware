@@ -465,16 +465,16 @@ SENDRAWMSG
 CALL $handleSuccessDexTransfer_8d08a069_internal_macro$
 
 .macro handleSuccessDexTransfer_8d08a069_internal_macro
-.loc ../contracts/DexChildMiddleware.tsol, 152
+.loc ../contracts/DexChildMiddleware.tsol, 156
 MYADDR
 SDEQ
 THROWIFNOT 2002
-.loc ../contracts/DexChildMiddleware.tsol, 154
+.loc ../contracts/DexChildMiddleware.tsol, 158
 GETGLOB 14
 DEC
 UFITS 32
 SETGLOB 14
-.loc ../contracts/DexChildMiddleware.tsol, 156
+.loc ../contracts/DexChildMiddleware.tsol, 160
 GETGLOB 9
 GETGLOB 23
 DUP2
@@ -494,10 +494,10 @@ ROTREV
 PUSHINT 267
 DICTSETB
 SETGLOB 23
-.loc ../contracts/DexChildMiddleware.tsol, 157
+.loc ../contracts/DexChildMiddleware.tsol, 161
 GETGLOB 14
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.tsol, 158
+	.loc ../contracts/DexChildMiddleware.tsol, 162
 	CALLREF {
 		CALL $getFinalTransactionSettings_64609f54_internal_macro$
 	}
@@ -514,7 +514,7 @@ IFNOT
 CALL $handleCancelDexTransfer_83d430b4_internal_macro$
 
 .macro handleCancelDexTransfer_83d430b4_internal_macro
-.loc ../contracts/DexChildMiddleware.tsol, 166
+.loc ../contracts/DexChildMiddleware.tsol, 170
 SWAP
 GETGLOB 9
 GETGLOB 23
@@ -535,18 +535,18 @@ ROTREV
 PUSHINT 267
 DICTSETB
 SETGLOB 23
-.loc ../contracts/DexChildMiddleware.tsol, 167
+.loc ../contracts/DexChildMiddleware.tsol, 171
 GETGLOB 14
 SUBR
 UFITS 32
 SETGLOB 14
-.loc ../contracts/DexChildMiddleware.tsol, 168
+.loc ../contracts/DexChildMiddleware.tsol, 172
 TRUE
 SETGLOB 26
-.loc ../contracts/DexChildMiddleware.tsol, 169
+.loc ../contracts/DexChildMiddleware.tsol, 173
 GETGLOB 14
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.tsol, 170
+	.loc ../contracts/DexChildMiddleware.tsol, 174
 	CALLREF {
 		CALL $getFinalTransactionSettings_64609f54_internal_macro$
 	}
@@ -563,9 +563,9 @@ IFNOT
 CALL $finalizeTransaction_14e33342_internal_macro$
 
 .macro finalizeTransaction_14e33342_internal_macro
-.loc ../contracts/DexChildMiddleware.tsol, 175
+.loc ../contracts/DexChildMiddleware.tsol, 179
 PUSHINT 0
-.loc ../contracts/DexChildMiddleware.tsol, 176
+.loc ../contracts/DexChildMiddleware.tsol, 180
 GETGLOB 23
 DUP
 PUSHINT 267
@@ -586,7 +586,7 @@ PUSHCONT {
 	NOT
 }
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.tsol, 177
+	.loc ../contracts/DexChildMiddleware.tsol, 181
 	PUSH S5
 	INDEX 3
 	TRUE
@@ -628,18 +628,18 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/DexChildMiddleware.tsol, 185
+	.loc ../contracts/DexChildMiddleware.tsol, 189
 	GETGLOB 13
 	PUSH S2
 	SDEQ
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.tsol, 186
+		.loc ../contracts/DexChildMiddleware.tsol, 190
 		TRUE
 		POP S5
 		.loc ../contracts/DexChildMiddleware.tsol, 0
 	}
 	IF
-	.loc ../contracts/DexChildMiddleware.tsol, 188
+	.loc ../contracts/DexChildMiddleware.tsol, 192
 	DROP
 	FALSE
 	NEWC
@@ -675,9 +675,9 @@ PUSHCONT {
 }
 WHILE
 BLKDROP 4
-.loc ../contracts/DexChildMiddleware.tsol, 191
+.loc ../contracts/DexChildMiddleware.tsol, 195
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.tsol, 192
+	.loc ../contracts/DexChildMiddleware.tsol, 196
 	GETGLOB 13
 	FALSE
 	NEWC
@@ -698,7 +698,7 @@ PUSHCONT {
 	.loc ../contracts/DexChildMiddleware.tsol, 0
 }
 IFNOT
-.loc ../contracts/DexChildMiddleware.tsol, 195
+.loc ../contracts/DexChildMiddleware.tsol, 199
 DROP
 GETGLOB 15
 NEWC
@@ -722,7 +722,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/DexChildMiddleware.tsol, 202
+.loc ../contracts/DexChildMiddleware.tsol, 206
 LDI 1
 ENDS
 .loc ../contracts/DexChildMiddleware.tsol, 0
@@ -741,7 +741,7 @@ GETGLOB 9
 GETGLOB 11
 SDEQ
 THROWIFNOT 2001
-.loc ../contracts/DexChildMiddleware.tsol, 203
+.loc ../contracts/DexChildMiddleware.tsol, 207
 PUSHCONT {
 	GETGLOB 18
 }
@@ -763,7 +763,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/DexChildMiddleware.tsol, 206
+.loc ../contracts/DexChildMiddleware.tsol, 210
 OVER
 PUSHCONT {
 	LDREF
@@ -798,7 +798,7 @@ CALLREF {
 THROW 0
 
 .macro onAcceptTokensTransfer_e63f2284_internal_macro
-.loc ../contracts/DexChildMiddleware.tsol, 206
+.loc ../contracts/DexChildMiddleware.tsol, 210
 PUSH S3
 .loc ../contracts/DexChildMiddleware.tsol, 92
 GETGLOB 9
@@ -839,40 +839,40 @@ THROWIFNOT 2004
 .loc ../contracts/DexChildMiddleware.tsol, 96
 BLKSWAP 6, 2
 PUSHCONT {
-	.loc ../contracts/DexChildMiddleware.tsol, 215
+	.loc ../contracts/DexChildMiddleware.tsol, 219
 	ROLL 3
 	GETGLOB 11
 	SDEQ
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.tsol, 216
+		.loc ../contracts/DexChildMiddleware.tsol, 220
 		GETGLOB 9
 		ROLL 4
 		ROLL 3
 		CALLREF {
 			CALL $handleRootTransfer_8839ce86_internal_macro$
 		}
-		.loc ../contracts/DexChildMiddleware.tsol, 217
+		.loc ../contracts/DexChildMiddleware.tsol, 221
 		BLKDROP 3
 		.loc ../contracts/DexChildMiddleware.tsol, 0
 	}
 	IFJMP
-	.loc ../contracts/DexChildMiddleware.tsol, 219
+	.loc ../contracts/DexChildMiddleware.tsol, 223
 	CTOS
-	.loc ../contracts/DexChildMiddleware.tsol, 220
+	.loc ../contracts/DexChildMiddleware.tsol, 224
 	DUP
 	LDU 8
 	POP S2
-	.loc ../contracts/DexChildMiddleware.tsol, 222
+	.loc ../contracts/DexChildMiddleware.tsol, 226
 	DUP
 	PUSHINT 200
 	EQUAL
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.tsol, 223
+		.loc ../contracts/DexChildMiddleware.tsol, 227
 		DROP
 		LDREF
 		PLDREF
 		NIP
-		.loc ../contracts/DexChildMiddleware.tsol, 224
+		.loc ../contracts/DexChildMiddleware.tsol, 228
 		ROLL 3
 		SWAP
 		CTOS
@@ -881,26 +881,26 @@ PUSHCONT {
 		CALLREF {
 			CALL $handleSuccessDexTransfer_8d08a069_internal_macro$
 		}
-		.loc ../contracts/DexChildMiddleware.tsol, 228
+		.loc ../contracts/DexChildMiddleware.tsol, 232
 		BLKDROP 3
 		.loc ../contracts/DexChildMiddleware.tsol, 0
 	}
 	IFJMP
-	.loc ../contracts/DexChildMiddleware.tsol, 231
+	.loc ../contracts/DexChildMiddleware.tsol, 235
 	PUSHINT 201
 	EQUAL
 	PUSHCONT {
-		.loc ../contracts/DexChildMiddleware.tsol, 232
+		.loc ../contracts/DexChildMiddleware.tsol, 236
 		DUP
 		LDU 16
 		LDREF
 		LDREF
 		POP S4
 		BLKDROP2 2, 1
-		.loc ../contracts/DexChildMiddleware.tsol, 233
+		.loc ../contracts/DexChildMiddleware.tsol, 237
 		CTOS
 		PLDU 32
-		.loc ../contracts/DexChildMiddleware.tsol, 234
+		.loc ../contracts/DexChildMiddleware.tsol, 238
 		PUXC S4, S-1
 		CALLREF {
 			CALL $handleCancelDexTransfer_83d430b4_internal_macro$
@@ -910,7 +910,7 @@ PUSHCONT {
 	IF
 	.loc ../contracts/DexChildMiddleware.tsol, 0
 	BLKDROP 5
-	.loc ../contracts/DexChildMiddleware.tsol, 206
+	.loc ../contracts/DexChildMiddleware.tsol, 210
 }
 CALLX
 .loc ../contracts/DexChildMiddleware.tsol, 0

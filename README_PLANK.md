@@ -56,7 +56,7 @@ const payloadForDexMiddleware = dexMiddleware.getPayload({
 ```
 Следующий этап подсчёт необходимого кол-ва токенов и газа, которые нужно будет направить в месте с транзакцией
 ```typescript
-    const {
+const {
     everValue, // <- gas
     tokenAmount // <- tokens
 } = await context.dexMiddleware.contract.methods

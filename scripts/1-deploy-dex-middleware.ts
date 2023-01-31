@@ -7,10 +7,14 @@ const deployDexMiddleware = async ({
   signer,
   adminAddress,
   deployVaultValue,
+  weverRoot,
+  weverVault,
 }: {
   adminAddress: Address;
   signer: Signer;
   deployVaultValue: string;
+  weverRoot: Address;
+  weverVault: Address;
 }) => {
   if (!signer) {
     throw new Error("Signer not found");
@@ -25,6 +29,8 @@ const deployDexMiddleware = async ({
         nonce: locklift.utils.getRandomNonce(),
         owner: adminAddress,
         dexMiddlewareChildCode,
+        weverRoot,
+        weverVault,
       },
       publicKey: signer.publicKey,
       constructorParams: {},
@@ -64,6 +70,18 @@ const main = async () => {
       message: "MultiSig admin(owner) wallet address",
       validate: (value: string) => (isValidAddress(value) ? true : "Invalid Everscale address"),
     },
+    {
+      type: "text",
+      name: "weverRoot",
+      message: "Wever token root address",
+      validate: (value: string) => (isValidAddress(value) ? true : "Invalid Everscale address"),
+    },
+    {
+      type: "text",
+      name: "weverVault",
+      message: "Wever vault",
+      validate: (value: string) => (isValidAddress(value) ? true : "Invalid Everscale address"),
+    },
   ]);
 
   if (!response.mSigWallet) {
@@ -72,8 +90,10 @@ const main = async () => {
 
   console.log("\x1b[1m", "\nSetup complete! ✔ ");
 
-  const { adminAddress } = {
+  const { adminAddress, weverRoot, weverVault } = {
     adminAddress: new Address(response.mSigWallet),
+    weverRoot: new Address(response.weverRoot),
+    weverVault: new Address(response.weverVault),
   };
 
   const giverBalance = await locklift.provider.getBalance(new Address(locklift.context.network.config.giver.address));
@@ -87,6 +107,8 @@ const main = async () => {
     adminAddress,
     signer,
     deployVaultValue: DEPLOY_DEX_MIDDLEWARE_VALUE,
+    weverRoot,
+    weverVault,
   });
 };
 main()

@@ -67,7 +67,7 @@ describe("Wever", () => {
           deployWalletValue: 0,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     if (!traceTree) {
       throw new Error("traceTree not found");
@@ -139,7 +139,7 @@ describe("Wever", () => {
           deployWalletValue: 0,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     if (!traceTree) {
       throw new Error("traceTree not found");

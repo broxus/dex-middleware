@@ -41,7 +41,7 @@ export class Dex {
           amount: toNano(2),
           from: this.tokenGiverAccount.address,
         }),
-      { rise: false },
+      { raise: false },
     );
   };
 }

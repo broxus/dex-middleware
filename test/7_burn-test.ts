@@ -153,7 +153,7 @@ describe("Burn testing", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     expect(traceTree)

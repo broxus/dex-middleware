@@ -1,4 +1,4 @@
-import { fromNano, toNano, WalletTypes, zeroAddress } from "locklift";
+import { fromNano, toNano, zeroAddress } from "locklift";
 
 import { Context, preparation } from "./preparation";
 import { PreBuiltRoutes } from "./constants";
@@ -124,7 +124,7 @@ describe("success and cancel", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint({
       printFullAddresses: true,
@@ -221,7 +221,7 @@ describe("success and cancel", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     console.log(`user balance changed ${fromNano(traceTree!.getBalanceDiff(user.account.address))}`);

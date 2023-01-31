@@ -116,7 +116,7 @@ describe("Validation testing", () => {
           notify: true,
         },
       ),
-      { rise: false },
+      { raise: false },
     );
     await traceTree?.beautyPrint();
     expect(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract)).to.be.eq("0");
@@ -204,7 +204,7 @@ describe("Validation testing", () => {
               notify: true,
             },
           ),
-          { rise: false },
+          { raise: false },
         );
         await traceTree?.beautyPrint();
         expect(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract.address)).to.be.eq(
@@ -227,7 +227,7 @@ describe("Validation testing", () => {
               notify: true,
             },
           ),
-          { rise: false },
+          { raise: false },
         );
         await traceTree?.beautyPrint();
         expect(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract.address)).to.be.eq(
@@ -255,7 +255,7 @@ describe("Validation testing", () => {
               notify: true,
             },
           ),
-          { rise: false },
+          { raise: false },
         );
         await traceTree?.beautyPrint();
         expect(traceTree!.tokens.getTokenBalanceChange(qweTokenWallet.walletContract.address)).to.be.eq(
