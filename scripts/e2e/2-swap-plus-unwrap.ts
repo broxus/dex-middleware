@@ -1,7 +1,7 @@
 import { getSwapPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
-import { getDefaultSwapPayload } from "./config";
-import { WalletTypes } from "locklift";
+import { config, getDefaultSwapPayload } from "./config";
+import { toNano, WalletTypes } from "../../../ever-locklift";
 import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
@@ -25,7 +25,17 @@ const main = async () => {
     await getSwapPayload(
       getDefaultSwapPayload({ tokenReceiver: account.address.toString(), remainingGasTo: account.address.toString() }),
     );
-
+  // await dexMiddlewareContract.methods
+  //   .forceChildsFinalize({
+  //     childsSettings: [
+  //       { child: new Address("0:bb90eb45af73036c141b2274cb2fc3085b5c33f4e59c2926ecfd55719f40c1bf"), isSuccess: true },
+  //     ],
+  //   })
+  //   .send({
+  //     amount: toNano(2),
+  //     from: account.address,
+  //     bounce: true,
+  //   });
   debugger;
   logger.startStep(`Start swapping`);
   const result = await fromTokenWalletContract.transferTokens(

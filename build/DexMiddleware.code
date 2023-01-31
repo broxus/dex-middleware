@@ -2719,6 +2719,72 @@ PUSHCONT {
 IF
 THROW 0
 
+.globl	Payload_with_obj_buildPayload_857686be
+.type	Payload_with_obj_buildPayload_857686be, @function
+CALL $Payload_with_obj_buildPayload_857686be_macro$
+
+.macro Payload_with_obj_buildPayload_857686be_macro
+.loc ../contracts/lib/Payload.tsol, 16
+REVERSE 5, 0
+NEWC
+PUSH S6
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 8
+STSLICE
+ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_no_obj_buildPayload_857686be
+.type	Payload_no_obj_buildPayload_857686be, @function
+CALL $Payload_no_obj_buildPayload_857686be_macro$
+
+.macro Payload_no_obj_buildPayload_857686be_macro
+.loc ../contracts/lib/Payload.tsol, 16
+REVERSE 6, 0
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 8
+STSLICE
+ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
 .globl	Payload_with_obj_decodePayload_3c8d9f35
 .type	Payload_with_obj_decodePayload_3c8d9f35, @function
 CALL $Payload_with_obj_decodePayload_3c8d9f35_macro$
@@ -2788,72 +2854,6 @@ GTINT 1
 THROWIF 73
 LDMSGADDR
 ENDS
-.loc ../contracts/lib/Payload.tsol, 0
-
-.globl	Payload_with_obj_buildPayload_857686be
-.type	Payload_with_obj_buildPayload_857686be, @function
-CALL $Payload_with_obj_buildPayload_857686be_macro$
-
-.macro Payload_with_obj_buildPayload_857686be_macro
-.loc ../contracts/lib/Payload.tsol, 16
-REVERSE 5, 0
-NEWC
-PUSH S6
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-STU 8
-STSLICE
-ENDC
-.loc ../contracts/lib/Payload.tsol, 0
-
-.globl	Payload_no_obj_buildPayload_857686be
-.type	Payload_no_obj_buildPayload_857686be, @function
-CALL $Payload_no_obj_buildPayload_857686be_macro$
-
-.macro Payload_no_obj_buildPayload_857686be_macro
-.loc ../contracts/lib/Payload.tsol, 16
-REVERSE 6, 0
-NEWC
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-STU 8
-STSLICE
-ENDC
 .loc ../contracts/lib/Payload.tsol, 0
 
 .macro public_function_selector

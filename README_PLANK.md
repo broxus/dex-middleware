@@ -107,10 +107,10 @@ const payloadForUnwrap = await context.dexMiddleware.contract.methods
         _payloadForUnwrap: [
           {
             amount: 0, // <- because we don't know particular amount after swap
-            payload: "", // <- Custom payload for success scenarios
+            payload: "", // <- successPayload.payload
             remainingGasTo: user.account.address,
-            destination: user.account.address,
-            attachedValue: toNano(0.5),
+            destination: user.account.address, // successPayload.tokenReceiver
+            attachedValue: toNano(0.5), // successPayload.valueForFinalTransfer
           },
         ],
         _tokensDistributionType: 1, // <- we want to unwrap all tokens

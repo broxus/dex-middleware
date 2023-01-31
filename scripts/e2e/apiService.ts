@@ -15,22 +15,40 @@ type RouteStep = {
   poolType: "default";
 };
 type SwapPayloadResponse = {
-  mapping: Record<string, Array<string>>;
-  firstRoot: string;
-  leaves: number;
-  route: {
-    steps: Array<RouteStep>;
-    globalPriceImpact: string;
-    globalFee: string;
-  };
-  payload: string;
-  id: number;
-  gas: string;
+  tokensTransferPayload: string;
+  sendTo: string;
+  everAmount: string;
+  tokenAmount: string;
+  minTokenAmountReceive: string;
+  tokenAmountReceive: string;
 };
 export const getSwapPayload = (swapConfig: SwapConfig): Promise<SwapPayloadResponse> => {
   return axios
-    .post<SwapPayloadResponse>("https://api-test-npools.flatqube.io/v2/pools/cross_swap_payload_middleware", {
-      crossPairInput: swapConfig,
+    .post<{ output: { swap: SwapPayloadResponse } }>("https://api-test-npools.flatqube.io/v2/middleware", {
+      input: { swap: swapConfig },
     })
-    .then(res => res.data);
+    .then(res => {
+      debugger;
+      return res.data.output.swap;
+    });
 };
+
+type SwapWithUnwrap = {
+  fromCurrencyAddress: string;
+  whiteListUri: null;
+  whiteListCurrencies: [];
+  minTvl: string;
+  deep: number;
+  amount: string;
+  slippage: string;
+  id: null;
+  remainingGasTo: string;
+  successPayload: "payload base64";
+  cancelPayload: {
+    tokenReceiver: "address";
+    valueForFinalTransfer: "123";
+    deployWalletValue: "123";
+    payload: "payload base64";
+  };
+};
+export const getSwapPlusUnwrapPayload = swapConfig => {};
