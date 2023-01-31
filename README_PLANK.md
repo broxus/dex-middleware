@@ -107,7 +107,7 @@ const payloadForUnwrap = await context.dexMiddleware.contract.methods
         _payloadForUnwrap: [
           {
             amount: 0, // <- because we don't know particular amount after swap
-            payload: "",
+            payload: "", // <- Custom payload for success scenarios
             remainingGasTo: user.account.address,
             destination: user.account.address,
             attachedValue: toNano(0.5),
