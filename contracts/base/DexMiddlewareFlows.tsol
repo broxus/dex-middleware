@@ -116,7 +116,6 @@ abstract contract DexMiddlewareFlows is DexMiddlewareBase {
         for (CommonStructures.PayloadForUnwrap unwrapConfig : _payloadsForUnwrap) {
             // attach destination address to original payload
             TvmCell payload = abi.encode(unwrapConfig.destination, unwrapConfig.payload);
-//            TODO attachedValue should be defined as const
             ITokenWallet(msg.sender).transfer{value: Constants.UNWRAP_TRANSACTION_VALUE, bounce: false}(
                 _tokensAmount.hasValue() ? _tokensAmount.get() : unwrapConfig.amount,
                 weverVault,
