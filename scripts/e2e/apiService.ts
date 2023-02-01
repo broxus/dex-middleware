@@ -8,6 +8,7 @@ type SwapPayloadResponse = {
   tokenAmount: string;
   minTokenAmountReceive: string;
   tokenAmountReceive: string;
+  deployWalletValue: string;
 };
 export const getSwapPayload = (swapConfig: SwapConfig): Promise<SwapPayloadResponse> => {
   return axios

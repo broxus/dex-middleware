@@ -92,8 +92,6 @@ export type SwapWithUnwrap = {
   remainingGasTo: string;
   successPayload: {
     tokenReceiver: string;
-    valueForFinalTransfer: string;
-    deployWalletValue: string;
     payload: string;
   };
   cancelPayload: {
@@ -122,9 +120,7 @@ export const getDefaultSwapPlusUnwrapPayload = ({
   },
   successPayload: {
     payload: EMPTY_TVM_CELL,
-    deployWalletValue: "0",
     tokenReceiver,
-    valueForFinalTransfer: toNano(0.5),
   },
   deep: 10,
   fromCurrencyAddress: "0:fe614b31763bf583d2a70eeb593277b8285530df151287bab309a991bce9b77e",

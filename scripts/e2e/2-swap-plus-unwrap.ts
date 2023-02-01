@@ -21,13 +21,20 @@ const main = async () => {
     ),
   );
 
-  const { minTokenAmountReceive, tokenAmount, tokenAmountReceive, tokensTransferPayload, everAmount, sendTo } =
-    await getSwapPlusUnwrapPayload(
-      getDefaultSwapPlusUnwrapPayload({
-        tokenReceiver: "0:aacb26e7f3caa01bae4a8b00a2d1976408f47208286966a0e9d472e81a72f287",
-        remainingGasTo: account.address.toString(),
-      }),
-    );
+  const {
+    minTokenAmountReceive,
+    tokenAmount,
+    tokenAmountReceive,
+    tokensTransferPayload,
+    everAmount,
+    sendTo,
+    deployWalletValue,
+  } = await getSwapPlusUnwrapPayload(
+    getDefaultSwapPlusUnwrapPayload({
+      tokenReceiver: "0:aacb26e7f3caa01bae4a8b00a2d1976408f47208286966a0e9d472e81a72f287",
+      remainingGasTo: account.address.toString(),
+    }),
+  );
 
   debugger;
   logger.startStep(`Start swapping`);
@@ -38,7 +45,7 @@ const main = async () => {
       },
       {
         amount: tokenAmount,
-        deployWalletValue: 0,
+        deployWalletValue: deployWalletValue,
         remainingGasTo: account.address,
         payload: tokensTransferPayload,
         recipient: new Address(sendTo),

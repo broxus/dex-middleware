@@ -194,3 +194,45 @@ struct Response {
     ever_amount_receive: u128,
 }
 ```
+
+### 3) chain1_erc20_A -> tip3_A -> chain2_erc20_A
+Задача данного сценария сжечь токены в пользу другого контракта с custom payload.
+От пользователя нам потребуются следующие данные
+
+```typescript
+
+type Request = {
+  payload: string // base64 payload,
+  remainingGasTo: Address,
+  destination: Address
+  amountToBurn: string;
+  attachedValue: string,
+}
+```
+```typescript
+    const payloadForDexMiddleware = await context.dexMiddleware.getPayload({
+      _payloadsForDex: [],
+      _payloadsForTransfers: [],
+      _payloadsForBurn: [
+        {
+          amount: toNano(500), // <- Request.amountToBurn
+          payload: messageForBurn, // <- Request.payload
+          remainingGasTo: user.account.address, // <- Request.remainingGasTo
+          attachedValue: toNano(0.1), // <- Request.attachedValue
+          callbackTo: receivers[0].address, // <- Request.destination
+        },
+      ],
+      _payloadForUnwrap: [],
+      _tokensDistributionType: 0,
+      _remainingTokensTo: user.account.address,  // <- Request.remainingGasTo
+    });
+```
+Далее повторяем шаги из пред идущих этапов, т.е считаем кол-во токенов и эверов и отдаём пользователю
+```rust
+struct Response {
+    tokens_transfer_payload: String,
+    send_to: String, // <- DexMiddleware address
+    ever_amount: u128,
+    token_amount: u128
+}
+```

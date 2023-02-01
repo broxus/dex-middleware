@@ -1533,7 +1533,7 @@ PUSHCONT {
 	STSLICE
 	STREF
 	ENDC
-	.loc ../contracts/base/DexMiddlewareFlows.tsol, 120
+	.loc ../contracts/base/DexMiddlewareFlows.tsol, 119
 	TRUE
 	PUSH S2
 	SECOND
@@ -1590,19 +1590,19 @@ BLKDROP 4
 CALL $handleWeverBurn_81e61ff5_internal_macro$
 
 .macro handleWeverBurn_81e61ff5_internal_macro
-.loc ../contracts/base/DexMiddlewareFlows.tsol, 132
+.loc ../contracts/base/DexMiddlewareFlows.tsol, 131
 CALLREF {
 	CALL $_reserve_413ab4a8_internal_macro$
 }
 PUSHINT 0
 RAWRESERVE
-.loc ../contracts/base/DexMiddlewareFlows.tsol, 133
+.loc ../contracts/base/DexMiddlewareFlows.tsol, 132
 ROT
 CTOS
 LDMSGADDR
 LDREF
 ENDS
-.loc ../contracts/base/DexMiddlewareFlows.tsol, 135
+.loc ../contracts/base/DexMiddlewareFlows.tsol, 134
 ROLL 3
 ROT
 NEWC
@@ -1616,7 +1616,7 @@ STREF
 ENDC
 PUSHINT 1
 SENDRAWMSG
-.loc ../contracts/base/DexMiddlewareFlows.tsol, 142
+.loc ../contracts/base/DexMiddlewareFlows.tsol, 141
 NEWC
 STSLICECONST x42_
 STSLICE
@@ -2712,72 +2712,6 @@ PUSHCONT {
 IF
 THROW 0
 
-.globl	Payload_with_obj_buildPayload_857686be
-.type	Payload_with_obj_buildPayload_857686be, @function
-CALL $Payload_with_obj_buildPayload_857686be_macro$
-
-.macro Payload_with_obj_buildPayload_857686be_macro
-.loc ../contracts/lib/Payload.tsol, 16
-REVERSE 5, 0
-NEWC
-PUSH S6
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-STU 8
-STSLICE
-ENDC
-.loc ../contracts/lib/Payload.tsol, 0
-
-.globl	Payload_no_obj_buildPayload_857686be
-.type	Payload_no_obj_buildPayload_857686be, @function
-CALL $Payload_no_obj_buildPayload_857686be_macro$
-
-.macro Payload_no_obj_buildPayload_857686be_macro
-.loc ../contracts/lib/Payload.tsol, 16
-REVERSE 6, 0
-NEWC
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-SWAP
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-STU 8
-STSLICE
-ENDC
-.loc ../contracts/lib/Payload.tsol, 0
-
 .globl	Payload_with_obj_decodePayload_3c8d9f35
 .type	Payload_with_obj_decodePayload_3c8d9f35, @function
 CALL $Payload_with_obj_decodePayload_3c8d9f35_macro$
@@ -2847,6 +2781,72 @@ GTINT 1
 THROWIF 73
 LDMSGADDR
 ENDS
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_with_obj_buildPayload_857686be
+.type	Payload_with_obj_buildPayload_857686be, @function
+CALL $Payload_with_obj_buildPayload_857686be_macro$
+
+.macro Payload_with_obj_buildPayload_857686be_macro
+.loc ../contracts/lib/Payload.tsol, 16
+REVERSE 5, 0
+NEWC
+PUSH S6
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 8
+STSLICE
+ENDC
+.loc ../contracts/lib/Payload.tsol, 0
+
+.globl	Payload_no_obj_buildPayload_857686be
+.type	Payload_no_obj_buildPayload_857686be, @function
+CALL $Payload_no_obj_buildPayload_857686be_macro$
+
+.macro Payload_no_obj_buildPayload_857686be_macro
+.loc ../contracts/lib/Payload.tsol, 16
+REVERSE 6, 0
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 8
+STSLICE
+ENDC
 .loc ../contracts/lib/Payload.tsol, 0
 
 .macro public_function_selector
