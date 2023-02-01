@@ -72,7 +72,6 @@ library CommonStructures {
         address remainingGasTo;
         uint128 amount;
         TvmCell payload;
-        uint128 attachedValue;
     }
 
     struct CalculationResult {

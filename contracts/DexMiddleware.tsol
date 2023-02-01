@@ -139,7 +139,7 @@ contract DexMiddleware is
         }
 
         for (CommonStructures.PayloadForUnwrap unwrapConfig : _payloadsForUnwrap) {
-            requiredValue += unwrapConfig.attachedValue;
+            requiredValue += Constants.UNWRAP_TRANSACTION_VALUE;
             requiredTokenAmount += unwrapConfig.amount;
         }
 
