@@ -1,6 +1,6 @@
-import { getSwapPayload } from "./apiService";
+import { getSwapPayload, getSwapPlusUnwrapPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
-import { config, getDefaultSwapPayload } from "./config";
+import { config, getDefaultSwapPayload, getDefaultSwapPlusUnwrapPayload } from "./config";
 import { toNano, WalletTypes } from "../../../ever-locklift";
 import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
@@ -22,36 +22,32 @@ const main = async () => {
   );
 
   const { minTokenAmountReceive, tokenAmount, tokenAmountReceive, tokensTransferPayload, everAmount, sendTo } =
-    await getSwapPayload(
-      getDefaultSwapPayload({ tokenReceiver: account.address.toString(), remainingGasTo: account.address.toString() }),
+    await getSwapPlusUnwrapPayload(
+      getDefaultSwapPlusUnwrapPayload({
+        tokenReceiver: "0:aacb26e7f3caa01bae4a8b00a2d1976408f47208286966a0e9d472e81a72f287",
+        remainingGasTo: account.address.toString(),
+      }),
     );
-  // await dexMiddlewareContract.methods
-  //   .forceChildsFinalize({
-  //     childsSettings: [
-  //       { child: new Address("0:bb90eb45af73036c141b2274cb2fc3085b5c33f4e59c2926ecfd55719f40c1bf"), isSuccess: true },
-  //     ],
-  //   })
-  //   .send({
-  //     amount: toNano(2),
-  //     from: account.address,
-  //     bounce: true,
-  //   });
+
   debugger;
   logger.startStep(`Start swapping`);
-  const result = await fromTokenWalletContract.transferTokens(
-    {
-      amount: everAmount,
-    },
-    {
-      amount: tokenAmount,
-      deployWalletValue: 0,
-      remainingGasTo: account.address,
-      payload: tokensTransferPayload,
-      recipient: new Address(sendTo),
-      notify: true,
-    },
+  const { traceTree } = await locklift.tracing.trace(
+    fromTokenWalletContract.transferTokens(
+      {
+        amount: everAmount,
+      },
+      {
+        amount: tokenAmount,
+        deployWalletValue: 0,
+        remainingGasTo: account.address,
+        payload: tokensTransferPayload,
+        recipient: new Address(sendTo),
+        notify: true,
+      },
+    ),
+    { raise: false },
   );
-  console.log(result);
+  await traceTree?.beautyPrint();
   logger.successStep(`Swap success`);
 };
 
