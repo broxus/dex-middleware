@@ -128,3 +128,54 @@ export const getDefaultSwapPlusUnwrapPayload = ({
   slippage: "0.1",
   whiteListCurrencies: [],
 });
+
+export type SwapWithBurn = {
+  fromCurrencyAddress: string;
+  whiteListUri: null;
+  whiteListCurrencies: [];
+  minTvl: string;
+  deep: number;
+  amount: string;
+  slippage: string;
+  id: null;
+  remainingGasTo: string;
+  successPayload: {
+    destination: string;
+    attachedValue: string;
+    payload: string;
+  };
+  cancelPayload: {
+    tokenReceiver: string;
+    valueForFinalTransfer: string;
+    deployWalletValue: string;
+    payload: string;
+  };
+};
+export const getDefaultSwapPlusBurnPayload = ({
+  remainingGasTo,
+  tokenReceiver,
+}: {
+  remainingGasTo: string;
+  tokenReceiver: string;
+}): SwapWithBurn => ({
+  amount: "10000000",
+  id: null,
+  whiteListUri: null,
+  remainingGasTo,
+  cancelPayload: {
+    payload: EMPTY_TVM_CELL,
+    deployWalletValue: "0",
+    tokenReceiver,
+    valueForFinalTransfer: toNano(0.1),
+  },
+  successPayload: {
+    payload: EMPTY_TVM_CELL,
+    attachedValue: toNano(0.1),
+    destination: tokenReceiver,
+  },
+  deep: 10,
+  fromCurrencyAddress: "0:fe614b31763bf583d2a70eeb593277b8285530df151287bab309a991bce9b77e",
+  minTvl: "0",
+  slippage: "0.1",
+  whiteListCurrencies: [],
+});

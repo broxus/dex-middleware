@@ -13,7 +13,6 @@
     "test-8": "npx locklift test --network local --tests test/8_complex_flow_swap_and_multi_send-test.ts",
     "test-wever-1": "npx locklift test --network local --tests test/wever/1-test.ts",
     "deploy-main": "npx locklift run --disable-build --network main -s scripts/1-deploy-dex-middleware.ts"
-
   },
   "author": "",
   "license": "ISC",

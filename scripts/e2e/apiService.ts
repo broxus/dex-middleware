@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SwapConfig, SwapWithUnwrap } from "./config";
+import { SwapConfig, SwapWithBurn, SwapWithUnwrap } from "./config";
 
 type SwapPayloadResponse = {
   tokensTransferPayload: string;
@@ -30,5 +30,28 @@ export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap) => {
     .then(res => {
       debugger;
       return res.data.output.swapAndUnwrapAll;
+    });
+};
+
+type SwapPlusBurnPayloadResponse = {
+  tokensTransferPayload: string;
+  sendTo: string;
+  everAmount: string;
+  tokenAmount: string;
+  minTokenAmountBurn: string;
+  tokenAmountBurn: string;
+  deployWalletValue: string;
+};
+export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn) => {
+  return axios
+    .post<{ output: { swapAndBurn: SwapPlusBurnPayloadResponse } }>(
+      "https://api-test-npools.flatqube.io/v2/middleware",
+      {
+        input: { swapAndBurn: swapConfig },
+      },
+    )
+    .then(res => {
+      debugger;
+      return res.data.output.swapAndBurn;
     });
 };

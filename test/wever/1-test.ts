@@ -1,4 +1,4 @@
-import { fromNano, getRandomNonce, toNano } from "locklift";
+import { fromNano, getRandomNonce, toNano, WalletTypes } from "locklift";
 
 import { expect } from "chai";
 
@@ -16,7 +16,19 @@ describe("Wever", () => {
     user = context.signersWithAccounts[0];
     const wever = await getWeverInstance();
     context.setWever(wever);
+    const everWalletAccount = await locklift.factory.accounts.addNewAccount({
+      type: WalletTypes.EverWallet,
+      publicKey: (await locklift.keystore.getSigner("8"))!.publicKey,
+      value: toNano(20),
+    });
 
+    await locklift.provider.sendMessage({
+      amount: toNano(1),
+      recipient: everWalletAccount.account.address,
+      bounce: true,
+      sender: everWalletAccount.account.address,
+    });
+    console.log(`Sent`);
     context.setDexMiddleware(
       await DexMiddleware.deployDexInstance(user, wever.weverVault.address, wever.weverRoot.address),
     );

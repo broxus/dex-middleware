@@ -5,13 +5,12 @@ pragma AbiHeader pubkey;
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 import "broxus-ton-tokens-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
-import "locklift/src/console.tsol";
-
-
 contract ReceiverAfterDex is IAcceptTokensTransferCallback, IAcceptTokensBurnCallback  {
     uint128 private static _nonce;
     address private static root;
-    constructor() public {}
+    constructor() public {
+        tvm.accept();
+    }
     event onReceiveTokens(address from, uint128 amount, string message);
     event onHandleTokensBurn(address from, uint128 amount, string  message);
 
