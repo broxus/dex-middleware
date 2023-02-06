@@ -73,9 +73,16 @@ library CommonStructures {
         uint128 amount;
         TvmCell payload;
     }
-
+    enum ValidationErrorCodes {
+        None,
+        OnlyOneOperationAllowed,
+        TotalEverValueToLow,
+        TotalTokensValueToLow,
+        AttachedValueToBurnToLow
+    }
     struct CalculationResult {
         uint128 everValue;
         uint128 tokenAmount;
+        ValidationErrorCodes errorCode;
     }
 }

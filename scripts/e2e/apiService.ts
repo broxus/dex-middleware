@@ -10,9 +10,10 @@ type SwapPayloadResponse = {
   tokenAmountReceive: string;
   deployWalletValue: string;
 };
-export const getSwapPayload = (swapConfig: SwapConfig): Promise<SwapPayloadResponse> => {
+
+export const getSwapPayload = (swapConfig: SwapConfig, apiEndpoint: string): Promise<SwapPayloadResponse> => {
   return axios
-    .post<{ output: { swap: SwapPayloadResponse } }>("https://api-test-npools.flatqube.io/v2/middleware", {
+    .post<{ output: { swap: SwapPayloadResponse } }>(`${apiEndpoint}/v2/middleware`, {
       input: { swap: swapConfig },
     })
     .then(res => {
@@ -21,10 +22,10 @@ export const getSwapPayload = (swapConfig: SwapConfig): Promise<SwapPayloadRespo
     });
 };
 
-export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap) => {
+export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap, apiEndpoint: string) => {
   debugger;
   return axios
-    .post<{ output: { swapAndUnwrapAll: SwapPayloadResponse } }>("https://api-test-npools.flatqube.io/v2/middleware", {
+    .post<{ output: { swapAndUnwrapAll: SwapPayloadResponse } }>(`${apiEndpoint}/v2/middleware`, {
       input: { swapAndUnwrapAll: swapConfig },
     })
     .then(res => {
@@ -42,14 +43,11 @@ type SwapPlusBurnPayloadResponse = {
   tokenAmountBurn: string;
   deployWalletValue: string;
 };
-export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn) => {
+export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn, apiEndpoint: string) => {
   return axios
-    .post<{ output: { swapAndBurn: SwapPlusBurnPayloadResponse } }>(
-      "https://api-test-npools.flatqube.io/v2/middleware",
-      {
-        input: { swapAndBurn: swapConfig },
-      },
-    )
+    .post<{ output: { swapAndBurn: SwapPlusBurnPayloadResponse } }>(`${apiEndpoint}/v2/middleware`, {
+      input: { swapAndBurn: swapConfig },
+    })
     .then(res => {
       debugger;
       return res.data.output.swapAndBurn;

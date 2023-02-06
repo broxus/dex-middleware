@@ -52,7 +52,7 @@
 				{"name":"_transferPayload","type":"cell"}
 			],
 			"outputs": [
-				{"components":[{"name":"everValue","type":"uint128"},{"name":"tokenAmount","type":"uint128"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"everValue","type":"uint128"},{"name":"tokenAmount","type":"uint128"},{"name":"errorCode","type":"uint8"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{

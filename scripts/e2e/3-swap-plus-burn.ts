@@ -6,6 +6,10 @@ import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
 const main = async () => {
+  const API_ENDPOINT = process.env.API_ENDPOINT;
+  if (!API_ENDPOINT) {
+    throw new Error("API_ENDPOINT doesn't provided");
+  }
   console.log(`Start burn flow`);
 
   const signer = (await locklift.keystore.getSigner("0"))!;
@@ -41,6 +45,7 @@ const main = async () => {
       tokenReceiver: receiverAddress,
       remainingGasTo: account.address.toString(),
     }),
+    API_ENDPOINT,
   );
 
   logger.startStep(`Start Burning`);

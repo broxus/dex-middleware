@@ -111,7 +111,8 @@ contract DexMiddleware is
 
         return CommonStructures.CalculationResult({
             everValue: calculationResult.everValue,
-            tokenAmount: isAllTokensToSingleFlowType ? 0 : calculationResult.tokenAmount
+            tokenAmount: isAllTokensToSingleFlowType ? 0 : calculationResult.tokenAmount,
+            errorCode: calculationResult.errorCode
         });
     }
     function _calculateFeeAndTokensValue(
@@ -128,6 +129,14 @@ contract DexMiddleware is
         }
 
         for (CommonStructures.PayloadForBurn payloadForBurn : _payloadsForBurn) {
+
+            if (payloadForBurn.attachedValue < Constants.MIN_ATTACHED_TO_BURN_VALUE) {
+                return CommonStructures.CalculationResult({
+                        everValue: 0,
+                        tokenAmount: 0,
+                        errorCode: CommonStructures.ValidationErrorCodes.AttachedValueToBurnToLow
+                });
+            }
             requiredValue += payloadForBurn.attachedValue;
             requiredTokenAmount += payloadForBurn.amount;
         }
@@ -145,7 +154,8 @@ contract DexMiddleware is
 
         return CommonStructures.CalculationResult({
             everValue: requiredValue,
-            tokenAmount: requiredTokenAmount
+            tokenAmount: requiredTokenAmount,
+            errorCode: CommonStructures.ValidationErrorCodes.None
         });
     }
 
@@ -158,7 +168,7 @@ contract DexMiddleware is
         CommonStructures.PayloadForUnwrap[] _payloadsForUnwrap,
         bool _isAllTokensToSingleFlow,
         uint128 _receivedTokensAmount
-    ) internal pure returns(bool, uint128) {
+    ) internal pure returns(CommonStructures.ValidationErrorCodes, uint128) {
 
         // Type `AllToSingleFlow` supports only one flow at a single time
         if (_isAllTokensToSingleFlow) {
@@ -167,7 +177,7 @@ contract DexMiddleware is
                 _payloadsForBurn.length +
                 _payloadsForUnwrap.length;
             if (totalFlows != 1) {
-                return (false, 0);
+                return (CommonStructures.ValidationErrorCodes.OnlyOneOperationAllowed, 0);
             }
         }
 
@@ -178,18 +188,26 @@ contract DexMiddleware is
             _payloadsForUnwrap
         );
 
+        if (calculationResult.errorCode != CommonStructures.ValidationErrorCodes.None) {
+            return (calculationResult.errorCode, 0);
+        }
+
         if (msg.value < calculationResult.everValue) {
-            return (false, 0);
+            return (CommonStructures.ValidationErrorCodes.TotalEverValueToLow, 0);
         }
 
         if (_isAllTokensToSingleFlow) {
-            return (true, 0);
+            return (CommonStructures.ValidationErrorCodes.None, 0);
         }
 
         if (_receivedTokensAmount < calculationResult.tokenAmount) {
-            return (false, 0);
+            return (CommonStructures.ValidationErrorCodes.TotalTokensValueToLow, 0);
         }
-        return (true, _receivedTokensAmount - calculationResult.tokenAmount);
+
+        return (
+            CommonStructures.ValidationErrorCodes.None,
+            _receivedTokensAmount - calculationResult.tokenAmount
+        );
     }
 
     function handleTokensTransfer(
@@ -211,7 +229,7 @@ contract DexMiddleware is
         bool isAllTokensToSingleFlowType = tokensDistributionType == CommonStructures.TokensDistributionType.AllToSingleFlow;
 
         (
-            bool isEnoughTokensAndValue,
+            CommonStructures.ValidationErrorCodes validationError,
             uint128 extraTokensAmount
         ) = checkIsEnoughValueAndTokens(
             payloadsForDex,
@@ -222,7 +240,7 @@ contract DexMiddleware is
             _amount
         );
 
-        if (!isEnoughTokensAndValue || isPaused) {
+        if (validationError != CommonStructures.ValidationErrorCodes.None || isPaused) {
 
             ITokenWallet(msg.sender).transfer{value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false}(
                 _amount,

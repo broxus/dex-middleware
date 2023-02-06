@@ -6,6 +6,10 @@ import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
 const main = async () => {
+  const API_ENDPOINT = process.env.API_ENDPOINT;
+  if (!API_ENDPOINT) {
+    throw new Error("API_ENDPOINT doesn't provided");
+  }
   const signer = (await locklift.keystore.getSigner("0"))!;
   const account = await locklift.factory.accounts.addExistingAccount({
     type: WalletTypes.MsigAccount,
@@ -24,6 +28,7 @@ const main = async () => {
   const { minTokenAmountReceive, tokenAmount, tokenAmountReceive, tokensTransferPayload, everAmount, sendTo } =
     await getSwapPayload(
       getDefaultSwapPayload({ tokenReceiver: account.address.toString(), remainingGasTo: account.address.toString() }),
+      API_ENDPOINT,
     );
 
   debugger;

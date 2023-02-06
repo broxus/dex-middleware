@@ -18,15 +18,17 @@ yarn run deploy-main
      CommonStructures.PayloadForDex[] _payloadsForDex, // multi-swap config
      CommonStructures.PayloadForTransfer[] _payloadsForTransfers, // tokens multi-send config
      CommonStructures.PayloadForBurn[] _payloadsForBurn, // tokens multi-burn config
+     CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
      address remainingTokensTo // remaining tokens receiver
  ) override external pure returns (TvmCell);
 ```
 2. Then calculate the required tokens and evers amount via `DexMiddleware.buildPayload` (optional step, but it can save mistakes)
 ```solidity
  function calculateFeeAndTokensValue(
-     CommonStructures.PayloadForDex[] _payloadsForDex,
-     CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
-     CommonStructures.PayloadForBurn[] _payloadsForBurn
+      CommonStructures.PayloadForDex[] _payloadsForDex,
+      CommonStructures.PayloadForTransfer[] _payloadsForTransfer,
+      CommonStructures.PayloadForBurn[] _payloadsForBurn,
+      CommonStructures.PayloadForUnwrap[] _payloadForUnwrap
  ) override public pure returns (CommonStructures.CalculationResult);
 ```
 3. Send payload from step 1 with tokens and evers amount from point 2
@@ -43,7 +45,7 @@ struct PayloadForDex {
      address firstRoot; // entry pool address
      address remainingGasTo;
      uint128 tokensAmount; // amount of tokens that will be attached to the first transfer (first root) 
-     uint128 attachedValue; // ever value that will be attached to the first transfer
+     uint128 valueForDexOperation; // ever value that will be attached to the first transfer
      uint128 deployWalletValue;
      mapping (address => address[]) rootToSendersAllowanceMap; // *rootToSendersAllowanceMap
      FinishTransaction successPayload; // * FinishTransaction
