@@ -1,12 +1,7 @@
-import { getSwapPayload, getSwapPlusBurnPayload, getSwapPlusUnwrapPayload } from "./apiService";
+import { getSwapPlusBurnPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
-import {
-  config,
-  getDefaultSwapPayload,
-  getDefaultSwapPlusBurnPayload,
-  getDefaultSwapPlusUnwrapPayload,
-} from "./config";
-import { toNano, WalletTypes, zeroAddress } from "../../../ever-locklift";
+import { getDefaultSwapPlusBurnPayload } from "./config";
+import { toNano, WalletTypes, zeroAddress } from "locklift";
 import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 

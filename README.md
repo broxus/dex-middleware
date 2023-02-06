@@ -109,3 +109,6 @@ Example flow:
 2. Send to three users  0.01 WBTC each
 3. Burn 0.06 WBTC for the bridge contract
    And after this flow `remainingTokensTo` receiver will receive an extra amount of WBTC
+
+# Api usage
+examples of API usage can be found inside `scripts/e2e` 
