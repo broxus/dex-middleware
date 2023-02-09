@@ -114,7 +114,14 @@ const config: LockliftConfig = {
     },
     main: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
-      connection: "mainnetJrpc",
+      connection: {
+        id: 1,
+        group: "group",
+        type: "jrpc",
+        data: {
+          endpoint: process.env.MAIN_ENDPOINT || "",
+        },
+      },
       giver: {
         giverFactory: (ever, keyPair, address) => new TestnetGiver(ever, keyPair, address),
         address: process.env.MAIN_GIVER_ADDRESS ?? "",
