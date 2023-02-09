@@ -20,14 +20,14 @@
     "@types/chai": "^4.3.3",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.8",
-    "broxus-ton-tokens-contracts": "git+ssh://git@gitlab.broxus.com/tokens/tip3#3997abf036025c8b771100b1d6c75d478c6a607a",
+    "broxus-ton-tokens-contracts": "github:broxus/tip3",
     "chai": "^4.3.6",
-    "dex": "git+ssh://git@gitlab.broxus.com/dex/contracts#2bba3508720c8a5d1436dd6401d170eca8894e83",
+    "dex": "github:broxus/flatqube-contracts",
     "everscale-standalone-client": "^2.1.1",
     "prettier": "^2.7.1",
     "ts-mocha": "^10.0.0",
     "typescript": "^4.7.4",
-    "wever": "git+ssh://git@gitlab.broxus.com/tokens/ever-wever#9d23d426c96c21029be2d3b09eaf3a21a77306a5"
+    "wever": "github:broxus/ever-wever"
   },
   "dependencies": {
     "@broxus/contracts": "^1.1.1",
