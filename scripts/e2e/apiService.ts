@@ -17,7 +17,6 @@ export const getSwapPayload = (swapConfig: SwapConfig, apiEndpoint: string): Pro
       input: { swap: swapConfig },
     })
     .then(res => {
-      debugger;
       return res.data.output.swap;
     });
 };
@@ -29,7 +28,6 @@ export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap, apiEndpoint
       input: { swapAndUnwrapAll: swapConfig },
     })
     .then(res => {
-      debugger;
       return res.data.output.swapAndUnwrapAll;
     });
 };
@@ -49,8 +47,33 @@ export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn, apiEndpoint: st
       input: { swapAndBurn: swapConfig },
     })
     .then(res => {
-      debugger;
       return res.data.output.swapAndBurn;
+    })
+    .catch(e => {
+      console.log(e);
+      throw new Error(e);
+    });
+};
+
+type UnwrapPayloadRequest = {
+  remainingGasTo: string;
+  destination: string;
+  amount: string;
+  payload?: string;
+};
+type UnwrapResponse = {
+  tokensTransferPayload: string;
+  sendTo: string;
+  everAmount: string;
+  tokenAmount: string;
+};
+export const getUnwrapPayload = (unwrapConfig: UnwrapPayloadRequest, apiEndpoint: string) => {
+  return axios
+    .post<{ output: { unwrapAll: UnwrapResponse } }>(`${apiEndpoint}/v2/middleware`, {
+      input: { unwrapAll: unwrapConfig },
+    })
+    .then(res => {
+      return res.data.output.unwrapAll;
     })
     .catch(e => {
       console.log(e);
