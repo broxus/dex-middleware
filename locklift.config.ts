@@ -117,8 +117,9 @@ const config: LockliftConfig = {
       connection: "mainnetJrpc",
       giver: {
         giverFactory: (ever, keyPair, address) => new TestnetGiver(ever, keyPair, address),
-        address: "0:3bcef54ea5fe3e68ac31b17799cdea8b7cffd4da75b0b1a70b93a18b5c87f723",
-        key: process.env.MAIN_GIVER_KEY ?? "",
+        address: process.env.MAIN_GIVER_ADDRESS ?? "",
+        phrase: process.env.MAIN_SEED_PHRASE ?? "",
+        accountId: 0,
       },
       tracing: {
         endpoint: MAIN_NET_NETWORK_ENDPOINT,
