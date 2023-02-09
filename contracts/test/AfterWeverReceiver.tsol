@@ -14,7 +14,7 @@ contract AfterWeverReceiver  {
 
 
 
-    function handleEversEndEmitEvent(string _msg) public {
+    function handleEversEndEmitEvent(string _msg) public pure {
         emit onReceiveEvers(msg.sender, msg.value, _msg);
     }
 }

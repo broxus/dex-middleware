@@ -208,7 +208,7 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
     }
 
     function onAcceptTokensTransfer(
-        address _tokenRoot,
+        address,
         uint128 _amount,
         address _sender,
         address,

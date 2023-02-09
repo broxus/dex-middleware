@@ -39,7 +39,7 @@
 		{
 			"name": "onAcceptTokensTransfer",
 			"inputs": [
-				{"name":"_tokenRoot","type":"address"},
+				{"name":"value0","type":"address"},
 				{"name":"_amount","type":"uint128"},
 				{"name":"_sender","type":"address"},
 				{"name":"value3","type":"address"},

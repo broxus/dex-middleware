@@ -127,7 +127,7 @@ abstract contract DexMiddlewareFlows is DexMiddlewareBase {
         }
     }
 
-    function handleWeverBurn(TvmCell _payload, uint128 _amount, address _remainingGasTo) internal view {
+    function handleWeverBurn(TvmCell _payload, uint128 _amount, address _remainingGasTo) internal pure {
         tvm.rawReserve(_reserve(), 0);
         (address destination, TvmCell originalPayload) = abi.decode(_payload, (address, TvmCell));
 

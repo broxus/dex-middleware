@@ -74,8 +74,8 @@ contract DexMiddleware is
 
     function onAcceptTokensBurn(
         uint128 _amount,
-        address walletOwner,
-        address wallet,
+        address,
+        address,
         address _remainingGasTo,
         TvmCell payload
     ) override external {

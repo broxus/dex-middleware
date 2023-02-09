@@ -22,11 +22,6 @@ THROW 0
 DROP
 GETGLOB 6
 THROWIFNOT 76
-GETGLOB 2
-ISNULL
-IFREF {
-	CALL $c4_to_c7$
-}
 .loc ../contracts/test/AfterWeverReceiver.tsol, 17
 LDREF
 ENDS
@@ -34,8 +29,7 @@ ENDS
 CALLREF {
 	CALL $handleEversEndEmitEvent_d72abccb_internal_macro$
 }
-DROP
-CALLREF {
+IFREF {
 	CALL $c7_to_c4$
 }
 THROW 0

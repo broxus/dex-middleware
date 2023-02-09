@@ -1,8 +1,9 @@
 import { LockliftConfig } from "locklift";
 import { FactorySource } from "./build/factorySource";
-import { SimpleGiver, GiverWallet, GiverWalletV2_3, TestnetGiver } from "./giverSettings";
+import { SimpleGiver, GiverWallet, TestnetGiver } from "./giverSettings";
 import * as chai from "chai";
-require("dotenv").config();
+
+const result = require("dotenv").config();
 
 import { lockliftChai } from "locklift/chaiPlugin";
 chai.use(lockliftChai);
@@ -18,7 +19,6 @@ const DEV_NET_NETWORK_ENDPOINT = process.env.DEV_NET_NETWORK_ENDPOINT || "https:
 
 // Create your own link on https://dashboard.evercloud.dev/
 const MAIN_NET_NETWORK_ENDPOINT = process.env.MAIN_NET_NETWORK_ENDPOINT || "https://mainnet.evercloud.dev/XXX/graphql";
-
 const config: LockliftConfig = {
   compiler: {
     // Specify path to your TON-Solidity-Compiler

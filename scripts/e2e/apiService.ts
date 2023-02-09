@@ -51,5 +51,9 @@ export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn, apiEndpoint: st
     .then(res => {
       debugger;
       return res.data.output.swapAndBurn;
+    })
+    .catch(e => {
+      console.log(e);
+      throw new Error(e);
     });
 };

@@ -1,7 +1,7 @@
 import { getSwapPlusBurnPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
 import { getDefaultSwapPlusBurnPayload } from "./config";
-import { toNano, WalletTypes, zeroAddress } from "locklift";
+import { getRandomNonce, toNano, WalletTypes, zeroAddress } from "locklift";
 import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
@@ -20,17 +20,18 @@ const main = async () => {
     mSigType: "SafeMultisig",
   });
 
-  const { contract } = await locklift.factory.deployContract({
-    contract: "ReceiverAfterDex",
-    publicKey: signer.publicKey,
-    value: toNano(1),
-    constructorParams: {},
-    initParams: {
-      _nonce: 1,
-      root: zeroAddress,
-    },
-  });
-  const receiverAddress = contract.address.toString();
+  // const { contract } = await locklift.factory.deployContract({
+  //   contract: "ReceiverAfterDex",
+  //   publicKey: signer.publicKey,
+  //   value: toNano(1),
+  //   constructorParams: {},
+  //   initParams: {
+  //     _nonce: getRandomNonce(),
+  //     root: zeroAddress,
+  //   },
+  // });
+  // const receiverAddress = contract.address.toString();
+  const receiverAddress = "0:85b514ba506ca64cbbf5c81f95dc190699f00d35582b5e6595b09ca221126546";
   console.log(`Receiver address ${receiverAddress}`);
   const fromTokenWalletContract = await TokenWallet.getWallet(
     account.address,
