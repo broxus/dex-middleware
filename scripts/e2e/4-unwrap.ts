@@ -32,39 +32,30 @@ const main = async () => {
     {
       amount: toNano(1),
       destination: account.address.toString(),
-      remainingGasTo: account.address.toString(),
+      remainingGasTo: "0:aacb26e7f3caa01bae4a8b00a2d1976408f47208286966a0e9d472e81a72f287",
     },
     API_ENDPOINT,
   );
   console.log(tokensTransferPayload);
   logger.startStep(`Start Unwrapping`);
 
-  const dexMiddleware = await locklift.factory.getDeployedContract("DexMiddleware", new Address(sendTo));
-  console.log(
-    await dexMiddleware.methods
-      .calculateFeeAndTokensValue({
-        _transferPayload:
-          "te6ccgEBAgEApwAB/rXunHIBAQUBAJcAAWUAAAAAAAAAAAAAAAAAAAAAMAgB+I8vrWO0QVkLvaCpg7/VbxuLKcZ8FoAuNPUO/0ARRVEBAQPQQAIBQ4AfiPL61jtEFZC72gqYO/1W8biynGfBaALjT1Dv9AEUVRADAWOAH4jy+tY7RBWQu9oKmDv9VvEBAEa4spxnwWgC409Q7/QBFFUAAAAAAAAAAAAAAAAHc1lAEAQAAA==",
-      })
-      .call(),
+  const { traceTree } = await locklift.tracing.trace(
+    fromTokenWalletContract.transferTokens(
+      {
+        amount: everAmount,
+      },
+      {
+        amount: tokenAmount,
+        deployWalletValue: 0,
+        remainingGasTo: account.address,
+        payload: tokensTransferPayload,
+        recipient: new Address(sendTo),
+        notify: true,
+      },
+    ),
+    { raise: false },
   );
-  // const { traceTree } = await locklift.tracing.trace(
-  //   fromTokenWalletContract.transferTokens(
-  //     {
-  //       amount: everAmount,
-  //     },
-  //     {
-  //       amount: tokenAmount,
-  //       deployWalletValue: 0,
-  //       remainingGasTo: account.address,
-  //       payload: tokensTransferPayload,
-  //       recipient: new Address(sendTo),
-  //       notify: true,
-  //     },
-  //   ),
-  //   { raise: false },
-  // );
-  // await traceTree?.beautyPrint();
+  await traceTree?.beautyPrint();
   logger.successStep(`Swap success`);
 };
 
