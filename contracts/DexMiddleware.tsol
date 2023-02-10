@@ -93,6 +93,7 @@ contract DexMiddleware is
             CommonStructures.PayloadForBurn[] payloadsForBurn,
             CommonStructures.PayloadForUnwrap[] payloadsForUnwrap,
             CommonStructures.TokensDistributionType tokensDistributionType,
+            ,
         ) = Payload.decodePayload(_transferPayload);
 
         bool isAllTokensToSingleFlowType = tokensDistributionType == CommonStructures.TokensDistributionType.AllToSingleFlow;
@@ -212,7 +213,7 @@ contract DexMiddleware is
 
     function handleTokensTransfer(
         uint128 _amount,
-        address _remainingGasTo,
+        address _tokensTransferRemainingGasTo,
         TvmCell _payload
     ) internal {
         tvm.rawReserve(_reserve(), 0);
@@ -223,8 +224,12 @@ contract DexMiddleware is
             CommonStructures.PayloadForBurn[] payloadsForBurn,
             CommonStructures.PayloadForUnwrap[] payloadsForUnwrap,
             CommonStructures.TokensDistributionType tokensDistributionType,
-            address remainingTokensTo
+            address remainingTokensTo,
+            address payloadRemainingGasTo
         ) = Payload.decodePayload(_payload);
+        address remainingGasTo = payloadRemainingGasTo.value == 0 ?
+            _tokensTransferRemainingGasTo :
+            payloadRemainingGasTo;
 
         bool isAllTokensToSingleFlowType = tokensDistributionType == CommonStructures.TokensDistributionType.AllToSingleFlow;
 
@@ -246,7 +251,7 @@ contract DexMiddleware is
                 _amount,
                 remainingTokensTo,
                 0,
-                _remainingGasTo,
+                remainingGasTo,
                 true,
                 _payload
             );
@@ -258,7 +263,7 @@ contract DexMiddleware is
                 extraTokensAmount,
                 remainingTokensTo,
                 0,
-                _remainingGasTo,
+                remainingGasTo,
                 true,
                 _payload
             );
@@ -272,7 +277,8 @@ contract DexMiddleware is
         makeBurns(payloadsForBurn, tokensAmount);
         createChildProcesses(payloadsForDex, tokensAmount);
         makeUnwraps(payloadsForUnwrap, tokensAmount);
-        _remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+
+        remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
 

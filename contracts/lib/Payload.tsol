@@ -11,7 +11,8 @@ library Payload {
         CommonStructures.PayloadForBurn[] _payloadForBurn,
         CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
         CommonStructures.TokensDistributionType _tokensDistributionType,
-        address _remainingTokensTo
+        address _remainingTokensTo,
+        address _remainingGasTo
     ) public  returns(TvmCell) {
         return abi.encode(
             _payloadsForDex,
@@ -19,7 +20,8 @@ library Payload {
             _payloadForBurn,
             _payloadForUnwrap,
             _tokensDistributionType,
-            _remainingTokensTo
+            _remainingTokensTo,
+            _remainingGasTo
         );
     }
 
@@ -29,6 +31,7 @@ library Payload {
         CommonStructures.PayloadForBurn[],
         CommonStructures.PayloadForUnwrap[],
         CommonStructures.TokensDistributionType,
+        address,
         address
     ) {
         return abi.decode(
@@ -39,6 +42,7 @@ library Payload {
                 CommonStructures.PayloadForBurn[],
                 CommonStructures.PayloadForUnwrap[],
                 CommonStructures.TokensDistributionType,
+                address,
                 address
             )
         );

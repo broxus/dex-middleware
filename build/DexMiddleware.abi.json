@@ -132,7 +132,8 @@
 				{"components":[{"name":"callbackTo","type":"address"},{"name":"remainingGasTo","type":"address"},{"name":"amount","type":"uint128"},{"name":"payload","type":"cell"},{"name":"attachedValue","type":"uint128"}],"name":"_payloadsForBurn","type":"tuple[]"},
 				{"components":[{"name":"destination","type":"address"},{"name":"remainingGasTo","type":"address"},{"name":"amount","type":"uint128"},{"name":"payload","type":"cell"}],"name":"_payloadForUnwrap","type":"tuple[]"},
 				{"name":"_tokensDistributionType","type":"uint8"},
-				{"name":"_remainingTokensTo","type":"address"}
+				{"name":"_remainingTokensTo","type":"address"},
+				{"name":"_remainingGasTo","type":"address"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}

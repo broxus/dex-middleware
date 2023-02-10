@@ -76,7 +76,8 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
         CommonStructures.PayloadForBurn[] _payloadsForBurn,
         CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
         CommonStructures.TokensDistributionType _tokensDistributionType,
-        address _remainingTokensTo
+        address _remainingTokensTo,
+        address _remainingGasTo
     ) override external pure returns (TvmCell) {
         return Payload.buildPayload(
             _payloadsForDex,
@@ -84,7 +85,8 @@ abstract contract DexMiddlewareBase is DexMiddlewareStorage {
             _payloadsForBurn,
             _payloadForUnwrap,
             _tokensDistributionType,
-            _remainingTokensTo
+            _remainingTokensTo,
+            _remainingGasTo
     );
     }
     //Children

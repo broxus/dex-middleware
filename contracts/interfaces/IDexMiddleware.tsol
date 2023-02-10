@@ -20,12 +20,13 @@ interface IDexMiddleware {
     function getDetails() external responsible view returns (Details);
     function transferOwnership(address _newOwner) external;
     function buildPayload(
-    CommonStructures.PayloadForDex[] _payloadsForDex,
-    CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
-    CommonStructures.PayloadForBurn[] _payloadsForBurn,
-    CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
-    CommonStructures.TokensDistributionType _tokensDistributionType,
-    address remainingTokensTo
+        CommonStructures.PayloadForDex[] _payloadsForDex,
+        CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
+        CommonStructures.PayloadForBurn[] _payloadsForBurn,
+        CommonStructures.PayloadForUnwrap[] _payloadForUnwrap,
+        CommonStructures.TokensDistributionType _tokensDistributionType,
+        address remainingTokensTo,
+        address remainingGasTo
     ) external pure returns (TvmCell);
 
     function onChildRequestTokens(uint128 _childNonce,address _rootWallet, uint128 _tokensAmount) external;

@@ -53,6 +53,7 @@ describe("Wever", () => {
         ],
         _tokensDistributionType: 0,
         _remainingTokensTo: user.account.address,
+        _remainingGasTo: user.account.address,
       })
       .call()
       .then(res => res.value0);
@@ -123,6 +124,7 @@ describe("Wever", () => {
         ],
         _tokensDistributionType: 0,
         _remainingTokensTo: user.account.address,
+        _remainingGasTo: user.account.address,
       })
       .call()
       .then(res => res.value0);
