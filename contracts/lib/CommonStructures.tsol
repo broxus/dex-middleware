@@ -78,7 +78,9 @@ library CommonStructures {
         OnlyOneOperationAllowed,
         TotalEverValueToLow,
         TotalTokensValueToLow,
-        AttachedValueToBurnToLow
+        AttachedValueToBurnToLow,
+        DeployWalletValueToLow,
+        ValueForFinalTransferToLow
     }
     struct CalculationResult {
         uint128 everValue;

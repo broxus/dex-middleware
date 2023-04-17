@@ -1,29 +1,23 @@
 export const PreBuiltRoutes = {
   succesSimpleRoute: {
     route: {
-      outcoming: "bar",
+      outcoming: "qwe",
       roots: ["foo", "bar", "qwe"],
+      contract_name: "DexStablePool",
       numerator: 1,
       nextSteps: [
         {
-          outcoming: "foo",
-          roots: ["foo", "bar"],
+          outcoming: "tst",
+          roots: ["qwe", "tst", "coin"],
+          contract_name: "DexStablePool",
           numerator: 1,
-          nextSteps: [
-            { outcoming: "tst", roots: ["tst", "foo"], numerator: 2, nextSteps: [] },
-
-            {
-              outcoming: "coin",
-              roots: ["foo", "coin"],
-              numerator: 3,
-              nextSteps: [{ outcoming: "tst", roots: ["qwe", "tst", "coin"], numerator: 1, nextSteps: [] }],
-            },
-          ],
+          nextSteps: [],
         },
       ],
     },
+
     leaves: 2,
-    start_token: "qwe",
+    start_token: "bar",
   },
 
   successMultiRoutes: (amountIncrease: number) => ({

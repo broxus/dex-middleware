@@ -1,8 +1,7 @@
-import { Address, Contract, toNano, zeroAddress } from "locklift";
+import { Address, Contract, zeroAddress } from "locklift";
 import { Migration } from "../migration";
-import { DexPairAbi, DexStablePairAbi, DexStablePoolAbi } from "../../build/factorySource";
+import { DexPairAbi, DexStablePoolAbi, DexStablePoolPrevAbi } from "../../build/factorySource";
 import BigNumber from "bignumber.js";
-import { Account } from "everscale-standalone-client";
 import { Constants, dummyContract } from "./utils";
 
 BigNumber.config({ EXPONENTIAL_AT: 257 });
@@ -52,9 +51,9 @@ function isLpToken(token, pool_roots) {
   return token.slice(-2) === "Lp" && !pool_roots.includes(token);
 }
 
-async function getPoolTokensRoots(poolName, pool_tokens) {
+async function getPoolTokensRoots(poolName, pool_tokens, contract_name) {
   const Pool = poolsContracts[poolName];
-  if (pool_tokens.length === 2) {
+  if (contract_name === "DexPair" || contract_name === "DexStablePair") {
     // pairs
     // return Pool.call({ method: "getTokenRoots", params: {} });
     return (Pool as Contract<DexPairAbi>).methods
@@ -74,20 +73,18 @@ async function getPoolTokensRoots(poolName, pool_tokens) {
   }
 }
 
-async function dexPoolInfo(pool_tokens) {
+async function dexPoolInfo(pool_tokens, contract_name) {
   let poolName = getPoolName(pool_tokens);
-  const Pool = poolsContracts[poolName] as Contract<DexStablePoolAbi>;
-  const poolRoots = await getPoolTokensRoots(poolName, pool_tokens);
-
-  const balances = await Pool.methods
+  const Pool = poolsContracts[poolName];
+  const poolRoots = await getPoolTokensRoots(poolName, pool_tokens, contract_name);
+  const balances = await (Pool as Contract<DexStablePoolPrevAbi>).methods
     .getBalances({ answerId: 0 })
     .call()
     .then(res => res.value0);
-
   let lp_supply = new BigNumber(balances.lp_supply).shiftedBy(-tokens[poolName + "Lp"].decimals).toString();
 
   let token_symbols, token_balances;
-  if (pool_tokens.length === 2) {
+  if (contract_name === "DexPair" || contract_name === "DexStablePair") {
     // pairs
 
     token_symbols = [tokens[pool_tokens[0]].symbol, tokens[pool_tokens[1]].symbol];
@@ -106,7 +103,6 @@ async function dexPoolInfo(pool_tokens) {
     // pools
     token_symbols = [];
     token_balances = [];
-
     pool_tokens.forEach(token => {
       const idx = poolRoots.findIndex(token_root => token_root === tokenRoots[token].address);
       token_symbols.push(tokens[token].symbol);
@@ -129,7 +125,7 @@ export type Config = {
 
 export const getPayload = async ({
   recipient,
-  options: { start_token, route, amount },
+  options,
   callbackPayloads,
 }: Config): Promise<{
   payload: string;
@@ -137,6 +133,8 @@ export const getPayload = async ({
   finalExpectedAmount: string;
   steps: Array<{ amount: string; roots: Array<Address>; outcoming: Address }>;
 }> => {
+  const { start_token, route, amount } = options;
+
   keyPairs = await locklift.keystore.getSigner("0");
 
   DexRoot = migration.load("DexRoot");
@@ -161,8 +159,7 @@ export const getPayload = async ({
         if (tokenRoots[token] === undefined) {
           // const root = await locklift.factory.getContract("TokenRootUpgradeable", TOKEN_CONTRACTS_PATH);
 
-          const root = migration.load(tokens[token].symbol + "Root");
-          tokenRoots[token] = root;
+          tokenRoots[token] = migration.load(tokens[token].symbol + "Root");
           // console.log(`${tokens[token].symbol}TokenRoot: ${root.address}`);
         }
       }
@@ -174,28 +171,27 @@ export const getPayload = async ({
         upgradeable: true,
       };
 
-      let pool: Contract<any> = dummyContract;
-      if (pool_tokens.length === 2) {
+      let pool = dummyContract;
+      if (elem.contract_name === "DexPair" || elem.contract_name === "DexStablePair") {
         // pair
-        // pool = await locklift.factory.getContract(pair_contract_name);
-
         const tokenLeft = tokens[pool_tokens[0]];
         const tokenRight = tokens[pool_tokens[1]];
-        if (migration.exists(`DexPair${tokenLeft.symbol}${tokenRight.symbol}`)) {
-          pool = migration.load(`DexPair${tokenLeft.symbol}${tokenRight.symbol}`);
-          // console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol}: ${pool.address}`);
-        } else if (migration.exists(`DexPair${tokenRight.symbol}${tokenLeft.symbol}`)) {
-          pool = migration.load(`DexPair${tokenRight.symbol}${tokenLeft.symbol}`);
-          // console.log(`DexPair${tokenRight.symbol}${tokenLeft.symbol}: ${pool.address}`);
+        if (migration.exists(`DexPool${tokenLeft.symbol}${tokenRight.symbol}`)) {
+          pool = migration.load(`DexPool${tokenLeft.symbol}${tokenRight.symbol}`);
+          console.log(`DexPool${tokenLeft.symbol}${tokenRight.symbol}: ${pool.address}`);
+        } else if (migration.exists(`DexPool${tokenRight.symbol}${tokenLeft.symbol}`)) {
+          pool = migration.load(`DexPool${tokenRight.symbol}${tokenLeft.symbol}`);
+          console.log(`DexPool${tokenRight.symbol}${tokenLeft.symbol}: ${pool.address}`);
         } else {
-          // console.log(`DexPair${tokenLeft.symbol}${tokenRight.symbol} NOT EXISTS`);
+          console.log(`DexPool${tokenLeft.symbol}${tokenRight.symbol} NOT EXISTS`);
         }
       } else {
+        // pool
         if (migration.exists(`DexPool${poolName}`)) {
           pool = migration.load(`DexPool${poolName}`);
-          // console.log(`DexPool${poolName}: ${pool.address}`);
+          console.log(`DexPool${poolName}: ${pool.address}`);
         } else {
-          // console.log(`DexPool${poolName} NOT EXISTS`);
+          console.log(`DexPool${poolName} NOT EXISTS`);
         }
       }
       poolsContracts[poolName] = pool;
@@ -246,7 +242,7 @@ export const getPayload = async ({
   async function getRouteDexPoolsInfo(route, poolsMap) {
     for (let elem of route) {
       let poolName = getPoolName(elem.roots);
-      poolsMap[poolName] = await dexPoolInfo(elem.roots);
+      poolsMap[poolName] = await dexPoolInfo(elem.roots, elem.contract_name);
 
       await getRouteDexPoolsInfo(elem.nextSteps, poolsMap);
     }
@@ -281,7 +277,7 @@ export const getPayload = async ({
     for (let elem of route) {
       let pool_roots = elem.roots.map(token => tokenRoots[token].address);
       let poolName = getPoolName(elem.roots);
-      const poolRoots = await getPoolTokensRoots(poolName, elem.roots);
+      const poolRoots = await getPoolTokensRoots(poolName, elem.roots, elem.contract_name);
 
       let partial_spent_amount = new BigNumber(spent_amount)
         .multipliedBy(elem.numerator)
@@ -292,14 +288,7 @@ export const getPayload = async ({
       if (isLpToken(spent_token, elem.roots)) {
         // spent token is lp token of the current pool
         const outcomingIndex = poolRoots.findIndex(root => root === tokenRoots[elem.outcoming].address);
-        //TODO
-        // expected = await (poolsContracts[poolName] as Contract<DexStablePoolAbi>).call({
-        //   method: "expectedWithdrawLiquidityOneCoin",
-        //   params: {
-        //     lp_amount: partial_spent_amount,
-        //     outcoming: tokenRoots[elem.outcoming].address,
-        //   },
-        // });
+
         expected = await (poolsContracts[poolName] as Contract<DexStablePoolAbi>).methods
           .expectedWithdrawLiquidityOneCoin({
             lp_amount: partial_spent_amount,
@@ -308,22 +297,10 @@ export const getPayload = async ({
           })
           .call()
           .then(res => res.value0);
-        debugger;
         expected_amount = expected.amounts[outcomingIndex];
       } else if (isLpToken(elem.outcoming, elem.roots)) {
         // receive token is lp token of the current pool
-        const amounts = poolRoots.map(token_root =>
-          elem.roots.find(token => token_root === tokenRoots[token].address) === spent_token
-            ? partial_spent_amount
-            : "0",
-        );
-        //TODO
-        // expected = await poolsContracts[poolName].call({
-        //   method: "expectedDepositLiquidityV2",
-        //   params: {
-        //     amounts: amounts,
-        //   },
-        // });
+
         expected = await (poolsContracts[poolName] as Contract<DexStablePoolAbi>).methods
           .expectedDepositLiquidityOneCoin({
             answerId: 0,
@@ -332,19 +309,11 @@ export const getPayload = async ({
           })
           .call()
           .then(res => res.value0);
-        debugger;
         expected_amount = expected.lp_reward;
       } else {
-        if (elem.roots.length === 2) {
+        if (elem.contract_name === "DexPair" || elem.contract_name === "DexStablePair") {
           // pair
-          //TODO
-          // expected = await poolsContracts[poolName].call({
-          //   method: "expectedExchange",
-          //   params: {
-          //     amount: partial_spent_amount,
-          //     spent_token_root: tokenRoots[spent_token].address,
-          //   },
-          // });
+
           expected = await (poolsContracts[poolName] as Contract<DexPairAbi>).methods
             .expectedExchange({
               amount: partial_spent_amount,
@@ -368,11 +337,12 @@ export const getPayload = async ({
         }
 
         const expectedAmount = new BigNumber(expected.expected_amount);
-
-        expected_amount = expectedAmount.plus(expectedAmount.multipliedBy(elem.amountIncrease || 0)).toFixed(0);
+        expected_amount = expectedAmount.toString();
+        debugger;
+        // expected_amount = expectedAmount.plus(expectedAmount.multipliedBy(elem.amountIncrease || 0)).toFixed(0);
         // console.log(`Original expected ${expectedAmount} -> ${expected_amount}`);
       }
-
+      debugger;
       // console.log();
       let tokenLeft = tokens[spent_token];
       let tokenRight = tokens[elem.outcoming];
@@ -437,7 +407,11 @@ export const getPayload = async ({
 
       expectedPoolBalances[poolName] = { lp_supply: expected_lp_supply, balances: expected_balances };
 
-      let next_step_indices = await getExpectedAmount(elem.nextSteps, elem.outcoming, expected_amount.toString());
+      let next_step_indices = await getExpectedAmount(
+        elem.nextSteps,
+        elem.outcoming,
+        (expected_amount || "0").toString(),
+      );
       steps.push({
         amount: expected_amount.toString(),
         roots: pool_roots,

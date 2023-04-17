@@ -42,7 +42,7 @@ describe("success and cancel", () => {
     const { route, leaves, start_token } = PreBuiltRoutes.succesSimpleRoute;
     const TOKENS_AMOUNT = 1200;
     const EXTRA_TOKENS = 100;
-    const START_TOKEN = "Qwe";
+    const START_TOKEN = "Bar";
 
     const qweTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: START_TOKEN }));
     const tstTokenWallet = await user.getTokenWalletByRoot(context.dex.getTokenRootByName({ tokenName: "Tst" }));
@@ -199,7 +199,7 @@ describe("success and cancel", () => {
       _payloadsForTransfers: [],
       _payloadsForBurn: [],
       _payloadForUnwrap: [],
-
+      _remainingGasTo: user.account.address,
       _tokensDistributionType: 0,
       _remainingTokensTo: user.account.address,
     });

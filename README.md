@@ -3,10 +3,10 @@
 ## Deploy
 Update `.env` file
 ```shell
-yarn
+npm i
 ```
 ```shell
-yarn run deploy-main
+npm run deploy-main
 ```
 
 

@@ -178,7 +178,10 @@ contract DexChildMiddleware is IAcceptTokensTransferCallback, IDexChildMiddlewar
     function finalizeTransaction(CommonStructures.FinishTransaction finalTransactionSettings) internal view {
         bool isTokenWalletFromRootTransferDeleted;
         for ((address tokenWallet, uint128 tokensAmount) : receivedTokens) {
-            ITokenWallet(tokenWallet).transfer{value: finalTransactionSettings.valueForFinalTransfer + finalTransactionSettings.deployWalletValue, bounce: false}(
+            ITokenWallet(tokenWallet).transfer{
+                    value: finalTransactionSettings.valueForFinalTransfer + finalTransactionSettings.deployWalletValue,
+                    bounce: false
+            }(
                 tokensAmount,
                 finalTransactionSettings.tokenReceiver,
                 finalTransactionSettings.deployWalletValue,

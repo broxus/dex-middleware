@@ -145,6 +145,30 @@ contract DexMiddleware is
         for (CommonStructures.PayloadForDex _dexConfig : _payloadsForDex) {
             requiredTokenAmount += _dexConfig.tokensAmount;
 
+            uint256 deployWalletValue = math.min(
+                _dexConfig.cancelPayload.deployWalletValue,
+                _dexConfig.successPayload.deployWalletValue
+            );
+            if (deployWalletValue < Constants.DEPLOY_WALLET_VALUE) {
+                return CommonStructures.CalculationResult({
+                        everValue: 0,
+                        tokenAmount: 0,
+                        errorCode: CommonStructures.ValidationErrorCodes.DeployWalletValueToLow
+                });
+            }
+            uint256 valueForFinalTransfer = math.min(
+                _dexConfig.cancelPayload.valueForFinalTransfer,
+                _dexConfig.successPayload.valueForFinalTransfer
+            );
+
+            if (valueForFinalTransfer < Constants.DEPLOY_WALLET_VALUE * 2) {
+                return CommonStructures.CalculationResult({
+                        everValue: 0,
+                        tokenAmount: 0,
+                        errorCode: CommonStructures.ValidationErrorCodes.ValueForFinalTransferToLow
+                });
+            }
+
             requiredValue += getTotalValueForDexOperation(_dexConfig);
         }
 
@@ -227,6 +251,7 @@ contract DexMiddleware is
             address remainingTokensTo,
             address payloadRemainingGasTo
         ) = Payload.decodePayload(_payload);
+
         address remainingGasTo = payloadRemainingGasTo.value == 0 ?
             _tokensTransferRemainingGasTo :
             payloadRemainingGasTo;

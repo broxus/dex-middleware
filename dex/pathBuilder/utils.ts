@@ -13,19 +13,19 @@ export const Constants: {
     foo: {
       name: "Foo",
       symbol: "Foo",
-      decimals: 18,
+      decimals: 6,
       upgradeable: true,
     },
     bar: {
       name: "Bar",
       symbol: "Bar",
-      decimals: 18,
+      decimals: 6,
       upgradeable: true,
     },
     qwe: {
       name: "QWE",
       symbol: "Qwe",
-      decimals: 18,
+      decimals: 6,
       upgradeable: true,
     },
     tst: {
@@ -49,5 +49,5 @@ export const Constants: {
   },
   LP_DECIMALS: 9,
 
-  TESTS_TIMEOUT: 1200000,
+  TESTS_TIMEOUT: 120000,
 };

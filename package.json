@@ -35,7 +35,8 @@
     "axios": "^1.2.2",
     "bignumber.js": "^9.1.0",
     "dotenv": "^16.0.3",
-    "locklift": "^2.4.7",
+    "locklift": "^2.5.1",
+    "locklift-verifier": "^1.0.3",
     "mocha-logger": "^1.0.8",
     "prompts": "^2.4.2",
     "rxjs": "^7.5.7"

@@ -24,8 +24,8 @@ abstract contract DexMiddlewareFlows is DexMiddlewareBase {
             _dexConfig.valueForDexOperation +
             _dexConfig.leaves *
                 (
-                maxValueForFinalTransfer +
-                maxDeployWalletValue
+                    maxValueForFinalTransfer +
+                    maxDeployWalletValue
                 );
     }
 
