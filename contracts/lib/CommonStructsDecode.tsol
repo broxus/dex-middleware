@@ -1,0 +1,67 @@
+pragma ever-solidity >=0.62.0;
+
+import "./Payload.tsol";
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+library CommonStructuresDecode {
+
+    struct DecodedPayload {
+        PayloadForDexWithDecode[] payloadsForDex;
+        PayloadForTransferWithDecode[] payloadsForTransfers;
+        PayloadForBurnWithDecode[] payloadForBurn;
+        PayloadForUnwrapWithDecode[] payloadForUnwrap;
+        CommonStructures.TokensDistributionType tokensDistributionType;
+        address remainingTokensTo;
+        address remainingGasTo;
+    }
+
+    struct FinishTransactionWithDecode {
+        address tokenReceiver;
+        uint128 valueForFinalTransfer;
+        uint128 deployWalletValue;
+        TvmCell payload;
+        bool needToDecode;
+    }
+
+    struct PayloadForDexWithDecode {
+        TvmCell dexPayload;
+        uint32 leaves;
+        address firstRoot;
+        address remainingGasTo;
+        uint128 tokensAmount;
+        uint128 valueForDexOperation;
+        uint128 deployWalletValue;
+        mapping (address => address[]) rootToSendersAllowanceMap;
+        FinishTransactionWithDecode successPayload;
+        FinishTransactionWithDecode cancelPayload;
+    }
+
+    struct PayloadForTransferWithDecode {
+        address receiver;
+        address _remainingGasTo;
+        uint128 amount;
+        TvmCell payload;
+        uint128 attachedValue;
+        uint128 deployWalletValue;
+        bool notify;
+        bool needToDecode;
+    }
+
+    struct PayloadForBurnWithDecode {
+        address callbackTo;
+        address remainingGasTo;
+        uint128 amount;
+        TvmCell payload;
+        uint128 attachedValue;
+        bool needToDecode;
+    }
+
+    struct PayloadForUnwrapWithDecode {
+        address destination;
+        address remainingGasTo;
+        uint128 amount;
+        TvmCell payload;
+        bool needToDecode;
+    }
+}

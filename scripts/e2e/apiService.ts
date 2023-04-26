@@ -21,6 +21,10 @@ export const getSwapPayload = (swapConfig: SwapConfig, apiEndpoint: string): Pro
     });
 };
 
+export const getDecode = (payload: string, apiEndpoint: string) => {
+  return axios.post(`${apiEndpoint}/v2/middleware/decode_payload`, { payload }).then(res => res.data);
+};
+
 export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap, apiEndpoint: string) => {
   debugger;
   return axios
@@ -50,6 +54,7 @@ export const getSwapPlusBurnPayload = (swapConfig: SwapWithBurn, apiEndpoint: st
       return res.data.output.swapAndBurn;
     })
     .catch(e => {
+      debugger;
       console.log(e);
       throw new Error(e);
     });

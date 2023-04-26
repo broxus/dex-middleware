@@ -5,6 +5,15 @@ pragma AbiHeader pubkey;
 import "./CommonStructures.tsol";
 
 library Payload {
+    struct DecodedPayload {
+        CommonStructures.PayloadForDex[] payloadsForDex;
+        CommonStructures.PayloadForTransfer[] payloadsForTransfers;
+        CommonStructures.PayloadForBurn[] payloadForBurn;
+        CommonStructures.PayloadForUnwrap[] payloadForUnwrap;
+        CommonStructures.TokensDistributionType tokensDistributionType;
+        address remainingTokensTo;
+        address remainingGasTo;
+    }
     function buildPayload(
         CommonStructures.PayloadForDex[] _payloadsForDex,
         CommonStructures.PayloadForTransfer[] _payloadsForTransfers,
@@ -14,7 +23,8 @@ library Payload {
         address _remainingTokensTo,
         address _remainingGasTo
     ) public  returns(TvmCell) {
-        return abi.encode(
+        TvmBuilder b;
+        b.store(
             _payloadsForDex,
             _payloadsForTransfers,
             _payloadForBurn,
@@ -23,9 +33,11 @@ library Payload {
             _remainingTokensTo,
             _remainingGasTo
         );
+        return b.toCell();
     }
 
-    function decodePayload(TvmCell _payload) internal returns (
+
+    function decodePayload(TvmCell _payload) public returns (
         CommonStructures.PayloadForDex[],
         CommonStructures.PayloadForTransfer[],
         CommonStructures.PayloadForBurn[],
@@ -34,9 +46,29 @@ library Payload {
         address,
         address
     ) {
-        return abi.decode(
-            _payload,
-            (
+        return _payload.toSlice().decode(
+            CommonStructures.PayloadForDex[],
+            CommonStructures.PayloadForTransfer[],
+            CommonStructures.PayloadForBurn[],
+            CommonStructures.PayloadForUnwrap[],
+            CommonStructures.TokensDistributionType,
+            address,
+            address
+        );
+    }
+
+    function decodePayloadSave(TvmCell _payload) internal returns (
+        optional(
+            CommonStructures.PayloadForDex[],
+            CommonStructures.PayloadForTransfer[],
+            CommonStructures.PayloadForBurn[],
+            CommonStructures.PayloadForUnwrap[],
+            CommonStructures.TokensDistributionType,
+            address,
+            address
+        )
+    ) {
+        return _payload.toSlice().decodeQ(
                 CommonStructures.PayloadForDex[],
                 CommonStructures.PayloadForTransfer[],
                 CommonStructures.PayloadForBurn[],
@@ -44,7 +76,6 @@ library Payload {
                 CommonStructures.TokensDistributionType,
                 address,
                 address
-            )
         );
     }
 }

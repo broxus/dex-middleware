@@ -128,7 +128,13 @@ describe("Wever", () => {
       })
       .call()
       .then(res => res.value0);
-
+    const decded = await context.dexMiddleware.contract.methods
+      .decodePayload({
+        _payload:
+          "te6ccgEBCAEAzgABGQAAAAAAAAAAAAAAABABAk0AAAABgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDAgBDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAED0EAEAUOAEuKctll7WSSCHnICQS/v9DaxCHFjDZqSJc5237r7GffwBQFjgBLinLZZe1kkgh5yAkEv7/Q2sQhxYw2akiXOdt+6+xn34AAAAAAAAAAAAAAAAAAAAVAGAQgMpo7sBwAOTUVTU0FHRQ==",
+      })
+      .call();
+    debugger;
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
       .calculateFeeAndTokensValue({
         _transferPayload: payloadForUnwrap,

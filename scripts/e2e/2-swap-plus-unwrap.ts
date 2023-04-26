@@ -1,4 +1,4 @@
-import { getSwapPayload, getSwapPlusUnwrapPayload } from "./apiService";
+import { getDecode, getSwapPayload, getSwapPlusUnwrapPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
 import { getDefaultSwapPlusUnwrapPayload } from "./config";
 import { toNano, WalletTypes } from "../../../ever-locklift";
@@ -6,7 +6,7 @@ import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
 const main = async () => {
-  const API_ENDPOINT = process.env.API_ENDPOINT;
+  const API_ENDPOINT = process.env.API_ENDPOINT
   if (!API_ENDPOINT) {
     throw new Error("API_ENDPOINT doesn't provided");
   }

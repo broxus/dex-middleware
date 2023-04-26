@@ -1,12 +1,12 @@
 import { getSwapPlusBurnPayload, getUnwrapPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
-import { getDefaultSwapPlusBurnPayload } from "./config";
-import { getRandomNonce, toNano, WalletTypes, zeroAddress } from "locklift";
+import { toNano, WalletTypes } from "locklift";
 import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
 const main = async () => {
   const API_ENDPOINT = process.env.API_ENDPOINT;
+
   if (!API_ENDPOINT) {
     throw new Error("API_ENDPOINT doesn't provided");
   }

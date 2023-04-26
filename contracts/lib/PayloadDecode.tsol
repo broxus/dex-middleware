@@ -1,0 +1,182 @@
+pragma ever-solidity >=0.62.0;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./CommonStructures.tsol";
+import "./CommonStructsDecode.tsol";
+
+
+library PayloadDecode {
+
+    function decodePayloadSave(TvmCell _payload) internal returns (
+        optional(
+            CommonStructures.PayloadForDex[],
+            CommonStructures.PayloadForTransfer[],
+            CommonStructures.PayloadForBurn[],
+            CommonStructures.PayloadForUnwrap[],
+            CommonStructures.TokensDistributionType,
+            address,
+            address
+        )
+    ) {
+        return _payload.toSlice().decodeQ(
+                CommonStructures.PayloadForDex[],
+                CommonStructures.PayloadForTransfer[],
+                CommonStructures.PayloadForBurn[],
+                CommonStructures.PayloadForUnwrap[],
+                CommonStructures.TokensDistributionType,
+                address,
+                address
+        );
+    }
+
+    function decodeWholePayload(TvmCell _payload) public returns (optional(CommonStructuresDecode.DecodedPayload)) {
+        optional(
+            CommonStructures.PayloadForDex[],
+            CommonStructures.PayloadForTransfer[],
+            CommonStructures.PayloadForBurn[],
+            CommonStructures.PayloadForUnwrap[],
+            CommonStructures.TokensDistributionType,
+            address,
+            address
+        ) mayBeDecoded = decodePayloadSave(_payload);
+
+
+        CommonStructuresDecode.DecodedPayload builder;
+        if  (!mayBeDecoded.hasValue()) {
+            optional(CommonStructuresDecode.DecodedPayload) dummy;
+            return dummy;
+        }
+
+        (
+            CommonStructures.PayloadForDex[] payloadsForDex,
+            CommonStructures.PayloadForTransfer[] payloadsForTransfers,
+            CommonStructures.PayloadForBurn[] payloadForBurn,
+            CommonStructures.PayloadForUnwrap[] payloadForUnwrap,
+            CommonStructures.TokensDistributionType tokensDistributionType,
+            address remainingTokensTo,
+            address remainingGasTo
+        )  = mayBeDecoded.get();
+
+
+        CommonStructuresDecode.PayloadForDexWithDecode[] decodedPayloadsForDex;
+        for (CommonStructures.PayloadForDex dexPayload : payloadsForDex) {
+            (
+                TvmCell _originalDexPayload,
+                uint32 _leaves,
+                address _firstRoot,
+                address _remainingGasTo,
+                uint128 _tokensAmount,
+                uint128 _valueForDexOperation,
+                uint128 _deployWalletValue,
+                mapping (address => address[]) rootToSendersAllowanceMap,
+                CommonStructures.FinishTransaction successPayload,
+                CommonStructures.FinishTransaction cancelPayload
+            ) = dexPayload.unpack();
+            optional(CommonStructuresDecode.DecodedPayload) mayBeDecodeSuccessPayload = decodeWholePayload(dexPayload.successPayload.payload);
+            optional(CommonStructuresDecode.DecodedPayload) mayBeDecodeCancelPayload = decodeWholePayload(dexPayload.cancelPayload.payload);
+            CommonStructuresDecode.PayloadForDexWithDecode decodedPayloadForDex = CommonStructuresDecode.PayloadForDexWithDecode(
+                _originalDexPayload,
+                _leaves,
+                _firstRoot,
+                remainingGasTo,
+                _tokensAmount,
+                _valueForDexOperation,
+                _deployWalletValue,
+                rootToSendersAllowanceMap,
+                CommonStructuresDecode.FinishTransactionWithDecode({
+                    tokenReceiver: successPayload.tokenReceiver,
+                    valueForFinalTransfer: successPayload.valueForFinalTransfer,
+                    deployWalletValue: successPayload.deployWalletValue,
+                    payload: successPayload.payload,
+                    needToDecode: mayBeDecodeSuccessPayload.hasValue()
+                }),
+                CommonStructuresDecode.FinishTransactionWithDecode({
+                    tokenReceiver: cancelPayload.tokenReceiver,
+                    valueForFinalTransfer: cancelPayload.valueForFinalTransfer,
+                    deployWalletValue: cancelPayload.deployWalletValue,
+                    payload: cancelPayload.payload,
+                    needToDecode: mayBeDecodeCancelPayload.hasValue()
+                })
+            );
+            decodedPayloadsForDex.push(decodedPayloadForDex);
+        }
+        builder.payloadsForDex = decodedPayloadsForDex;
+
+        CommonStructuresDecode.PayloadForTransferWithDecode[] decodedPayloadsForTransfer;
+        for (CommonStructures.PayloadForTransfer transferPayload : payloadsForTransfers) {
+            (
+                address _receiver,
+                address _remainingGasTo,
+                uint128 _amount,
+                TvmCell _originalPayload,
+                uint128 _attachedValue,
+                uint128 _deployWalletValue,
+                bool _notify
+            ) = transferPayload.unpack();
+            optional(CommonStructuresDecode.DecodedPayload) mayBeDecodeTransferPayload = decodeWholePayload(_originalPayload);
+            CommonStructuresDecode.PayloadForTransferWithDecode decodedPayloadForTransfer = CommonStructuresDecode.PayloadForTransferWithDecode(
+                _receiver,
+                _remainingGasTo,
+                _amount,
+                _originalPayload,
+                _attachedValue,
+                _deployWalletValue,
+                _notify,
+                mayBeDecodeTransferPayload.hasValue()
+            );
+            decodedPayloadsForTransfer.push(decodedPayloadForTransfer);
+        }
+        builder.payloadsForTransfers = decodedPayloadsForTransfer;
+
+
+        CommonStructuresDecode.PayloadForBurnWithDecode[] decodedPayloadsForBurn;
+        for (CommonStructures.PayloadForBurn burnPayload : payloadForBurn) {
+            (
+                address _callbackTo,
+                address _remainingGasTo,
+                uint128 _amount,
+                TvmCell _originalPayload,
+                uint128 _attachedValue
+            ) = burnPayload.unpack();
+            optional(CommonStructuresDecode.DecodedPayload) mayBeDecodeBurnPayload = decodeWholePayload(_originalPayload);
+            CommonStructuresDecode.PayloadForBurnWithDecode decodedPayloadForBurn = CommonStructuresDecode.PayloadForBurnWithDecode(
+                _callbackTo,
+                _remainingGasTo,
+                _amount,
+                _originalPayload,
+                _attachedValue,
+                mayBeDecodeBurnPayload.hasValue()
+            );
+            decodedPayloadsForBurn.push(decodedPayloadForBurn);
+        }
+
+        builder.payloadForBurn = decodedPayloadsForBurn;
+
+        CommonStructuresDecode.PayloadForUnwrapWithDecode[] decodedPayloadsForUnwrap;
+        for (CommonStructures.PayloadForUnwrap unwrapPayload : payloadForUnwrap) {
+            (
+                address _destination,
+                address _remainingGasTo,
+                uint128 _amount,
+                TvmCell _originalPayload
+            ) = unwrapPayload.unpack();
+            optional(CommonStructuresDecode.DecodedPayload) mayBeDecodeUnwrapPayload = decodeWholePayload(_originalPayload);
+            CommonStructuresDecode.PayloadForUnwrapWithDecode decodedPayloadForUnwrap = CommonStructuresDecode.PayloadForUnwrapWithDecode(
+                _destination,
+                _remainingGasTo,
+                _amount,
+                _originalPayload,
+                mayBeDecodeUnwrapPayload.hasValue()
+            );
+            decodedPayloadsForUnwrap.push(decodedPayloadForUnwrap);
+        }
+
+        builder.payloadForUnwrap = decodedPayloadsForUnwrap;
+        builder.remainingGasTo = remainingGasTo;
+        builder.remainingTokensTo = remainingTokensTo;
+        builder.tokensDistributionType = tokensDistributionType;
+        return builder;
+
+    }
+}
