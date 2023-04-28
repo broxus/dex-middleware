@@ -18,7 +18,7 @@
   
 В первую очередь нам нужно собрать правильный пейлоад и отдать на билд, в данном случае он будет выглядеть вот так
 ```typescript
-const payloadForDexMiddleware = dexMiddleware.getPayload({
+const payloadForDexMiddleware = dexMiddleware.buildPayload({
       _payloadsForDex: [
         {
           dexPayload: payload, // <- payload for dex swap

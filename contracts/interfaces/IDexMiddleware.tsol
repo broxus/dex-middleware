@@ -2,6 +2,7 @@ pragma ever-solidity >=0.62.0;
 pragma AbiHeader expire;
 
 import "../lib/CommonStructures.tsol";
+import "../lib/CommonStructsDecode.tsol";
 
 interface IDexMiddleware {
     event DeployChild(address childAddress);
@@ -36,6 +37,8 @@ interface IDexMiddleware {
     function setChildCode(TvmCell dexMiddlewareChildCode) external;
 
     function calculateFeeAndTokensValue(TvmCell _transferPayload) external pure returns (CommonStructures.CalculationResult);
+
+    function decodePayload(TvmCell _payload) external pure returns (optional(CommonStructuresDecode.DecodedPayload));
 
     function forceChildsFinalize(CommonStructures.ForceChildFinalize[] childsSettings) external;
     function upgrade(TvmCell _newCode, uint32 _newVersion, address _sendGaTo) external;

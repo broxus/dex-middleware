@@ -1,4 +1,4 @@
-import { getSwapPlusBurnPayload } from "./apiService";
+import { getDecode, getSwapPlusBurnPayload } from "./apiService";
 import { Address } from "locklift/everscale-provider";
 import { getDefaultSwapPlusBurnPayload } from "./config";
 import { getRandomNonce, toNano, WalletTypes, zeroAddress } from "locklift";
@@ -48,7 +48,8 @@ const main = async () => {
     }),
     API_ENDPOINT,
   );
-
+  const decodedPayload = await getDecode(tokensTransferPayload, API_ENDPOINT);
+  process.exit(0);
   logger.startStep(`Start Burning`);
   const { traceTree } = await locklift.tracing.trace(
     fromTokenWalletContract.transferTokens(

@@ -20,7 +20,6 @@ describe("Burn testing", () => {
   beforeEach(async () => {
     context = await preparation({ deployAccountValue: toNano(100), accountsAndSignersCount: 2 });
     user = context.signersWithAccounts[0];
-
     const TOKEN_ROOT_NAME = "StEver";
     const TOKEN_ROOT_SYMBOL = "STE";
     const ZERO_ADDRESS = new Address("0:0000000000000000000000000000000000000000000000000000000000000000");
@@ -133,6 +132,7 @@ describe("Burn testing", () => {
       _payloadForUnwrap: [],
       _tokensDistributionType: 0,
       _remainingTokensTo: user.account.address,
+      _remainingGasTo: user.account.address,
     });
     const stEverTokenWallet = await user.getTokenWalletByRoot(stEverTokenRoot);
     const { everValue, tokenAmount } = await context.dexMiddleware.contract.methods
