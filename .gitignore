@@ -2,5 +2,4 @@
 node_modules
 .temp
 .vscode
-dePools
-addresses
+/build
