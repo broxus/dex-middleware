@@ -65,10 +65,14 @@ contract DexMiddleware is
         address _remainingGasTo,
         TvmCell _payload
     ) override external {
+
+        // extract nonce and original payload
+        (uint32 _bridgeNonce, TvmCell _originalPayload) = abi.decode(_payload, (uint32, TvmCell));
+
         handleTokensTransfer(
             _amount,
             _remainingGasTo,
-            _payload
+            _originalPayload
         );
     }
 
