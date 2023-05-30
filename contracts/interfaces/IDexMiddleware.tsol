@@ -40,6 +40,16 @@ interface IDexMiddleware {
 
     function decodePayload(TvmCell _payload) external pure returns (optional(CommonStructuresDecode.DecodedPayload));
 
+    function withdrawExtraTip3(
+        address _tokenWallet,
+        uint128 _amount,
+        address _recipient,
+        uint128 _deployWalletValue,
+        address _remainingGasTo,
+        bool _notify,
+        TvmCell _payload
+    ) external;
+
     function forceChildsFinalize(CommonStructures.ForceChildFinalize[] childsSettings) external;
     function upgrade(TvmCell _newCode, uint32 _newVersion, address _sendGaTo) external;
 }

@@ -84,22 +84,23 @@ export const getDefaultSwapPlusUnwrapPayload = ({
   remainingGasTo: string;
   tokenReceiver: string;
 }): SwapWithUnwrap => ({
-  amount: "10000000",
+  amount: "1000",
   id: null,
   whiteListUri: null,
   remainingGasTo,
   cancelPayload: {
     payload: EMPTY_TVM_CELL,
-    deployWalletValue: "0",
+    deployWalletValue: toNano(0.1),
     tokenReceiver,
-    valueForFinalTransfer: toNano(0.1),
+    valueForFinalTransfer: toNano(1),
   },
   successPayload: {
     payload: EMPTY_TVM_CELL,
     tokenReceiver,
+    valueForFinalTransfer: toNano(1),
   },
   deep: 10,
-  fromCurrencyAddress: "0:c9dcc33efb227772f7337b5624c5edeada81e998433055f8edecf6d92e84e3bf",
+  fromCurrencyAddress: "0:a519f99bb5d6d51ef958ed24d337ad75a1c770885dcd42d51d6663f9fcdacfb2",
   minTvl: "0",
   slippage: "0.1",
   whiteListCurrencies: [],

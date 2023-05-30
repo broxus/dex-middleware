@@ -6,7 +6,7 @@ import { logger } from "../utils";
 import { TokenWallet } from "../../test/entities/tokenWallet";
 
 const main = async () => {
-  const API_ENDPOINT = process.env.API_ENDPOINT
+  const API_ENDPOINT = process.env.API_ENDPOINT;
   if (!API_ENDPOINT) {
     throw new Error("API_ENDPOINT doesn't provided");
   }
@@ -21,7 +21,7 @@ const main = async () => {
     account.address,
     locklift.factory.getDeployedContract(
       "TokenRootUpgradeable",
-      new Address("0:fe614b31763bf583d2a70eeb593277b8285530df151287bab309a991bce9b77e"),
+      new Address("0:a519f99bb5d6d51ef958ed24d337ad75a1c770885dcd42d51d6663f9fcdacfb2"),
     ),
   );
 

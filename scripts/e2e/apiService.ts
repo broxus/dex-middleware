@@ -33,6 +33,10 @@ export const getSwapPlusUnwrapPayload = (swapConfig: SwapWithUnwrap, apiEndpoint
     })
     .then(res => {
       return res.data.output.swapAndUnwrapAll;
+    })
+    .catch(e => {
+      console.log(e);
+      throw new Error(e);
     });
 };
 

@@ -279,7 +279,7 @@ contract DexMiddleware is
             ITokenWallet(msg.sender).transfer{value: 0, flag:MsgFlag.ALL_NOT_RESERVED, bounce: false}(
                 _amount,
                 remainingTokensTo,
-                0,
+                msg.value > Constants.DEPLOY_WALLET_VALUE ? Constants.DEPLOY_WALLET_VALUE: 0,
                 remainingGasTo,
                 true,
                 _payload
@@ -311,6 +311,25 @@ contract DexMiddleware is
     }
 
 
+    function withdrawExtraTip3(
+        address _tokenWallet,
+        uint128 _amount,
+        address _recipient,
+        uint128 _deployWalletValue,
+        address _remainingGasTo,
+        bool _notify,
+        TvmCell _payload
+    ) external override onlyOwner {
+        tvm.rawReserve(_reserve(), 0);
+        ITokenWallet(_tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+            _amount,
+            _recipient,
+            _deployWalletValue,
+            _remainingGasTo,
+            _notify,
+            _payload
+        );
+    }
 
     function upgrade(TvmCell _newCode, uint32 _newVersion, address _sendGaTo) onlyOwner override external {
         if (dexMiddlewareVersion == _newVersion) {
