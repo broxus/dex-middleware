@@ -307,6 +307,17 @@ contract DexMiddleware is
     }
 
 
+    function setWeverRoot(address _weverRoot) external override onlyOwner {
+        tvm.rawReserve(_reserve(), 0);
+        weverRoot = _weverRoot;
+        owner.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
+    function setWeverVault(address _weverVault) external override onlyOwner {
+        tvm.rawReserve(_reserve(), 0);
+        weverVault = _weverVault;
+        owner.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
 
     function upgrade(TvmCell _newCode, uint32 _newVersion, address _sendGaTo) onlyOwner override external {
         if (dexMiddlewareVersion == _newVersion) {
