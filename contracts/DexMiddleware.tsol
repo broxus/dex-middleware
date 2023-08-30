@@ -307,13 +307,13 @@ contract DexMiddleware is
     }
 
 
-    function setWeverRoot(address _weverRoot) external override onlyOwner {
+    function setWeverRoot(address _weverRoot) external onlyOwner {
         tvm.rawReserve(_reserve(), 0);
         weverRoot = _weverRoot;
         owner.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
 
-    function setWeverVault(address _weverVault) external override onlyOwner {
+    function setWeverVault(address _weverVault) external onlyOwner {
         tvm.rawReserve(_reserve(), 0);
         weverVault = _weverVault;
         owner.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
