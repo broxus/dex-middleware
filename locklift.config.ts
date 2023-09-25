@@ -81,9 +81,7 @@ const config: LockliftConfig = {
         address: "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
         key: "172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3",
       },
-      tracing: {
-        endpoint: LOCAL_NETWORK_ENDPOINT,
-      },
+
       keys: {
         // Use everdev to generate your phrase
         // !!! Never commit it in your repos !!!
@@ -108,9 +106,7 @@ const config: LockliftConfig = {
         phrase: "expire caution sausage spot monkey prefer dad rib vicious pepper mimic armed",
         accountId: 0,
       },
-      tracing: {
-        endpoint: DEV_NET_NETWORK_ENDPOINT,
-      },
+
       keys: {
         // Use everdev to generate your phrase
         // !!! Never commit it in your repos !!!
@@ -126,9 +122,7 @@ const config: LockliftConfig = {
         address: process.env.MAIN_GIVER_ADDRESS || "set me",
         key: process.env.MAIN_GIVER_KEY || "set me",
       },
-      tracing: {
-        endpoint: MAIN_NET_NETWORK_ENDPOINT,
-      },
+
       keys: {
         phrase: process.env.SEED || "set me",
         amount: 500,
@@ -150,9 +144,7 @@ const config: LockliftConfig = {
         phrase: process.env.MAIN_GIVER_SEED_PHRASE || "set me",
         accountId: 0,
       },
-      tracing: {
-        endpoint: MAIN_NET_NETWORK_ENDPOINT,
-      },
+
       keys: {
         phrase: process.env.SEED || "set me",
         amount: 500,
