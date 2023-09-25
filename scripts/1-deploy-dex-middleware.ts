@@ -21,7 +21,9 @@ const deployDexMiddleware = async ({
   }
   const { code: dexMiddlewareChildCode } = locklift.factory.getContractArtifacts("DexChildMiddleware");
   logger.startStep("DexMiddleware is deploying...");
-  const { contract: dexMiddlewareContract } = await locklift.transactions.waitFinalized(
+  const {
+    extTransaction: { contract: dexMiddlewareContract },
+  } = await locklift.transactions.waitFinalized(
     locklift.factory.deployContract({
       contract: "DexMiddleware",
       value: deployVaultValue,
