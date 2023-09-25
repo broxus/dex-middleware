@@ -150,6 +150,24 @@ const config: LockliftConfig = {
         amount: 500,
       },
     },
+    venom_main: {
+      connection: {
+        id: 1,
+        group: "group",
+        type: "jrpc",
+        data: {
+          endpoint: "https://jrpc.venom.foundation",
+        },
+      },
+      giver: {
+        address: process.env.VENOM_MAIN_GIVER_ADDRESS ?? "",
+        phrase: process.env.VENOM_MAIN_GIVER_PHRASE ?? "",
+        accountId: 0,
+      },
+      keys: {
+        amount: 20,
+      },
+    },
   },
   mocha: {
     timeout: 2000000,

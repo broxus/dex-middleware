@@ -56,8 +56,8 @@ const main = async () => {
 
   const signer = await locklift.keystore.getSigner("0");
 
-  if (!process.env.SEED || !process.env.MAIN_GIVER_KEY) {
-    throw new Error("SEED phrase and MAIN_GIVER_KEY should be provided as env parameters");
+  if (!process.env.VENOM_MAIN_GIVER_PHRASE) {
+    throw new Error("VENOM_MAIN_GIVER_PHRASE should be provided as env parameters");
   }
   if (!signer) {
     throw new Error("Bad SEED phrase");
