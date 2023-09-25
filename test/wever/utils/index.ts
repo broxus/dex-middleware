@@ -82,24 +82,22 @@ export const getWeverInstance = async (): Promise<Wever> => {
   // Vault
   // - Deploy vault
 
-  const { contract: vault } = await locklift.transactions.waitFinalized(
-    locklift.factory.deployContract({
-      contract: "WeverVault",
-      constructorParams: {
-        owner_: user.address,
-        root_tunnel: tunnel.address,
-        root: root.address,
-        receive_safe_fee: toNano(1),
-        settings_deploy_wallet_grams: toNano(0.05),
-        initial_balance: toNano(1),
-      },
-      value: toNano(2),
-      initParams: {
-        _randomNonce: getRandomNonce(),
-      },
-      publicKey: keyPair.publicKey,
-    }),
-  );
+  const { contract: vault } = await locklift.factory.deployContract({
+    contract: "WeverVault",
+    constructorParams: {
+      owner_: user.address,
+      root_tunnel: tunnel.address,
+      root: root.address,
+      receive_safe_fee: toNano(1),
+      settings_deploy_wallet_grams: toNano(0.05),
+      initial_balance: toNano(1),
+    },
+    value: toNano(2),
+    initParams: {
+      _randomNonce: getRandomNonce(),
+    },
+    publicKey: keyPair.publicKey,
+  });
 
   // Wait until user token wallet is presented into the GraphQL
 
@@ -114,19 +112,17 @@ export const getWeverInstance = async (): Promise<Wever> => {
   // Proxy token transfer
   // - Deploy proxy token transfer
 
-  const { contract: proxyTokenTransfer } = await locklift.transactions.waitFinalized(
-    locklift.factory.deployContract({
-      contract: "WeverProxyTokenTransfer",
-      constructorParams: {
-        owner_: user.address,
-      },
-      initParams: {
-        _randomNonce: getRandomNonce(),
-      },
-      publicKey: keyPair.publicKey,
-      value: toNano(2),
-    }),
-  );
+  const { contract: proxyTokenTransfer } = await locklift.factory.deployContract({
+    contract: "WeverProxyTokenTransfer",
+    constructorParams: {
+      owner_: user.address,
+    },
+    initParams: {
+      _randomNonce: getRandomNonce(),
+    },
+    publicKey: keyPair.publicKey,
+    value: toNano(2),
+  });
 
   // - Set configuration (use user as ethereum configuration to emulate callbacks)
 
